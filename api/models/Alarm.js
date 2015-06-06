@@ -8,17 +8,6 @@ module.exports = {
       createdAt:  'date',
       data:       'array',
 
-      // isAlarm: function(){
-      //   var count = 0;
-      //   for(var i = 0 ; i < this.data.length; i++){
-      //     if(i < 2)
-      //       count += this.data[i];
-      //     else
-      //       break;
-      //   }
-      //   return count > 0 ? true : false;
-
-      // },
 
       parseAlarm: function(){
         var array = [];
@@ -127,7 +116,7 @@ module.exports = {
             var array = [];
             for(var i = 0; i < results.length; i++){
                 var temp = [];
-            
+                sails.log(results[i].parseAlarm());
                 temp.push(results[i].createdAt);
                 temp.push(results[i].parseAlarm()[0]);
                 temp.push(results[i].parseAlarm()[1]);

@@ -1,0 +1,108 @@
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="/workflows/fresh_tobacco">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
+            <li><a href="/workflows/fresh_tobacco/packings">装烟情况统计</a></li>
+            <li class="active"><a href="#">烘烤量统计</a></li>
+            <li><a href="#">烤房使用情况统计</a></li>
+            <li><a href="#">烤房远程监管</a></li>
+          </ul>         
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Analysis</h1>
+
+          <div class="row placeholders">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div role="tabpanel">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active"><a href="/workflows/fresh_tobacco" aria-controls="home" role="tab" data-toggle="tab">烘烤量统计分析</a></li>
+              <li role="presentation"><a href="/workflows/fresh_tobacco/breeds" aria-controls="profile" role="tab" data-toggle="tab">在烤统计分析</a></li>
+              <li role="presentation"><a href="/workflows/fresh_tobacco/fresh_type" aria-controls="messages" role="tab" data-toggle="tab">烘烤历史数据分析</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="breeds">
+                <div class="row">
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="radio">
+                      <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 按烤房统计
+                      </label>
+                      <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 按大户统计
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="烤房编号"></div>
+                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="烟基编号"></div>
+                  <div class="col-xs-3">
+                      <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">开始日期</div>
+                            <input type="text" class="form-control" id="exampleInputAmount" name="startDate" />
+                        </div>
+                      </div> 
+                  </div>
+                  <div class="col-xs-3">
+                      <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">结束日期</div>
+                            <input type="text" class="form-control" id="exampleInputAmount" name="endDate" />
+                        </div>
+                      </div> 
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="鲜烟品种"></div>
+                  <div class="col-xs-2"><button type="button" class="btn btn-primary">搜索</button></div>
+                  <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="profile">...</div>
+              <div role="tabpanel" class="tab-pane" id="messages">...</div>
+              <div role="tabpanel" class="tab-pane" id="settings">...</div>
+            </div>
+        </div>
+            </div>
+          </div>
+
+          <h5 class="sub-header">烘烤量统计表</h5>
+          <h6>单位：公斤</h6>
+          <div class="table-responsive">
+            <table id="example" class="display" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th rowspan="2">烤房</th>
+                  <th rowspan="2">烟基号</th>
+                  <th rowspan="2">机构组织</th>
+                  <th colspan="3">第一烤</th>
+                  <th colspan="2">第二烤</th>
+                </tr>
+                <tr>
+                  <th>开烤时间</th>
+                  <th>鲜烟重量</th>
+                  <th>干烟重量</th>
+                  <th>鲜烟重量</th>
+                  <th>干烟重量</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+           
+          </div>
+        </div>
+      </div>
+      <script type="text/javascript">
+          $(document).ready(function() {
+            $('#example').dataTable( {
+              "scrollY": 200,
+              "scrollX": true
+            } );
+          } );
+      </script>

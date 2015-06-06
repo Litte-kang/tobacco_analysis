@@ -14,7 +14,7 @@ module.exports = {
 					if(req.wantsJSON)
 						res.send(200, {user: user});
 					else
-						res.redirect('/dashbord');
+						res.redirect('/workflow/fresh_tobacco');
 
 				} else
 					res.send(404,'User Not Found');

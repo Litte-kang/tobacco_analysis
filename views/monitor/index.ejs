@@ -58,9 +58,8 @@
 <script type="text/javascript">
   $(document).ready(function() {
     var table =  $('#alarms').dataTable({
-        "ajax": 'http://121.41.111.212:1337/alarms/40',
+        "ajax": 'http://localhost:1337/alarms/40',
         "retrieve": true,
-        "scrollX": false,
         "searching" : false
     });
 
@@ -71,7 +70,7 @@
       
       if(roomNo != ''){
         console.log('send request' + roomNo);
-        table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
+        table.api().ajax.url('http://localhost:1337/alarms/' + roomNo).load();
 
 
         alarmChart.Line(prepairDatasets(table));

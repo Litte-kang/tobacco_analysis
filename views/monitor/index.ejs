@@ -73,9 +73,18 @@
       
       if(roomNo != ''){
         console.log('send request' + roomNo);
-        table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
+        $getJSON('http://121.41.111.212:1337/alarms/' + roomNo, function(data){
+          if(data.length > 0){
+              table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
 
-        $('#h3_room_no').text('#' + roomNo + '烤房');
+             
+          }else
+              table.api().ajax.clear();
+        })
+         $('#h3_room_no').text('#' + roomNo + '烤房');
+        // table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
+
+        // $('#h3_room_no').text('#' + roomNo + '烤房');
         alarmChart.Line(prepairDatasets(table));
         alarmChart.update();
       }

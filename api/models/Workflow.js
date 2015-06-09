@@ -56,6 +56,10 @@ module.exports = {
       //鲜烟品质
       tobaccoQuality: function(){
       	return this.fresh_tobacco.quality;
+      },
+
+      freshTobaccoImages: function(){
+        return this.fresh_tobacco.filename;
       }
 
   },

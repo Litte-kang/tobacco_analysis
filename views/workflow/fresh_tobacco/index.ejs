@@ -92,6 +92,7 @@
                   <th>含水量</th>
                   <th>烟叶类型</th>
                   <th>烟叶质地</th>
+                  <th>images</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,6 +112,11 @@
                    <td><%= tobacco.waterContent() %></td>
                		 <td><%= tobacco.tobaccoType() %></td>
                		 <td><%= tobacco.tobaccoQuality() %></td>
+                   <td>
+                    <% _.each(tobacco.freshTobaccoImages(), function(image){ %>
+                      <a href='/images/photos/<%= image %>'>aa</a>
+                    <% }) %>
+                   </td>
                		</tr>
     			     <% }) %>
               </tbody>

@@ -73,7 +73,7 @@
       
       if(roomNo != ''){
         console.log('send request' + roomNo);
-        $getJSON('http://121.41.111.212:1337/alarms/' + roomNo, function(data){
+        $.getJSON('http://121.41.111.212:1337/alarms/' + roomNo, function(data){
           if(data.length > 0){
               table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
 

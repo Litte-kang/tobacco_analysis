@@ -31,7 +31,7 @@
           </div>
           <div class="row">
             <div class="col-xs-2">
-              <h3 id="h3_room_no">#40烤房</h3>
+              <h3 id="h3_room_no"></h3>
             </div>
             <div class="col-xs-2">
               <button class="btn btn-default" type="submit" id="show_chart">显示图表</button>
@@ -73,21 +73,21 @@
       
       if(roomNo != ''){
         console.log('send request' + roomNo);
-        $.getJSON('http://121.41.111.212:1337/alarms/' + roomNo, function(data){
-          if(data.length){
-              table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
-              alarmChart.Line(prepairDatasets(table));
-              alarmChart.update();
+        // $.getJSON('http://121.41.111.212:1337/alarms/' + roomNo, function(data){
+        //   if(data.length){
+        //       table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
+        //       alarmChart.Line(prepairDatasets(table));
+        //       alarmChart.update();
              
-          }else
-              table.api().clear().draw();
-        })
-         $('#h3_room_no').text('#' + roomNo + '烤房');
-        // table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
+        //   }else
+        //       table.api().clear().draw();
+        // })
+        //  $('#h3_room_no').text('#' + roomNo + '烤房');
+        table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
 
-        // $('#h3_room_no').text('#' + roomNo + '烤房');
-        // alarmChart.Line(prepairDatasets(table));
-        // alarmChart.update();
+        ///$('#h3_room_no').text('#' + roomNo + '烤房');
+        alarmChart.Line(prepairDatasets(table));
+        alarmChart.update();
       }
       else
         alert('请填写烤房号');

@@ -76,17 +76,18 @@
         $.getJSON('http://121.41.111.212:1337/alarms/' + roomNo, function(data){
           if(data.length > 0){
               table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
-
+              alarmChart.Line(prepairDatasets(table));
+              alarmChart.update();
              
           }else
-              table.clear();
+              table.api().clear();
         })
          $('#h3_room_no').text('#' + roomNo + '烤房');
         // table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
 
         // $('#h3_room_no').text('#' + roomNo + '烤房');
-        alarmChart.Line(prepairDatasets(table));
-        alarmChart.update();
+        // alarmChart.Line(prepairDatasets(table));
+        // alarmChart.update();
       }
       else
         alert('请填写烤房号');

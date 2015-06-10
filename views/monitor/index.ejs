@@ -61,7 +61,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
     var table =  $('#alarms').dataTable({
-        "ajax": 'http://localhost:1337/alarms/40',
+        "ajax": 'http://121.41.111.212:1337/alarms/40',
         "retrieve": true,
         "searching" : false
     });
@@ -83,7 +83,7 @@
         //       table.api().clear().draw();
         // })
         //  $('#h3_room_no').text('#' + roomNo + '烤房');
-        table.api().ajax.url('http://localhost:1337/alarms/' + roomNo).load();
+        table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
 
         ///$('#h3_room_no').text('#' + roomNo + '烤房');
         alarmChart.Line(prepairDatasets(table));

@@ -1,17 +1,19 @@
 module.exports = {
   connection: 'innotek_tobacco',
-  //tableName: 'fresh_analysis',
-  tableName:  'tobaccos',
-  attributes: {
-  		room_no:             {type: 'string'},
-      tobacco_no:          {type: 'string'},
-      name:                {type: 'string'},
-      aca:                 {type: 'string'},
-      middleware:          {type: 'string'}
+  tableName:  'stations',
+  autoPK : false,
 
-      // tobaccos: {
-      //   collection: 'workflow',
-      //   via: 'owner'
-      // }
+  attributes: {
+  	  _id:           {type: 'string', primaryKey: true, unique: true},
+      name:          {type: 'string'},
+      code:          {type: 'string'},
+      createdAt:     {type: 'date'},
+      middlewares:   {type: 'array'},
+
+      belongs:  {
+        model: 'town'
+      }
+
   }
+
 };

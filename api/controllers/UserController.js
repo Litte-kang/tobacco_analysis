@@ -7,18 +7,22 @@
 
 module.exports = {
 	login: function(req, res){
-		User.findOne({userId: req.body.userId, hashedPassword: User.encryptPassword(req.body.password)}).
-			exec(function cb(err, user){
-				if(err) return res.negotiate(err);
-				if(user){
-					if(req.wantsJSON)
-						res.send(200, {user: user});
-					else
-						res.redirect('workflows/fresh_tobacco');
+		User.findUserByUserIdAndPassword(req.body, function(err, user){
+			if(err) res.negotiate(err);
+			if(user){
+				req.session.authenticated = true;
+				req.session.user = user._id;
+				req.session.role = user.role;
+				req.session.fullName = user.fullName();
 
-				} else
-					res.send(404,'User Not Found');
-			});
+				if(req.wantsJSON) return res.send({user: user});
+				return res.redirect('/dashbord');
+
+			}else{
+				req.session.authenticated = false;
+				return res.view('homepage', {msg: 'Invalid userId or password'});
+			}
+		})
 	}
 };
 

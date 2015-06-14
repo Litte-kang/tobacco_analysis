@@ -1,9 +1,8 @@
 /**
- * sessionAuth
+ * isLoggedIn
  *
  * @module      :: Policy
- * @description :: Simple policy to allow any authenticated user
- *                 Assumes that your login action in one of your controllers sets `req.session.authenticated = true;`
+ * @description :: User which is LoggedIn could access all the pages
  * @docs        :: http://sailsjs.org/#!/documentation/concepts/Policies
  *
  */
@@ -17,5 +16,5 @@ module.exports = function(req, res, next) {
 
   // User is not allowed
   // (default res.forbidden() behavior can be overridden in `config/403.js`)
-  return res.forbidden('拒绝访问，请先登录');
+  return res.forbidden('You are not permitted to perform this action.');
 };

@@ -7,7 +7,12 @@
 
 module.exports = {
 	index: function(req, res){
-		res.send(200, 'fuck');
+		AnalysisCounty.getAnalysisResult(null, function(err, result){
+			if(err) res.negotiate(err);
+			//res.send(result);
+			return res.view('dashbord', {fullName: req.session.fullName, result: result});
+		})
+			
 	}
 };
 

@@ -104,7 +104,7 @@ module.exports = {
     if(opt != null){
       var roomNo = opt;
       
-      Station.findOne({room_no: roomNo}).exec(function(err, station){
+      Tobacco.findOne({room_no: roomNo}).exec(function(err, station){
         if(err) cb(err);
 
         else if(station){

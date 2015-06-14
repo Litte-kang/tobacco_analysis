@@ -11,6 +11,7 @@ module.exports = {
   connection: 'innotek_tobacco',
   tableName: 'users',
 
+  // role 0 , 1, 2
   attributes: {
 
   		firstName:          {type: 'string'},
@@ -19,11 +20,12 @@ module.exports = {
   		hashedPassword:     {type: 'string'},
   		ip:                 {type: 'string'},
   		isAdmin:            {type: 'boolean', defaultsTo: false},
+      role:               {type: 'string'},
   		lastLogin:          {type: 'string'},
   		createdAt:          {type: 'date'},
   		middlewares:        {type: 'array'},
 
-  		getFullName: function(){
+  		fullName: function(){
   			return this.firstName + ' ' + this.lastName;
   		}
   	},
@@ -31,8 +33,15 @@ module.exports = {
 	  //Class method
     encryptPassword: function(password){
   		var sha = crypto.createHash('sha1');
-		sha.update(password);
-		return sha.digest('hex');
+		  sha.update(password);
+		  return sha.digest('hex');
+    },
+
+    findUserByUserIdAndPassword: function(opt, cb){
+      User.findOne({userId: opt.userId, hashedPassword: User.encryptPassword(opt.password)}).
+        exec(function(err, user){
+          cb(err, user);
+        });
     }
 };
 

@@ -1,10 +1,10 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="/workflows/fresh_tobacco">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
+            <li><a href="/workflows/manage_fresh">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
             <li><a href="/workflows/fresh_tobacco/packings">装烟情况统计</a></li>
             <li><a href="/workflows/dry_tobacco">烘烤量统计</a></li>
             <li><a href="#">烤房使用情况统计</a></li>
-            <li class="active"><a href="#">烤房远程监管</a></li>
+            <li><a href="/alarms">烤房远程监管</a></li>
           </ul>         
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -51,9 +51,6 @@
                 
                 </tr>
               </thead>
-              <tbody>
-                
-              </tbody>
             </table>
           </div>
         </div>
@@ -61,7 +58,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
     var table =  $('#alarms').dataTable({
-        "ajax": 'http://121.41.111.212:1337/alarms/40',
+        "ajax": 'http://localhost:1337/alarms/40',
         "retrieve": true,
         "searching" : false
     });
@@ -73,19 +70,7 @@
       
       if(roomNo != ''){
         console.log('send request' + roomNo);
-        // $.getJSON('http://121.41.111.212:1337/alarms/' + roomNo, function(data){
-        //   if(data.length){
-        //       table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
-        //       alarmChart.Line(prepairDatasets(table));
-        //       alarmChart.update();
-             
-        //   }else
-        //       table.api().clear().draw();
-        // })
-        //  $('#h3_room_no').text('#' + roomNo + '烤房');
-        table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
-
-        ///$('#h3_room_no').text('#' + roomNo + '烤房');
+        table.api().ajax.url('http://localhost:1337/alarms/' + roomNo).load();
         alarmChart.Line(prepairDatasets(table));
         alarmChart.update();
       }

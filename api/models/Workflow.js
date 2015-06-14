@@ -66,10 +66,10 @@ module.exports = {
 
   integrateToStation: function(opts, cb){
 
-    Station.find().exec(function(err, stations){
+    Tobacco.find().exec(function(err, stations){
         if(err) return cb(err);
 
-         Workflow.find().exec(function(err, workflows){
+         Workflow.find().sort('protocol_created_at ASC').exec(function(err, workflows){
             if(err) return cb(err);
 
             for(var i = 0; i < workflows.length; i++){

@@ -33,7 +33,12 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
+    view: 'homepage',
+    locals: {
+      layout:   'homepage',
+      title:    'Login',
+      msg:      ''
+    }
   },
 
   /***************************************************************************
@@ -46,24 +51,31 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
- 'post /login': 'UserController.login',
+ 'post /login': {
+    controller: 'UserController',
+    action: 'login',
+    locals: {
+        layout: 'homepage'
+    }
+  },
+     
 
  'get /dashbord': {
-    view: 'dashbord',
-    controller: 'DashbordController',
-    locals: {
-      layout: 'analysis'
-    }
+      controller: 'DashbordController',
+      action: 'index'
   },
 
   'get /workflows' :{
-    locals: {
-      layout: 'layout'
-    }
+      locals: {
+        layout: 'layout',
+        title: 'Login'
+      }
   },
 
   //Analysis 
-  'get /workflows/fresh_tobacco'               :'WorkflowController.index',
+  'get /workflows/manage_fresh'                :'WorkflowController.index',
+  'get /workflows/manage_fresh/tobaccos'       :'WorkflowController.getFreshTobaccos',
+  
   'get /workflows/fresh_tobacco/breeds'        :'WorkflowController.analysisTobaccoBreed',
   'get /workflows/fresh_tobacco/fresh_type'    :'WorkflowController.analysisTobaccoType',
   'get /workflows/fresh_tobacco/packings'      :'WorkflowController.analysisPacking',
@@ -71,5 +83,8 @@ module.exports.routes = {
 
   //Monitor
   'get /alarms'          :        'MonitorController.index',
-  'get /alarms/:roomNo'  :        'MonitorController.alarms'
+  'get /alarms/:roomNo'  :        'MonitorController.alarms',
+
+  
+
 };

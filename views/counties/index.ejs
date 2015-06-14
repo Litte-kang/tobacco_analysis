@@ -1,0 +1,7 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	<ul>
+		<% _.each(counties, function(county){ %>
+			<li><a href="/cities/<%= county.id %>/counties"><%= county.name %></a></li>
+		<% }) %>
+	</ul>
+</div>

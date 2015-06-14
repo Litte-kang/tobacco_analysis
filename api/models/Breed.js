@@ -32,17 +32,19 @@ module.exports = {
                 result.totalB += curr.breeds.B
                 result.totalC += curr.breeds.C
                 result.totalD += curr.breeds.D
-              }
-              
-            ,
-          function(err, results){
-            cb(err, results);
-          })
+              },
+              function(err, results){
+                  results.sort();
+                  cb(err, results);
+              })
       })
     },
 
+    analysisBreedGroupByCounties: function(opts, cb){
+
+    },
+
     analysisType: function(opts, cb){
-      sails.log('Begin fresh tobacco type analysis...');
 
       Breed.native(function(err, collection){
         if(err) return cb(err);

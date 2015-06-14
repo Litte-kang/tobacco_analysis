@@ -4,13 +4,15 @@
     <title>烟叶专业化精准烘烤数据分析系统</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/styles/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/styles/dashbord.css">
 
     <script src="//cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+   
   </head>
 
   <body>
@@ -23,11 +25,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">烟叶专业化精准烘烤数据分析系统</a>
+          <a class="navbar-brand" href="/dashbord">烟叶专业化精准烘烤数据分析系统</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Hello <%= fullName %></a></li>
             <li><a href="#">Settings</a></li>
             <li><a href="#">Profile</a></li>
             <li><a href="#">Help</a></li>
@@ -42,9 +44,10 @@
     <div class="container-fluid">
       <div class="row">
         <%- body %>
+      </div>
     </div>
 
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" preserveAspectRatio="none" style="visibility: hidden; position: absolute; top: -100%; left: -100%;"><defs></defs><text x="0" y="10" style="font-weight:bold;font-size:10pt;font-family:Arial, Helvetica, Open Sans, sans-serif;dominant-baseline:middle">200x200</text></svg>
+
     
 
 
@@ -101,6 +104,7 @@
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/Chart.min.js"></script>
+    <script src="/js/jquery.dataTables.min.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

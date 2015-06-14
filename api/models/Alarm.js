@@ -122,12 +122,12 @@ module.exports = {
                 temp.push(results[i].parseAlarm()[1]);
 
                 
-                // var contents = results[i].parseAlarm();
-                // sails.log(contents);
-                // if(contents.length > 3)
-                //   temp.push(contents.slice(2, contents.length-1));
-                // else
-                //   temp.push('');
+                var contents = results[i].parseAlarm();
+                sails.log(contents);
+                if(contents.length > 3)
+                  temp.push(contents.slice(2, contents.length-1));
+                else
+                  temp.push('');
 
                 array.push(temp);
             } 

@@ -48,5 +48,85 @@
   	</tbody>
 
   </table>
+  <h4>江华县</h4>
+  <h5>单位：公斤</h5>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>装烟量</th>
+        <th>装烟杆数</th>
+        <th>云烟87</th>
+            <th>湘烟3号</th>
+            <th>K236</th>
+            <th>其他</th>
+            <th>正常烟叶</th>
+            <th>返青烟叶</th>
+            <th>干旱烟叶</th>
+            <th>黑暴烟叶</th>
+            <th>后发烟叶</th>
+            <th>统计日期</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%_.each(result, function(city){ %>
+        <tr>
+          <td><%= city.packing_amount %></td>
+          <td><%= city.packing_bar %></td>
+          <td><%= city.breeds.A %></td>
+          <td><%= city.breeds.B %></td>
+          <td><%= city.breeds.C %></td>
+          <td><%= city.breeds.D %></td>
+          <td><%= city.tobacco_type.A %></td>
+          <td><%= city.tobacco_type.B %></td>
+          <td><%= city.tobacco_type.C %></td>
+          <td><%= city.tobacco_type.D %></td>
+          <td><%= city.tobacco_type.E %></td>
+          <td>2015年6月14日</td>
+        </tr>
+        <%}) %>
+
+    </tbody>
+
+  </table>
+  <h5>白芒营镇</h5>
+  <h6>单位：公斤</h6>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>装烟量</th>
+        <th>装烟杆数</th>
+        <th>云烟87</th>
+            <th>湘烟3号</th>
+            <th>K236</th>
+            <th>其他</th>
+            <th>正常烟叶</th>
+            <th>返青烟叶</th>
+            <th>干旱烟叶</th>
+            <th>黑暴烟叶</th>
+            <th>后发烟叶</th>
+            <th>统计日期</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%_.each(result, function(city){ %>
+        <tr>
+          <td><%= city.packing_amount %></td>
+          <td><%= city.packing_bar %></td>
+          <td><%= city.breeds.A %></td>
+          <td><%= city.breeds.B %></td>
+          <td><%= city.breeds.C %></td>
+          <td><%= city.breeds.D %></td>
+          <td><%= city.tobacco_type.A %></td>
+          <td><%= city.tobacco_type.B %></td>
+          <td><%= city.tobacco_type.C %></td>
+          <td><%= city.tobacco_type.D %></td>
+          <td><%= city.tobacco_type.E %></td>
+          <td>2015年6月14日</td>
+        </tr>
+        <%}) %>
+
+    </tbody>
+
+  </table>
 </div>
 

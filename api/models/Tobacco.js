@@ -1,7 +1,7 @@
 module.exports = {
   connection: 'innotek_tobacco',
-  
   tableName:  'tobaccos',
+  
   attributes: {
   		room_no:             {type: 'string'},
       tobacco_no:          {type: 'string'},

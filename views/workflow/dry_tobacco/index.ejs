@@ -8,8 +8,8 @@
           </ul>         
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Analysis</h1>
-          <h4>永州市-江华县-白芒营镇-云田工场</h4>
+          <h1 class="page-header"><%= place %></h1>
+          
           <div class="row placeholders">
             <div class="col-xs-12 col-sm-12 col-md-12">
                         <div role="tabpanel">
@@ -23,7 +23,7 @@
 
             <!-- Tab panes -->
             <div class="tab-content">
-              <div role="tabpanel" class="tab-pane active" id="breeds">
+              <div role="tabpanel" class="tab-pane active" id="home">
                 <div class="row">
                   <div class="col-xs-6 col-sm-4">
                     <div class="radio">
@@ -37,13 +37,24 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="烤房编号"></div>
-                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="烟基编号"></div>
+                  <div class="col-xs-2">
+                    <select id="place" class="form form-control">
+                      <option value="">选择地区</option>
+                      <option value="江华县">江华县</option>
+                      <option value="宁远县">宁远县</option>
+                      <option value="江永县">江永县</option>
+                      <option value="蓝山县">蓝山县</option>
+                      <option value="东安县">东安县</option>
+                      <option value="双牌县">双牌县</option>
+                      <option value="道县">道县</option>
+                    </select>
+                  </div>
+                  <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
                   <div class="col-xs-3">
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="exampleInputAmount" name="startDate" />
+                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" />
                         </div>
                       </div> 
                   </div>
@@ -51,14 +62,19 @@
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="exampleInputAmount" name="endDate" />
+                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" />
                         </div>
                       </div> 
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="鲜烟品种"></div>
-                  <div class="col-xs-2"><button type="button" class="btn btn-primary">搜索</button></div>
+                  
+                   <div class="col-xs-2">
+                  <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
+
+                   </div>
+                 
+                  <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
                   <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
                 </div>
               </div>
@@ -70,8 +86,8 @@
             </div>
           </div>
 
-          <h5 class="sub-header">烘烤量统计表</h5>
-          <h6>单位：公斤</h6>
+          <h5 class="sub-header" style="text-align:center">烘烤量统计表</h5>
+          <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
             <table id="example" class="display" cellspacing="0" width="100%">
               <thead>
@@ -80,29 +96,100 @@
                   <th rowspan="2">烟基号</th>
                   <th rowspan="2">机构组织</th>
                   <th colspan="3">第一烤</th>
-                  <th colspan="2">第二烤</th>
+                  <th colspan="3">第二烤</th>
+                  <th colspan="3">第三烤</th>
+                  <th colspan="3">第四烤</th>
                 </tr>
                 <tr>
                   <th>开烤时间</th>
                   <th>鲜烟重量</th>
                   <th>干烟重量</th>
+                  <th>开烤时间</th>
+                  <th>鲜烟重量</th>
+                  <th>干烟重量</th>
+                  <th>开烤时间</th>
+                  <th>鲜烟重量</th>
+                  <th>干烟重量</th>
+                  <th>开烤时间</th>
                   <th>鲜烟重量</th>
                   <th>干烟重量</th>
                 </tr>
               </thead>
-              <tbody>
-
-              </tbody>
             </table>
            
           </div>
         </div>
       </div>
       <script type="text/javascript">
+        var table;
           $(document).ready(function() {
-            $('#example').dataTable( {
+            table = $('#example').dataTable( {
               "scrollY": 200,
               "scrollX": true
-            } );
-          } );
+            });
+          });
+
+          $('#searchButton').on('click', function(){
+            var roomNo = $('#roomNo').val();
+            var tobaccoNo = $('#tobaccoNo').val();
+
+            var place = $('#place').val();
+            var protocolStartDate = $('#protocolStartDate').val();
+            var protocolEndDate = $('#protocolEndDate').val();
+
+            var url = 'http://121.41.111.212:1337/workflows/baking_history?';
+
+            if(roomNo != '')
+              url += 'room_no=' + roomNo + '&';
+
+            if(tobaccoNo != '')
+              url += 'tobacco_no=' + tobaccoNo + '&';
+           
+            if(place != '')
+              url += 'code=' + place + '&';
+           
+            if(protocolStartDate != '')
+              url += 'startDate=' + protocolStartDate + '&';
+
+            if(protocolEndDate != '')
+              url += 'endDate=' + protocolEndDate + '&';
+
+            url = url.substring(0, url.lastIndexOf('&'));
+          
+            $.getJSON(url, function(data){
+               table.api().clear().draw();
+               if(data){
+                  table.api().rows.add(createTobacco(data)).draw();
+               }
+            });
+          });
+
+        function createTobacco(arr){
+          var datasets = [];
+          for(var i = 0; i < arr.length; i++){
+            var data = [];
+            data.room = arr[i][0].room;
+            data.tobacco_no = arr[i][0].tobacco_no;
+            data.org_name = arr[i][0].org_name;
+
+            for(var j = 0; j < 4; j++){
+              if(arr[i][j] !== undefined){
+                
+                data['start_time' + j] = arr[i][j].start_time;
+                data['fresh_tobacco' + j] = arr[i][j].fresh_weight;
+                data['dry_tobacco' + j] = arr[i][j].dry_weight;
+              }else{
+                data['start_time' + j] = '';
+                data['fresh_tobacco' + j] = '';
+                data['dry_tobacco' + j] = '';
+              }
+              
+            }
+          
+            datasets.push(data);
+          }
+          console.log(datasets[0])
+          return datasets;
+        }
+
       </script>

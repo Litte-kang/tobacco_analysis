@@ -1,30 +1,29 @@
         <div class="col-sm-3 col-md-2 sidebar">
-           <ul class="nav nav-sidebar">
-            <li><a href="/workflows/manage_fresh">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
             <li><a href="/workflows/fresh_tobacco/packings">装烟情况统计</a></li>
-            <li><a href="/workflows/dry_tobacco">烘烤量统计</a></li>
+            <li><a href="/cities/<%= code %>/bakingHistory">烘烤量统计</a></li>
             <li><a href="#">烤房使用情况统计</a></li>
             <li><a href="/alarms">烤房远程监管</a></li>
           </ul>         
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Analysis</h1>
-          <h4>永州市-江华县-白芒营镇-云田工场</h4>
+          <h1 class="page-header"><%= place %></h1>
           <div class="row placeholders">
             <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div role="tabpanel">
+                <div role="tabpanel">
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation"><a href="/workflows/manage_fresh" aria-controls="home" role="tab" data-toggle="link">鲜烟成熟度分析</a></li>
-              <li role="presentation"><a href="/workflows/fresh_tobacco/breeds" aria-controls="profile" role="tab" data-toggle="link">鲜烟品种统计</a></li>
-              <li role="presentation" class="active"><a href="/workflows/fresh_tobacco/fresh_type" aria-controls="messages" role="tab" data-toggle="link">鲜烟类型分析</a></li>
-              <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="link">干烟质量分析</a></li>
+              <li role="presentation"><a href="/cities/<%= code %>" aria-controls="home" role="tab" data-toggle="link">鲜烟成熟度分析</a></li>
+              <li role="presentation"><a href="/cities/<%= code %>/types" aria-controls="profile" role="tab" data-toggle="link">鲜烟品种统计</a></li>
+              <li role="presentation"><a href="/cities/<%= code %>/types" aria-controls="messages" role="tab" data-toggle="link">鲜烟类型分析</a></li>
+              <li role="presentation" class="active"><a href="#" aria-controls="settings" role="tab" data-toggle="link">干烟质量分析</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-              <div role="tabpanel" class="tab-pane active" id="fresh_type">
+              <div role="tabpanel" class="tab-pane active" id="home">
                 <div class="row">
                   <div class="col-xs-6 col-sm-4">
                     <div class="radio">
@@ -38,13 +37,24 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="烤房编号"></div>
-                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="烟基编号"></div>
+                  <div class="col-xs-2">
+                    <select id="place" class="form form-control">
+                      <option value="">选择地区</option>
+                      <option value="江华县">江华县</option>
+                      <option value="宁远县">宁远县</option>
+                      <option value="江永县">江永县</option>
+                      <option value="蓝山县">蓝山县</option>
+                      <option value="东安县">东安县</option>
+                      <option value="双牌县">双牌县</option>
+                      <option value="道县">道县</option>
+                    </select>
+                  </div>
+                  <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
                   <div class="col-xs-3">
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="exampleInputAmount" name="startDate" />
+                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" />
                         </div>
                       </div> 
                   </div>
@@ -52,14 +62,19 @@
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="exampleInputAmount" name="endDate" />
+                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" />
                         </div>
                       </div> 
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-xs-2"><input type="text" class="form-control" placeholder="鲜烟品种"></div>
-                  <div class="col-xs-2"><button type="button" class="btn btn-primary">搜索</button></div>
+                
+                   <div class="col-xs-2">
+                  <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
+
+                   </div>
+  
+                  <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
                   <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
                 </div>
               </div>
@@ -71,59 +86,30 @@
             </div>
           </div>
            <div class="row">
-            <div class="col-xs-2">
-              <h3 id="h3_room_no"></h3>
-            </div>
-            <div class="col-xs-2">
-              
-            </div>
+            <canvas id="myChart" height="400" width="947" style="display:none"></canvas>
           </div>
-          <div class="row">
-            <canvas id="myChart" height="400" width="947" style=""></canvas>
-          </div>
-          <h5 class="sub-header">烘烤鲜烟烟叶类型统计表</h5>
-          <h6>单位：公斤</h6>
+          <h5 class="sub-header" style="text-align:center">烘烤鲜烟干烟质量统计表</h5>
+          <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
             <table class="table table-striped table-hover table-condensed" id="table">
               <thead>
                 <tr>
-                 
                   <th>烤房编号</th>
                   <th>烟基编号</th>
                   <th>所属机构</th>
                   <th>鲜烟总量</th>
-                  <th>正常烟叶</th>
-                  <th>返青烟叶</th>
-                  <th>干旱烟叶</th>
-                  <th>黑暴烟叶</th>
-                  <th>后发烟叶</th>
-                 
+                  <th>干烟总量</th>
                 </tr>
               </thead>
-              <tbody>
-               	<% _.each(results, function(tobacco) { %>
-               		<tr>
-               		
-               		 <td><%= tobacco.room %></td>
-               		 <td><%= tobacco.tobacco_no %></td>
-               		 <td><%= tobacco.org_name %></td>
-               		 <td><%= tobacco.amount / 2 %></td>
-               		 <td><%= tobacco.totalA / 2 %></td>
-               		 <td><%= tobacco.totalB / 2 %></td>
-                   <td><%= tobacco.totalC / 2 %></td>
-               		 <td><%= tobacco.totalD / 2 %></td>
-               	   <td><%= tobacco.totalE / 2 %></td>
-                  
-               		</tr>
-    			     <% }) %>
-              </tbody>
             </table>
           </div>
         </div>
       </div>
+
 <script type="text/javascript">
-$('document').ready(function(){
-  var table = $('#table').dataTable({
+ var table;
+  $('document').ready(function(){
+  table = $('#table').dataTable({
       "scrollCollapse": true
   });
 
@@ -131,12 +117,6 @@ $('document').ready(function(){
   var chart;
   chart = initChart();
               chart.Pie(prepairDatasets(table), chartOpts);
-            // $('#show_chart').on('click', function(){
-            //   $('#myChart').show();  
-
-            //   chart = initChart();
-            //   chart.Pie(prepairDatasets(table), chartOpts);
-            // });
 
             function initChart(){
               var ctx = $("#myChart").get(0).getContext("2d");
@@ -176,20 +156,14 @@ $('document').ready(function(){
                 heibao += parseFloat(value);
               });
 
-              var houfa = 0;
-              dataTable.api().columns(8).data().reduce(function(a, b){
-                  return a + b;
-              }).forEach(function(value , index){
-                houfa += parseFloat(value);
-              });
+           
               
               console.log(normal)
               var data = [
-                {value: normal.toFixed(2), color:"#F7464A", highlight: "#FF5A5E", label: "正常烟叶"},
-                {value: fanqing.toFixed(2), color:"#46BFBD", highlight: "#5AD3D1", label: "返青烟叶"},
-                {value: ganhan.toFixed(2), color:"#FDB45C", highlight: "#FFC870", label: "干旱烟叶"},
-                {value: heibao.toFixed(2), color:"#FCE95E", highlight: "#F1E970", label: "黑暴烟叶"},
-                {value: houfa.toFixed(2), color:"#FEB85C", highlight: "#FDE070", label: "后发烟叶"}
+                {value: normal.toFixed(2), color:"#F7464A", highlight: "#FF5A5E", label: "云烟87"},
+                {value: fanqing.toFixed(2), color:"#46BFBD", highlight: "#5AD3D1", label: "湘烟3号"},
+                {value: ganhan.toFixed(2), color:"#FDB45C", highlight: "#FFC870", label: "K236"},
+                {value: heibao.toFixed(2), color:"#FCE95E", highlight: "#F1E970", label: "其他"},
               ];
               return data;
             }
@@ -241,5 +215,59 @@ $('document').ready(function(){
 
 });
 
-    
+        $('#searchButton').on('click', function(){
+            var roomNo = $('#roomNo').val();
+            var tobaccoNo = $('#tobaccoNo').val();
+            var tobaccoBreed = $('#tobaccoBreed').val();
+            
+            var place = $('#place').val();
+            var protocolStartDate = $('#protocolStartDate').val();
+            var protocolEndDate = $('#protocolEndDate').val();
+
+            var url = 'http://121.41.111.212:1337/workflows/dries?';
+
+            
+            if(roomNo != '')
+              url += 'room=' + roomNo + '&'  
+            if(tobaccoNo != '')
+              url += 'tobacco_no=' + tobaccoNo + '&';
+
+            if(place != '')
+              url += 'code=' + place + '&';
+           
+            if(protocolStartDate != '')
+              url += 'startDate=' + protocolStartDate + '&';
+
+            if(protocolEndDate != '')
+              url += 'endDate=' + protocolEndDate + '&';
+
+            url = url.substring(0, url.lastIndexOf('&') );
+            console.log(url);
+            $.getJSON(url, function(data){
+               table.api().clear().draw();
+               if(data){
+                console.log(data.length)
+                table.api().rows.add(createBreeds(data)).draw();
+               }
+               
+            });
+
+        });
+
+        function createBreeds(arr){
+            var datasets = [];
+            arr.forEach(function(element, index){
+                var data = [];
+                data.push(element.room);
+                data.push(element.tobacco_no);
+                data.push(element.org_name);
+                data.push(element.amount.toFixed(2));
+                data.push(element.dry.toFixed(2));
+
+                datasets.push(data);
+            });
+
+            return datasets;
+        }
+
 </script>

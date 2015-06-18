@@ -66,30 +66,64 @@ module.exports = {
 
   integrateToStation: function(opts, cb){
 
-    Tobacco.find().exec(function(err, stations){
+    var query = {};
+    var subQuery = {};
+    Object.getOwnPropertyNames(opts).forEach(function(element, index){
+        switch(element){
+          case 'room_no':
+          case 'tobacco_no':
+            query[element] = opts[element];
+            break;
+
+          case 'code':
+            query.middleware = {'startsWith': opts[element]};
+            subQuery.middleware ={'startsWith': opts[element]};
+            break;
+
+          case 'startDate':
+            subQuery.protocol_created_at = {'>=' : opts[element]};
+            break;
+          case 'endDate':
+            subQuery.protocol_created_at = {'<=' : opts[element]};
+            break;
+
+          case 'fresh_tobacco.breed':
+          case 'fresh_tobacco.part':
+            subQuery[element] = opts[element];
+            break;
+        }
+    });
+
+    Tobacco.find(query).exec(function(err, stations){
+
         if(err) return cb(err);
+        if(stations.length > 0){
 
-         Workflow.find().sort('protocol_created_at ASC').exec(function(err, workflows){
-            if(err) return cb(err);
-
-            for(var i = 0; i < workflows.length; i++){
-                var workflow = workflows[i];
-                
-                for(var j = 0; j < stations.length; j++){
+            sails.log(subQuery);
+            Workflow.find(subQuery).exec(function(err, workflows){
+                if(err) return cb(err);
+                sails.log(workflows);
+                for(var i = 0; i < workflows.length; i++){
+                    var workflow = workflows[i];
                     
-                  if(workflow.middleware.localeCompare(stations[j].middleware) == 0
-                            && workflow.address.localeCompare(stations[j].aca) == 0){
+                    for(var j = 0; j < stations.length; j++){
+                        
+                      if(workflow.middleware.localeCompare(stations[j].middleware) == 0
+                                && workflow.address.localeCompare(stations[j].aca) == 0){
 
-                      workflow.room_no = stations[j].room_no;
-                      workflow.org_name = stations[j].name;
-                      workflow.tobacco_no = stations[j].tobacco_no;
+                          workflow.room_no = stations[j].room_no;
+                          workflow.org_name = stations[j].name;
+                          workflow.tobacco_no = stations[j].tobacco_no;
 
-                      break;
-                  }
+                          break;
+                      }
+                    }
                 }
-            }
-            return cb(null, workflows);
-         })
+                
+                return cb(null, workflows);
+            });
+        }
+
       }
     )
   }

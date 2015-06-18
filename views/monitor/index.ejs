@@ -1,10 +1,10 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="/workflows/manage_fresh">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
-            <li><a href="/workflows/fresh_tobacco/packings">装烟情况统计</a></li>
-            <li><a href="/workflows/dry_tobacco">烘烤量统计</a></li>
+            <li><a href="/cities/<%= code %>">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
+            <li><a href="/cities/<%= code %>/packings">装烟情况统计</a></li>
+            <li><a href="/cities/<%= code %>/bakingHistory">烘烤量统计</a></li>
             <li><a href="#">烤房使用情况统计</a></li>
-            <li><a href="/alarms">烤房远程监管</a></li>
+            <li class="active"><a href="#">烤房远程监管</a></li>
           </ul>         
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -38,8 +38,8 @@
               <button class="btn btn-default" type="submit" id="show_chart">显示图表</button>
             </div>
           </div>
-          <div class="row">
-            <canvas id="myChart" height="400" width="947" style="display: none"></canvas>
+           <div class="row">
+            <div id="chartContainer" style="height: 300px; width: 100%; display: none"></div>
           </div>
           <div class="row"></div>
           <div class="table-responsive">
@@ -57,131 +57,28 @@
         </div>
       </div>
 <script type="text/javascript">
+var table;
   $(document).ready(function() {
-    var table =  $('#alarms').dataTable({
-        "ajax": 'http://121.41.111.212:1337/alarms/40',
+    table =  $('#alarms').dataTable({
         "retrieve": true,
         "searching" : false
     });
 
-    var alarmChart;
+   
+ 
 
-    $('#search_btn').on('click', function(){
-      var roomNo = $('#roomNo').val();
-      
-      if(roomNo != ''){
-        console.log('send request' + roomNo);
-        table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
-        alarmChart.Line(prepairDatasets(table));
-        alarmChart.update();
-      }
-      else
-        alert('请填写烤房号');
-    });
-
-    $('#show_chart').on('click', function(){
-        $('#myChart').show();  
-
-        alarmChart = initChart();
-        alarmChart.Line(prepairDatasets(table));
-    });
-
-    var prepairDatasets = function (dataTable){
-       var dryBall = dataTable.api().columns(1).data().reduce(function (a,b) {
-            return a + b;
-        } );
-        var wetBall = dataTable.api().columns(2).data().reduce(function (a, b){
-            return a + b;
-        });
-        
-        var labels = dataTable.api().columns(0).data().reduce(function (a, b){
-            return a + b;
-        });
-
-        var data = {};
-        datasets = [];
-        var dryLine = {
-            label: "干球实际温度",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)",
-            data: dryBall
-        };
-
-        var wetLine = {
-            label: "湿球实际温度",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
-            data: wetBall
-        };
-        datasets.push(dryLine);
-        datasets.push(wetLine);
-
-        data.labels = labels;
-        data.datasets = datasets;
-
-
-
-        // var ctx = $("#myChart").get(0).getContext("2d");
-        // var myLineChart = new Chart(ctx).Line(data);
-        return data;
+  $('#search_btn').on('click', function(){
+    var roomNo = $('#roomNo').val();
+    
+    if(roomNo != ''){
+      console.log('send request' + roomNo);
+      table.api().ajax.url('http://121.41.111.212:1337/alarms/' + roomNo).load();
+      alarmChart.Line(prepairDatasets(table));
+      alarmChart.update();
     }
-
-    function initChart(){
-      var ctx = $("#myChart").get(0).getContext("2d");
-      return new Chart(ctx);
-    }
-
-    var chartOpts = {
-
-        ///Boolean - Whether grid lines are shown across the chart
-        scaleShowGridLines : true,
-
-        //String - Colour of the grid lines
-        scaleGridLineColor : "rgba(0,0,0,.05)",
-
-        //Number - Width of the grid lines
-        scaleGridLineWidth : 1,
-
-        //Boolean - Whether to show horizontal lines (except X axis)
-        scaleShowHorizontalLines: true,
-
-        //Boolean - Whether to show vertical lines (except Y axis)
-        scaleShowVerticalLines: true,
-
-        //Boolean - Whether the line is curved between points
-        bezierCurve : false,
-
-        //Number - Tension of the bezier curve between points
-        bezierCurveTension : 0.4,
-
-        //Boolean - Whether to show a dot for each point
-        pointDot : true,
-
-        //Number - Radius of each point dot in pixels
-        pointDotRadius : 4,
-
-        //Number - Pixel width of point dot stroke
-        pointDotStrokeWidth : 1,
-
-        //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-        pointHitDetectionRadius : 20,
-
-        //Boolean - Whether to show a stroke for datasets
-        datasetStroke : true,
-
-        //Number - Pixel width of dataset stroke
-        datasetStrokeWidth : 2,
-
-        //Boolean - Whether to fill the dataset with a colour
-        datasetFill : true
-      };
+    else
+      alert('请填写烤房号');
   });
+
+
 </script>

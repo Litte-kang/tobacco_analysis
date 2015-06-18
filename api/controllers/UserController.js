@@ -6,6 +6,10 @@
  */
 
 module.exports = {
+
+	/*
+	User.role.length 2 => states ,4 => city , 6 => county , 8=> town, 10 => station 
+	*/
 	login: function(req, res){
 		User.findUserByUserIdAndPassword(req.body, function(err, user){
 			if(err) res.negotiate(err);

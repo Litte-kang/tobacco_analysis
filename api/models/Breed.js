@@ -18,13 +18,26 @@ module.exports = {
 
 	  //Class method
     analysisBreed: function(opts, cb){
-      sails.log('Begin breed analysis...');
+
+      var query = {};
+
+      Object.getOwnPropertyNames(opts).forEach(function(element, index){
+            if(element == 'startDate')
+              query.created_at = {'>=': opts[element]};
+            if(element == 'endDate')
+              query.created_at = {'<=': opts[element]};
+            if(element == 'code'){
+             query.org_name = new RegExp(opts[element]);
+            }else query[element] = opts[element];
+      }); 
 
       Breed.native(function(err, collection){
-          if(err) return cb(err);
+        if(err) return cb(err);
+
+        sails.log(query);
           collection.group(
               {room: 1, tobacco_no: 1, org_name: 1},
-              {},
+              query,
               {amount: 0, totalA: 0, totalB: 0, totalC: 0, totalD:0},
               function(curr, result){
                 result.amount += curr.packing_amount
@@ -40,17 +53,24 @@ module.exports = {
       })
     },
 
-    analysisBreedGroupByCounties: function(opts, cb){
-
-    },
-
     analysisType: function(opts, cb){
+      var query = {};
+      Object.getOwnPropertyNames(opts).forEach(function(element, index){
+           if(element == 'startDate')
+              query.created_at = {'>=': opts[element]};
+            if(element == 'endDate')
+              query.created_at = {'<=': opts[element]};
+            if(element == 'code'){
+             query.org_name = new RegExp(opts[element]);
+            }else query[element] = opts[element];
+      });
+
 
       Breed.native(function(err, collection){
         if(err) return cb(err);
         collection.group(
           {room: 1, tobacco_no: 1, org_name: 1},
-          {},
+          query,
           {amount: 0, totalA:0 , totalB: 0, totalC: 0, totalD:0, totalE: 0},
           function(curr, result){
             result.amount += curr.packing_amount
@@ -64,6 +84,40 @@ module.exports = {
             cb(err, results);
           }
         )
+      })
+    },
+
+    //干烟质量分析
+    analysisDryTobacco: function(opts, cb){
+      var query = {};
+      Object.getOwnPropertyNames(opts).forEach(function(element, index){
+           if(element == 'startDate')
+              query.created_at = {'>=': opts[element]};
+            if(element == 'endDate')
+              query.created_at = {'<=': opts[element]};
+            if(element == 'code'){
+             query.org_name = new RegExp(opts[element]);
+            }else query[element] = opts[element];
+      });
+
+      Breed.native(function(err, collection){
+        if(err) return cb(err);
+
+        collection.group(
+          {room: 1, tobacco_no: 1, org_name: 1},
+          query,
+          {amount: 0, dry: 0},
+          function(curr, result){
+            result.amount += curr.packing_amount;
+            if(curr.dry_tobacco != null)
+              result.dry +=  parseFloat(curr.dry_tobacco.dry_tobacco_weight) * curr.packing_bar
+            else
+              result.dry += 0;
+          },
+          function(err, result){
+            cb(err, result);
+          }
+        );
       })
     }
 };

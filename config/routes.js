@@ -72,19 +72,30 @@ module.exports.routes = {
       }
   },
 
-  //Analysis 
+  /*
+    显示 View
+  */
+  'get /cities/:id'                            :'CityController.show',
+  'get /cities/:id/breeds'                     :'CityController.breeds',
+  'get /cities/:id/types'                      :'CityController.types',
+  'get /cities/:id/dries'                      :'CityController.dries',
+  'get /cities/:id/bakingHistory'              :'CityController.bakingHistory',
+  'get /cities/:id/packings'                   :'CityController.packings',
+  'get /cities/:id/alarms'                     :'CityController.alarms',
+
+  //Analysis json
   'get /workflows/manage_fresh'                :'WorkflowController.index',
   'get /workflows/manage_fresh/tobaccos'       :'WorkflowController.getFreshTobaccos',
   
   'get /workflows/fresh_tobacco/breeds'        :'WorkflowController.analysisTobaccoBreed',
   'get /workflows/fresh_tobacco/fresh_type'    :'WorkflowController.analysisTobaccoType',
   'get /workflows/fresh_tobacco/packings'      :'WorkflowController.analysisPacking',
-  'get /workflows/dry_tobacco'                 :'WorkflowController.findBakingHistory',
+  'get /workflows/baking_history'              :'WorkflowController.findBakingHistory',
 
+  'get /workflows/dries'                       :'WorkflowController.analysisDryTobacco',
   //Monitor
   'get /alarms'          :        'MonitorController.index',
   'get /alarms/:roomNo'  :        'MonitorController.alarms',
 
-  
 
 };

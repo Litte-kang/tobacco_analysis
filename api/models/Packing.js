@@ -31,13 +31,23 @@ module.exports = {
   	},
 
     analysisPacking: function(opts, cb){
-      sails.log('Begin breed analysis...');
+      var query = {};
+
+      Object.getOwnPropertyNames(opts).forEach(function(element, index){
+            if(element == 'startDate')
+              query.created_at = {'>=': opts[element]};
+            if(element == 'endDate')
+              query.created_at = {'<=': opts[element]};
+            if(element == 'code'){
+             query.org_name = new RegExp(opts[element]);
+            }else query[element] = opts[element];
+      }); 
 
       Packing.native(function(err, collection){
           if(err) return cb(err);
           collection.group(
-              {room: 1, tobacco_no: 1, org_name: 1},
-              {},
+              {room: 1, tobacco_no: 1, org_name: 1, packing_average: 1},
+              query,
               {amount: 0, bars:0 ,totalA: 0, totalB: 0,
                totalC: 0, totalD: 0, totalE: 0,
                totalF: 0, totalG: 0, totalH: 0,

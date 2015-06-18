@@ -25,7 +25,19 @@ module.exports = {
 
 	  //Class method
     findBakingHistory: function(opts, cb){
-      Baking.find().sort('tobacco_no').exec(function(err, data){
+      var query = {};
+
+      Object.getOwnPropertyNames(opts).forEach(function(element, index){
+            if(element == 'startDate')
+              query.created_at = {'>=': opts[element]};
+            if(element == 'endDate')
+              query.created_at = {'<=': opts[element]};
+            if(element == 'code'){
+             query.org_name = new RegExp(opts[element]);
+            }else query[element] = opts[element];
+      }); 
+      sails.log(query);
+      Baking.find(query).sort('tobacco_no').exec(function(err, data){
 
         // results = [
         //             [{'a' : 2}, {'a': 5}],

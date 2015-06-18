@@ -110,7 +110,7 @@ module.exports = {
         else if(station){
             sails.log(station);
             Alarm.find({address: station.aca, midAddress: station.middleware})
-                 .sort('createdAt DESC').exec(function(err, results){
+                 .sort('createdAt DESC').limit(20).exec(function(err, results){
 
             var array = [];
             for(var i = 0; i < results.length; i++){

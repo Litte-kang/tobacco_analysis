@@ -29,9 +29,9 @@ module.exports = {
 
       Object.getOwnPropertyNames(opts).forEach(function(element, index){
             if(element == 'startDate')
-              query.created_at = {'>=': opts[element]};
+              query.created_at = {'>=': new Date(opts[element])};
             if(element == 'endDate')
-              query.created_at = {'<=': opts[element]};
+              query.created_at = {'<=': new Date(opts[element])};
             if(element == 'code'){
              query.org_name = new RegExp(opts[element]);
             }else query[element] = opts[element];

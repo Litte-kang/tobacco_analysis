@@ -65,10 +65,15 @@ module.exports = {
   },
 
   integrateToStation: function(opts, cb){
+
     var result = null;
     var query = {};
     var subQuery = {};
+
+    subQuery.protocol_created_at = {};
+    
     Object.getOwnPropertyNames(opts).forEach(function(element, index){
+
         switch(element){
           case 'room_no':
           case 'tobacco_no':

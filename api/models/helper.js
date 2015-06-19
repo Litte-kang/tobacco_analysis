@@ -14,7 +14,7 @@ module.exports = {
              query.org_name = new RegExp(opts[element]);
             }else query[element] = opts[element];
       });
-      sails.log(queru);
+      sails.log(query);
       return query;
     }
 }

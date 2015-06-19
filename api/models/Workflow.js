@@ -81,10 +81,10 @@ module.exports = {
             break;
 
           case 'startDate':
-            subQuery.protocol_created_at['>='] = new Date(opts[element];
+            subQuery.protocol_created_at['>='] = new Date(opts[element]);
             break;
           case 'endDate':
-            subQuery.protocol_created_at['<='] = new Date(opts[element];
+            subQuery.protocol_created_at['<='] = new Date(opts[element]);
             break;
 
           case 'fresh_tobacco.breed':

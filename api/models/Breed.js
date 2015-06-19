@@ -37,7 +37,7 @@ module.exports = {
 
 	  //鲜烟品种统计
     analysisBreed: function(opts, cb){
-
+      var query = createQueryParams(opts);
       // var query = {};
 
       // Object.getOwnPropertyNames(opts).forEach(function(element, index){
@@ -55,7 +55,7 @@ module.exports = {
 
           collection.group(
               {room: 1, tobacco_no: 1, org_name: 1},
-              createQueryParams(opts),
+              query,
               {amount: 0, totalA: 0, totalB: 0, totalC: 0, totalD:0},
               function(curr, result){
                 result.amount += curr.packing_amount
@@ -72,6 +72,7 @@ module.exports = {
     },
 
     analysisType: function(opts, cb){
+       var query = createQueryParams(opts);
       // var query = {};
       // Object.getOwnPropertyNames(opts).forEach(function(element, index){
       //      if(element == 'startDate')
@@ -88,7 +89,7 @@ module.exports = {
         if(err) return cb(err);
         collection.group(
           {room: 1, tobacco_no: 1, org_name: 1},
-          createQueryParams(opts),
+          query,
           {amount: 0, totalA:0 , totalB: 0, totalC: 0, totalD:0, totalE: 0},
           function(curr, result){
             result.amount += curr.packing_amount
@@ -108,6 +109,7 @@ module.exports = {
 
     //干烟质量分析
     analysisDryTobacco: function(opts, cb){
+       var query = createQueryParams(opts);
       // var query = {};
       // Object.getOwnPropertyNames(opts).forEach(function(element, index){
       //      if(element == 'startDate')
@@ -124,7 +126,7 @@ module.exports = {
 
         collection.group(
           {room: 1, tobacco_no: 1, org_name: 1},
-          createQueryParams(opts),
+          query,
           {amount: 0, dry: 0},
           function(curr, result){
             result.amount += curr.packing_amount;

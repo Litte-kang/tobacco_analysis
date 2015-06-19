@@ -16,28 +16,46 @@ module.exports = {
       tobacco_type:         {type: 'json'}
   	},
 
-	  //鲜烟品种统计
-    analysisBreed: function(opts, cb){
-
+    createQueryParams: function(opts){
       var query = {};
+      var params = Object.getOwnPropertyNames(opts);
+      if(params.indexOf('startDate') >= 0 || params.indexOf('endDate') >= 0) 
+        query.created_at = {};
 
-      Object.getOwnPropertyNames(opts).forEach(function(element, index){
+      params.forEach(function(element, index){
             if(element == 'startDate')
-              query.created_at = {'>=': new Date(opts[element])};
+              query.created_at['>='] = new Date(opts[element]);
             if(element == 'endDate')
-              query.created_at = {'<=': new Date(opts[element])};
+              query.created_at['<='] = new Date(opts[element]);
             if(element == 'code'){
              query.org_name = new RegExp(opts[element]);
             }else query[element] = opts[element];
-      }); 
+      });
+
+      return query;
+    },
+
+	  //鲜烟品种统计
+    analysisBreed: function(opts, cb){
+
+      // var query = {};
+
+      // Object.getOwnPropertyNames(opts).forEach(function(element, index){
+      //       if(element == 'startDate')
+      //         query.created_at = {'>=': new Date(opts[element])};
+      //       if(element == 'endDate')
+      //         query.created_at = {'<=': new Date(opts[element])};
+      //       if(element == 'code'){
+      //        query.org_name = new RegExp(opts[element]);
+      //       }else query[element] = opts[element];
+      // }); 
 
       Breed.native(function(err, collection){
         if(err) return cb(err);
 
-        sails.log(query);
           collection.group(
               {room: 1, tobacco_no: 1, org_name: 1},
-              query,
+              createQueryParams(opts),
               {amount: 0, totalA: 0, totalB: 0, totalC: 0, totalD:0},
               function(curr, result){
                 result.amount += curr.packing_amount
@@ -54,23 +72,23 @@ module.exports = {
     },
 
     analysisType: function(opts, cb){
-      var query = {};
-      Object.getOwnPropertyNames(opts).forEach(function(element, index){
-           if(element == 'startDate')
-              query.created_at = {'>=': new Date(opts[element])};
-            if(element == 'endDate')
-              query.created_at = {'<=': new Date(opts[element])};
-            if(element == 'code'){
-             query.org_name = new RegExp(opts[element]);
-            }else query[element] = opts[element];
-      });
+      // var query = {};
+      // Object.getOwnPropertyNames(opts).forEach(function(element, index){
+      //      if(element == 'startDate')
+      //         query.created_at = {'>=': new Date(opts[element])};
+      //       if(element == 'endDate')
+      //         query.created_at = {'<=': new Date(opts[element])};
+      //       if(element == 'code'){
+      //        query.org_name = new RegExp(opts[element]);
+      //       }else query[element] = opts[element];
+      // });
 
 
       Breed.native(function(err, collection){
         if(err) return cb(err);
         collection.group(
           {room: 1, tobacco_no: 1, org_name: 1},
-          query,
+          createQueryParams(opts),
           {amount: 0, totalA:0 , totalB: 0, totalC: 0, totalD:0, totalE: 0},
           function(curr, result){
             result.amount += curr.packing_amount
@@ -90,23 +108,23 @@ module.exports = {
 
     //干烟质量分析
     analysisDryTobacco: function(opts, cb){
-      var query = {};
-      Object.getOwnPropertyNames(opts).forEach(function(element, index){
-           if(element == 'startDate')
-              query.created_at = {'>=': new Date(opts[element])};
-            if(element == 'endDate')
-              query.created_at = {'<=': new Date(opts[element])};
-            if(element == 'code'){
-             query.org_name = new RegExp(opts[element]);
-            }else query[element] = opts[element];
-      });
+      // var query = {};
+      // Object.getOwnPropertyNames(opts).forEach(function(element, index){
+      //      if(element == 'startDate')
+      //         query.created_at = {'>=': new Date(opts[element])};
+      //       if(element == 'endDate')
+      //         query.created_at = {'<=': new Date(opts[element])};
+      //       if(element == 'code'){
+      //        query.org_name = new RegExp(opts[element]);
+      //       }else query[element] = opts[element];
+      // });
 
       Breed.native(function(err, collection){
         if(err) return cb(err);
 
         collection.group(
           {room: 1, tobacco_no: 1, org_name: 1},
-          query,
+          createQueryParams(opts),
           {amount: 0, dry: 0},
           function(curr, result){
             result.amount += curr.packing_amount;

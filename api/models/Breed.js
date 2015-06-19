@@ -16,7 +16,7 @@ module.exports = {
       tobacco_type:         {type: 'json'}
   	},
 
-	  //Class method
+	  //鲜烟品种统计
     analysisBreed: function(opts, cb){
 
       var query = {};
@@ -81,6 +81,7 @@ module.exports = {
             result.totalE += curr.tobacco_type.E
           },
           function(err, results){
+
             cb(err, results);
           }
         )

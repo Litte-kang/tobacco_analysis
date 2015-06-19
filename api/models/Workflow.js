@@ -102,8 +102,6 @@ module.exports = {
         }
     });
 
-    if(subQuery.protocol_created_at == null) delete subQuery.protocol_created_at;
-
     Tobacco.find(query).exec(function(err, stations){
 
         if(err) return cb(err);

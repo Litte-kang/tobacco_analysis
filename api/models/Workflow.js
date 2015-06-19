@@ -70,9 +70,12 @@ module.exports = {
     var query = {};
     var subQuery = {};
 
-    subQuery.protocol_created_at = {};
+    
+    var arr = Object.getOwnPropertyNames(opts);
 
-    Object.getOwnPropertyNames(opts).forEach(function(element, index){
+    if(arr.includes('startDate') || arr.includes('endDate')) subQuery.protocol_created_at = {};
+
+    arr.forEach(function(element, index){
 
         switch(element){
           case 'room_no':

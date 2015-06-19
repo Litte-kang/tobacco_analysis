@@ -54,7 +54,7 @@
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" />
+                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" placeholder="YYYY-M-D"/>
                         </div>
                       </div> 
                   </div>
@@ -62,7 +62,7 @@
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" />
+                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" placeholder="年-月-日"/>
                         </div>
                       </div> 
                   </div>
@@ -199,8 +199,6 @@
               "scrollCollapse": true,
               "scrollX": true
             });
-
-            var url = 'http://121.41.111.212:1337/workflows/manage_fresh/tobaccos?code=' + <%= code %>;
         });
 
 
@@ -240,17 +238,13 @@
             url = url.substring(0, url.lastIndexOf('&') );
           
             $.getJSON(url, function(data){
-               table.fnClearTable();
-               if(data.result !== undefined){
-                  
-                  table.api().rows.add(createTobacco(data.result)).draw();
+                table.api().clear().draw();
+                
+                if(data){
+                  table.api().rows.add(createTobacco(data)).draw();
                   showChart();
                }
-               
-                // if(data.result !== undefined)
-                //   showChart();
-               
-               
+
             });
 
         });

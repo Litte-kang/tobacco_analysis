@@ -15,7 +15,7 @@ module.exports = {
   },
 
   getFreshTobaccos: function(req, res){
-  
+    var result = null;
     var opts = {};
     Object.getOwnPropertyNames(req.query).forEach(function(element, index){
         opts[element] = req.query[element];
@@ -23,9 +23,8 @@ module.exports = {
 
     Workflow.integrateToStation(opts, function(err, tobaccos){
       if(err) res.negotiate(err);
-      sails.log(tobaccos == null);
-
-      return res.send({result: tobaccos});
+      result = tobaccos;
+      return res.send(result);
     })
   },
 
@@ -39,7 +38,6 @@ module.exports = {
     Breed.analysisBreed(opts, function(err, result){
       if(err) res.negotiate(err);
       return res.send(result);
-      //res.view('workflow/fresh_tobacco/breeds', {results: results, fullName: req.session.fullName});
     })
   },
 
@@ -52,7 +50,6 @@ module.exports = {
     Breed.analysisType(opts, function(err, result){
       if(err) res.negotiate(err);
       return res.send(result);
-      //res.view('workflow/fresh_tobacco/fresh_type', {results: results, fullName: req.session.fullName});
     })
   },
 
@@ -64,7 +61,6 @@ module.exports = {
 
     Packing.analysisPacking(opts, function(err, result){
       if(err) res.negotiate(err);
-      //res.view('workflow/fresh_tobacco/packings', {results: results, fullName: req.session.fullName});
       res.send(result);
     })
   },

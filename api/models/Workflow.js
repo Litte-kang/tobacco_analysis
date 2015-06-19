@@ -65,7 +65,7 @@ module.exports = {
   },
 
   integrateToStation: function(opts, cb){
-
+    var result = null;
     var query = {};
     var subQuery = {};
     Object.getOwnPropertyNames(opts).forEach(function(element, index){
@@ -81,10 +81,10 @@ module.exports = {
             break;
 
           case 'startDate':
-            subQuery.protocol_created_at = {'>=' : opts[element]};
+            subQuery.protocol_created_at = {'>=' : new Date(opts[element])};
             break;
           case 'endDate':
-            subQuery.protocol_created_at = {'<=' : opts[element]};
+            subQuery.protocol_created_at = {'<=' : new Date(opts[element])};
             break;
 
           case 'fresh_tobacco.breed':
@@ -98,11 +98,10 @@ module.exports = {
 
         if(err) return cb(err);
         if(stations.length > 0){
-
             sails.log(subQuery);
             Workflow.find(subQuery).exec(function(err, workflows){
                 if(err) return cb(err);
-                sails.log(workflows);
+                
                 for(var i = 0; i < workflows.length; i++){
                     var workflow = workflows[i];
                     
@@ -119,8 +118,8 @@ module.exports = {
                       }
                     }
                 }
-                
-                return cb(null, workflows);
+                result = workflows;
+                return cb(null, result);
             });
         }
 

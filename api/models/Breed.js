@@ -1,3 +1,5 @@
+var helper = require('helper');
+
 module.exports = {
   connection: 'innotek_tobacco',
   tableName: 'analysis_fresh_breed',
@@ -16,28 +18,9 @@ module.exports = {
       tobacco_type:         {type: 'json'}
   	},
 
-    createQueryParams: function(opts){
-      var query = {};
-      var params = Object.getOwnPropertyNames(opts);
-      if(params.indexOf('startDate') >= 0 || params.indexOf('endDate') >= 0) 
-        query.created_at = {};
-
-      params.forEach(function(element, index){
-            if(element == 'startDate')
-              query.created_at['>='] = new Date(opts[element]);
-            if(element == 'endDate')
-              query.created_at['<='] = new Date(opts[element]);
-            if(element == 'code'){
-             query.org_name = new RegExp(opts[element]);
-            }else query[element] = opts[element];
-      });
-
-      return query;
-    },
-
 	  //鲜烟品种统计
     analysisBreed: function(opts, cb){
-      var query = createQueryParams(opts);
+      var query = helper.createQueryParams(opts);
       // var query = {};
 
       // Object.getOwnPropertyNames(opts).forEach(function(element, index){
@@ -72,7 +55,7 @@ module.exports = {
     },
 
     analysisType: function(opts, cb){
-       var query = createQueryParams(opts);
+       var query = helper.createQueryParams(opts);
       // var query = {};
       // Object.getOwnPropertyNames(opts).forEach(function(element, index){
       //      if(element == 'startDate')
@@ -109,7 +92,7 @@ module.exports = {
 
     //干烟质量分析
     analysisDryTobacco: function(opts, cb){
-       var query = createQueryParams(opts);
+       var query = helper.createQueryParams(opts);
       // var query = {};
       // Object.getOwnPropertyNames(opts).forEach(function(element, index){
       //      if(element == 'startDate')

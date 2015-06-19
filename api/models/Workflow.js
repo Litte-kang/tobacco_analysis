@@ -73,7 +73,7 @@ module.exports = {
     
     var arr = Object.getOwnPropertyNames(opts);
 
-    if(arr.includes('startDate') || arr.includes('endDate')) subQuery.protocol_created_at = {};
+    if(arr.indexOf('startDate') >=0 || arr.indexOf('endDate') >= 0 ) subQuery.protocol_created_at = {};
 
     arr.forEach(function(element, index){
 

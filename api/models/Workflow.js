@@ -71,7 +71,7 @@ module.exports = {
     var subQuery = {};
 
     subQuery.protocol_created_at = {};
-    
+
     Object.getOwnPropertyNames(opts).forEach(function(element, index){
 
         switch(element){
@@ -98,6 +98,8 @@ module.exports = {
             break;
         }
     });
+
+    if(subQuery.protocol_created_at == null) delete subQuery.protocol_created_at;
 
     Tobacco.find(query).exec(function(err, stations){
 

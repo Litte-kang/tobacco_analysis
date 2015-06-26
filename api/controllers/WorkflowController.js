@@ -15,51 +15,33 @@ module.exports = {
   },
 
   getFreshTobaccos: function(req, res){
-    var result = null;
-    var opts = {};
-    Object.getOwnPropertyNames(req.query).forEach(function(element, index){
-        opts[element] = req.query[element];
-    });
-
-    Workflow.integrateToStation(opts, function(err, tobaccos){
+    Workflow.getBackups(req.query, function(err, tobaccos){
       if(err) res.negotiate(err);
-      result = tobaccos;
-      return res.send(result);
+      
+      return res.send(tobaccos);
     })
   },
 
   //Return breeds json
   analysisTobaccoBreed: function(req, res) {
-    var opts = {};
-    Object.getOwnPropertyNames(req.query).forEach(function(element, index){
-        opts[element] = req.query[element];
-    });
     
-    Breed.analysisBreed(opts, function(err, result){
+    Breed.analysisBreed(req.query, function(err, result){
       if(err) res.negotiate(err);
       return res.send(result);
     })
   },
 
   analysisTobaccoType: function(req, res){
-    var opts = {};
-    Object.getOwnPropertyNames(req.query).forEach(function(element, index){
-        opts[element] = req.query[element];
-    });
 
-    Breed.analysisType(opts, function(err, result){
+    Breed.analysisType(req.query, function(err, result){
       if(err) res.negotiate(err);
       return res.send(result);
     })
   },
 
   analysisPacking: function(req, res){
-    var opts = {};
-    Object.getOwnPropertyNames(req.query).forEach(function(element, index){
-        opts[element] = req.query[element];
-    });
 
-    Packing.analysisPacking(opts, function(err, result){
+    Packing.analysisPacking(req.query, function(err, result){
       if(err) res.negotiate(err);
       res.send(result);
     })
@@ -67,27 +49,18 @@ module.exports = {
 
   //干烟质量分析
   analysisDryTobacco: function(req, res){
-    var opts = {};
-    Object.getOwnPropertyNames(req.query).forEach(function(element, index){
-        opts[element] = req.query[element];
-    });
 
-    Breed.analysisDryTobacco(opts, function(err, result){
+    Breed.analysisDryTobacco(req.query, function(err, result){
       if(err) res.negotiate(err);
       res.send(result);
     })
   },
 
   findBakingHistory: function(req, res){
-    var opts = {};
-    Object.getOwnPropertyNames(req.query).forEach(function(element, index){
-        opts[element] = req.query[element];
-    });
 
-    Baking.findBakingHistory(opts, function(err, result){
+    Baking.findBakingHistory(req.query, function(err, result){
       if(err) res.negotiate(err);
-      res.send(result)
-      //res.view('workflow/dry_tobacco/index', {results: results, fullName: req.session.fullName});
+      res.view('workflow/dry_tobacco/index', {result: result, fullName: req.session.fullName, role: req.session.role});
     })
   }
 

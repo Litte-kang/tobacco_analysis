@@ -65,34 +65,81 @@ module.exports.routes = {
       action: 'index'
   },
 
-  'get /workflows' :{
-      locals: {
-        layout: 'layout',
-        title: 'Login'
-      }
-  },
+  'get /overview'                             :'DashbordController.overview',
 
-  /*
-    显示 View
-  */
-  'get /cities/:id'                            :'CityController.show',
-  'get /cities/:id/breeds'                     :'CityController.breeds',
-  'get /cities/:id/types'                      :'CityController.types',
-  'get /cities/:id/dries'                      :'CityController.dries',
-  'get /cities/:id/bakingHistory'              :'CityController.bakingHistory',
-  'get /cities/:id/packings'                   :'CityController.packings',
-  'get /cities/:id/alarms'                     :'CityController.alarms',
+  //鲜烟成熟度分析返回 view
+  'get /fresh_analysis'                       :'FreshAnalysisController.index',
+  //鲜烟成熟度分析统计返回 json
+  'get /fresh_analysis/maturity/summery'      :'FreshAnalysisController.maturitySummery' ,    
+  //鲜烟成熟度明细返回 json 
+  'get /workflows/manage_fresh/tobaccos'      :'WorkflowController.getFreshTobaccos',
+
+
+  //鲜烟品牌分析返回 view
+  'get /fresh_analysis/breeds'                :'FreshAnalysisController.breedsAnalysis', 
+  //鲜烟品牌分析返回 json
+  'get /fresh_analysis/breeds/summery'        :'FreshAnalysisController.breedsSummery',
+  //鲜烟品牌分析明细 返回json                    
+  'get /workflows/fresh_tobacco/breeds'       :'WorkflowController.analysisTobaccoBreed',
+
+
+  //鲜烟类型分析返回 view
+  'get /fresh_analysis/types'                 :'FreshAnalysisController.typesAnalysis',
+  //鲜烟类型分析统计返回 json
+  'get /fresh_analysis/types/summery'         :'FreshAnalysisController.typesSummery',
+  //鲜烟类型分析明细返回 json
+  'get /workflows/fresh_tobacco/fresh_type'   :'WorkflowController.analysisTobaccoType',
+
+
+  //干烟质量分析返回 view
+  'get /dry_tobacco'                          :'FreshAnalysisController.dryTobacco',
+  //干烟质量分析统计 JSON
+  'get /dry_tobacco/summery'                  :'FreshAnalysisController.dryTobaccoSummery',
+  //干烟质量分析明细 JSON
+  'get /workflows/dries'                      :'WorkflowController.analysisDryTobacco',
+
+
+  //装烟情况统计 view
+  'get /fresh_tobacco/packings'               :'FreshAnalysisController.packings',
+  //装烟情况统计 json
+  'get /workflows/fresh_tobacco/packings'     :'WorkflowController.analysisPacking',
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //Place options
+  'get /counties/:id':                         'CountyController.show',
+  'get /counties/:id/towns':                   'CountyController.getTowns',
+  'get /towns/:id/stations':                   'CountyController.getStationsByTown',
+
+  'get /cities/:id'                            :'CityController.getCounties',
+
 
   //Analysis json
-  'get /workflows/manage_fresh'                :'WorkflowController.index',
-  'get /workflows/manage_fresh/tobaccos'       :'WorkflowController.getFreshTobaccos',
   
-  'get /workflows/fresh_tobacco/breeds'        :'WorkflowController.analysisTobaccoBreed',
-  'get /workflows/fresh_tobacco/fresh_type'    :'WorkflowController.analysisTobaccoType',
-  'get /workflows/fresh_tobacco/packings'      :'WorkflowController.analysisPacking',
+
+  'get /workflows/manage_fresh'                :'WorkflowController.index',
+  
+  
+  
+  
+
   'get /workflows/baking_history'              :'WorkflowController.findBakingHistory',
 
-  'get /workflows/dries'                       :'WorkflowController.analysisDryTobacco',
+  
   //Monitor
   'get /alarms'          :        'MonitorController.index',
   'get /alarms/:roomNo'  :        'MonitorController.alarms',

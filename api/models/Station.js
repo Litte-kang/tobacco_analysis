@@ -14,6 +14,12 @@ module.exports = {
         model: 'town'
       }
 
+  },
+
+  getStationsByTown: function(townId, cb){
+    Station.find({code: {'startsWith': townId}}).exec(function(err, stations){
+      cb(err, stations);
+    })
   }
 
 };

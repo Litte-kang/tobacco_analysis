@@ -11,6 +11,7 @@ module.exports = {
       room_no:            {type: 'string'},
       tobacco_no:         {type: 'string'},
       org_name:           {type: 'string'},
+      county:             {type: 'string'},
   	  address:            {type: 'string'},
       middleware:         {type: 'string'},
   	  arbitrate:          {type: 'json'},
@@ -64,76 +65,47 @@ module.exports = {
 
   },
 
-  integrateToStation: function(opts, cb){
+  getBackups: function(opts, cb){
+      var query = {};
+     
+      var arr = Object.getOwnPropertyNames(opts);
 
-    var result = null;
-    var query = {};
-    var subQuery = {};
+      if(arr.indexOf('startDate') >= 0 || arr.indexOf('endDate') >= 0 )
+        query.protocol_created_at = {};
 
-    var arr = Object.getOwnPropertyNames(opts);
+      arr.forEach(function(element, index){
 
-    if(arr.indexOf('startDate') >=0 || arr.indexOf('endDate') >= 0 )
-      subQuery.protocol_created_at = {};
+          switch(element){
+            case 'room_no':
+            case 'tobacco_no':
+              query[element] = opts[element];
+              break;
 
-    arr.forEach(function(element, index){
+            case 'code':
+              query.middleware = {'startsWith': opts[element]};
 
-        switch(element){
-          case 'room_no':
-          case 'tobacco_no':
-            query[element] = opts[element];
-            break;
+              break;
 
-          case 'code':
-            query.middleware = {'startsWith': opts[element]};
-            subQuery.middleware ={'startsWith': opts[element]};
-            break;
+            case 'startDate':
+              query.protocol_created_at['>='] = new Date(opts[element]);
+              break;
+            case 'endDate':
+              query.protocol_created_at['<='] = new Date(opts[element]);
+              break;
 
-          case 'startDate':
-            subQuery.protocol_created_at['>='] = new Date(opts[element]);
-            break;
-          case 'endDate':
-            subQuery.protocol_created_at['<='] = new Date(opts[element]);
-            break;
-
-          case 'fresh_tobacco.breed':
-          case 'fresh_tobacco.part':
-            subQuery[element] = opts[element];
-            break;
-        }
-    });
-
-    Tobacco.find(query).exec(function(err, stations){
-
-        if(err) return cb(err);
-        if(stations.length > 0){
-            sails.log(subQuery);
-            Workflow.find(subQuery).exec(function(err, workflows){
-                if(err) return cb(err);
-                
-                for(var i = 0; i < workflows.length; i++){
-                    var workflow = workflows[i];
-                    
-                    for(var j = 0; j < stations.length; j++){
-                        
-                      if(workflow.middleware.localeCompare(stations[j].middleware) == 0
-                                && workflow.address.localeCompare(stations[j].aca) == 0){
-
-                          workflow.room_no = stations[j].room_no;
-                          workflow.org_name = stations[j].name;
-                          workflow.tobacco_no = stations[j].tobacco_no;
-
-                          break;
-                      }
-                    }
-                }
-                result = workflows;
-                return cb(null, result);
-            });
-        }
-
-      }
-    )
+            case 'fresh_tobacco.breed':
+            case 'fresh_tobacco.part':
+              query[element] = opts[element];
+              break;
+          }
+      });
+        
+      Workflow.find(query).exec(function(err, result){
+        cb(err, result);
+      })
   }
+
+
 };
 
 

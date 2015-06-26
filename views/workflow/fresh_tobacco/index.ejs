@@ -1,55 +1,71 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
+            <li><a href="/dashbord">烘烤总览</a></li>
             <li class="active"><a href="#">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
-            <li><a href="/cities/<%= code %>/packings">装烟情况统计</a></li>
-            <li><a href="/cities/<%= code %>/bakingHistory">烘烤量统计</a></li>
+            <li><a href="/fresh_tobacco/packings">装烟情况统计</a></li>
+            <li><a href="">烘烤量统计</a></li>
             <li><a href="#">烤房使用情况统计</a></li>
-            <li><a href="/cities/<%= code %>/alarms">烤房远程监管</a></li>
+            <li><a href="">烤房远程监管</a></li>
           </ul>          
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header"><%= place %></h1>
           <div class="row placeholders">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div role="tabpanel">
-
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" class="active"><a href="#" aria-controls="home" role="tab" data-toggle="link">鲜烟成熟度分析</a></li>
-              <li role="presentation"><a href="/cities/<%= code %>/breeds" aria-controls="profile" role="tab" data-toggle="link">鲜烟品种统计</a></li>
-              <li role="presentation"><a href="/cities/<%= code %>/types" aria-controls="messages" role="tab" data-toggle="link">鲜烟类型分析</a></li>
-              <li role="presentation"><a href="/cities/<%= code %>/dries" aria-controls="settings" role="tab" data-toggle="link">干烟质量分析</a></li>
-            </ul>
-
-            <!-- Tab panes -->
-            <div class="tab-content">
-              <div role="tabpanel" class="tab-pane active" id="home">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" class="active"><a href="#" aria-controls="home" role="tab" data-toggle="link">鲜烟成熟度分析</a></li>
+                  <li role="presentation"><a href="/fresh_analysis/breeds" aria-controls="profile" role="tab" data-toggle="link">鲜烟品种统计</a></li>
+                  <li role="presentation"><a href="/fresh_analysis/types" aria-controls="messages" role="tab" data-toggle="link">鲜烟类型分析</a></li>
+                  <li role="presentation"><a href="/dry_tobacco" aria-controls="settings" role="tab" data-toggle="link">干烟质量分析</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>         
+         
+          <h4 class="sub-header" style="text-align:center">烘烤鲜烟成熟度统计</h4>
+          <h6 style="text-align:center">单位：公斤</h6>
+          <div class="table-responsive">
+            <table id="fresh-sum" class="display compact" cellpadding="0" width="100%">
+              <thead>
+                <tr>
+                  <th rowspan="2">地区</th>
+                  <th rowspan="2">鲜烟总量</th>
+                  <th colspan="3">成熟度</th>
+                </tr>
+                <tr>
+                  <th>正常烟叶</th>
+                  <th>欠熟烟叶</th>
+                  <th>过熟烟叶</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <br />
                 <div class="row">
-                  <div class="col-xs-6 col-sm-4">
-                    <div class="radio">
-                      <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked> 按烤房统计
-                      </label>
-                      <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 按大户统计
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-xs-2">
+                  <div class="col-xs-2" id="counties">
                     <select id="place" class="form form-control">
-                      <option value="">选择地区</option>
-                      <option value="431129">江华县</option>
-                      <option value="431124">宁远县</option>
-                      <option value="431125">江永县</option>
-                      <option value="431127">蓝山县</option>
-                      <option value="431122">东安县</option>
-                      <option value="431130">双牌县</option>
-                      <option value="431124">道县</option>
+                      <option value="">选择县</option>
+                      <%_.each(place.counties, function(county){%>
+                        <option value="<%= county.id %>"> <%= county.name %></option>
+                      <% }) %>
                     </select>
                   </div>
-                  <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
+                  <div class="col-xs-2" id="towns" style="display: none">
+                    <select id="town" class="form form-control">
+                    </select>
+                  </div>
+                  <div class="col-xs-2" id="stations" style="display: none">
+                    <select id="station" class="form form-control">
+                    </select>
+                  </div>
+                    <a href="javascript:void(0)" id="advance-search-link">高级搜索</a>
+                </div>
+                <div id="search-advance" style="display: none">
+                   <div class="row">
+                  <div class="col-xs-2">
+                    <input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号">
+                  </div>
                   <div class="col-xs-3">
                       <div class="form-group">
                         <div class="input-group">
@@ -69,6 +85,9 @@
                 </div>
                 <div class="row">
                   <div class="col-xs-2">
+                      <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
+                  </div>
+                  <div class="col-xs-2">
                     <select id="tobaccoBreed" class="form form-control">
                         <option value="">选择鲜烟品种</option>
                         <option value="云烟87">云烟87</option>
@@ -78,10 +97,7 @@
                         
                       </select>
                     </div>
-                   <div class="col-xs-2">
-                  <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
 
-                   </div>
                   <div class="col-xs-2">
                       <select id="tobaccoPart" class="form form-control">
                         <option value="">选择烟叶部位</option>
@@ -89,27 +105,21 @@
                         <option value="中部叶">中部叶</option>
                         <option value="下部叶">下部叶</option>
                       </select>
-                   
                   </div>
+                  
+                </div>
+                </div>
+                <div class="row">
                   <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
                   <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
                 </div>
-              </div>
-              <div role="tabpanel" class="tab-pane" id="profile">...</div>
-              <div role="tabpanel" class="tab-pane" id="messages">...</div>
-              <div role="tabpanel" class="tab-pane" id="settings">...</div>
-            </div>
-        </div>
-            </div>
-          </div>
-
            <div class="row">
             <div id="chartContainer" style="height: 300px; width: 100%; display: none"></div>
           </div>
-          <h4 class="sub-header" style="text-align:center">烘烤鲜烟成熟度查询表</h4>
+          <h4 class="sub-header" style="text-align:center">烘烤鲜烟成熟度明细表</h4>
           <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
-            <table id="fresh_table" class="display" cellspacing="0" width="100%">
+            <table id="fresh_table" class="display compact" cellspacing="0" width="100%">
               <thead>
                 <tr>
                   <th rowspan="2">烤房编号</th>
@@ -144,169 +154,277 @@
         </div>
       </div>
 
-      <script type="text/javascript">
-        var table;
+<script type="text/javascript">
+  var summerayTable;
+  var detailTable;
 
-        function createTobacco(arr){
-            var freshTobaccos = [];
-            
+  var advanceDisplay = false;
+  var stateParam = <%= place.code %>;
 
-            arr.forEach(function(element, index, arr){
-              var tobacco = [];
-              var count = 1;
-              var amount_weight = parseFloat(element.packing.average_weight) *
-                                  parseInt(element.packing.packing_amount) / 2;
+  $(document).ready(function(){
+      detailTable = $('#fresh_table').dataTable({
+        "scrollCollapse": true,
+        'searching': false
+      });
 
-              tobacco.push(element.room_no);
-              tobacco.push(element.tobacco_no);
-              tobacco.push(amount_weight.toFixed(2));
+      summerayTable = $('#fresh-sum').dataTable({
+        "scrollCollapse": true,
+        "paging": false,
+        "ordering": false,
+        'searching': false,
+        columns: [
+          { data: 'county' },
+          { data: 'amount' },
+          { data: 'totalA' },
+          { data: 'totalB' },
+          { data: 'totalC' }
+        ]
 
-              //统计坎数
-              freshTobaccos.forEach(function(ele, index, freshTobaccos){
-                  if(ele[1] == element.tobacco_no)
-                    count ++;
-              });
-              tobacco.push(count);
+      });
 
-              tobacco.push(element.fresh_tobacco.breed);
-              tobacco.push(element.fresh_tobacco.part);
-              tobacco.push(element.fresh_tobacco.tobacco_type);
-              tobacco.push(element.fresh_tobacco.quality);
+      initAdvanceSearchLink();
+      initSearchButton('/workflows/manage_fresh/tobaccos?');
+      initDataForStatistics();
+      initLinkedSelect();
 
-              var maturities = element.fresh_tobacco.maturity.split('/');
-              maturities.forEach(function(m, i, maturities){
-                tobacco.push((parseFloat(m) / 100 * amount_weight).toFixed(2));
-              });
+      
+  }); 
 
-              var files = element.fresh_tobacco.filename;
-              var paths = '';
-              files.forEach(function(file, index, files){
-                  paths += '<a href="/images/photos/'+ file +'" target="_blank"><img src="/images/photos.jpg" width="20" height="20" /></a>'
-              });
-              tobacco.push(paths);
+  function setStateParam(state){
+    stateParam = state;
+  }
 
-              tobacco.push(element.protocol.yi);
-              tobacco.push(element.protocol.UID);
-              tobacco.push(element.protocol_created_at.slice(0,element.protocol_created_at.indexOf('T')));
-              freshTobaccos.push(tobacco);
+  function initAdvanceSearchLink(){
+    $('#advance-search-link').on('click', function(){
+      if(advanceDisplay)
+        $('#search-advance').hide();
+      else
+        $('#search-advance').show();
 
-            });
-            return freshTobaccos;
-        };
+      advanceDisplay = !advanceDisplay;
+    });
+  }
 
-        $(document).ready(function(){
-            table = $('#fresh_table').dataTable({
-              "scrollCollapse": true,
-              "scrollX": true
-            });
-        });
+  function initLinkedSelect(){
+    $('#place').on('change', function(){
+        var county = $('#place').val();
+        setStateParam(county);
 
-
-        $('#searchButton').on('click', function(){
-            var roomNo = $('#roomNo').val();
-            var tobaccoNo = $('#tobaccoNo').val();
-            var tobaccoBreed = $('#tobaccoBreed').val();
-            var tobaccoPart = $('#tobaccoPart').val();
-           
-            var place = $('#place').val();
-            var protocolStartDate = $('#protocolStartDate').val();
-            var protocolEndDate = $('#protocolEndDate').val();
-
-            var url = 'http://121.41.111.212:1337/workflows/manage_fresh/tobaccos?';
-
-            
-            if(roomNo != '')
-              url += 'room_no=' + roomNo + '&'  
-            if(tobaccoNo != '')
-              url += 'tobacco_no=' + tobaccoNo + '&';
-              
-            if(tobaccoBreed != '')
-              url += 'fresh_tobacco.breed=' + tobaccoBreed + '&';
+        $.getJSON('/counties/' + county + '/towns', function(data){
           
-            if(tobaccoPart != '')
-              url += 'fresh_tobacco.part=' + tobaccoPart + '&';
-           
-            if(place != '')
-              url += 'code=' + place + '&';
-           
-            if(protocolStartDate != '')
-              url += 'startDate=' + protocolStartDate + '&';
-
-            if(protocolEndDate != '')
-              url += 'endDate=' + protocolEndDate + '&';
-
-            url = url.substring(0, url.lastIndexOf('&') );
-          
-            $.getJSON(url, function(data){
-                table.api().clear().draw();
-                
-                if(data){
-                  table.api().rows.add(createTobacco(data)).draw();
-                  showChart();
-               }
-
+          if(data.length > 0){
+            var options = '<option value="">选择镇</option>';
+            data.forEach(function(town, index){
+              options += '<option value="'+ town.id +'">' + town.name + '</option>';
             });
-
+            $(options).appendTo($('#town'));
+            $('#towns').show();
+          }
         });
+    });
 
-        function createChartDatasets(){
-            var normal = 0;
-            table.api().columns(8).data().reduce(function(a, b){
-                  return a + b;
-              }).forEach(function(value , index){
-                normal += parseFloat(value);
+    $('#town').on('change', function(){
+        var town = $('#town').val();
+        setStateParam(town);
+
+        $.getJSON('/towns/' + town + '/stations', function(data){
+          if(data.length > 0){
+              console.log(data);
+              var options = '<option value="">选择工场</option>';
+              data.forEach(function(station, index){
+                options += '<option value="' + station.middlewares + '">' + station.name + '</option>';
               });
+              $(options).appendTo($('#station'));
+              $('#stations').show();
+          }
+        })
+      });
 
-            var guoshu = 0;
-            table.api().columns(9).data().reduce(function(a, b){
-                  return a + b;
-              }).forEach(function(value , index){
-                guoshu += parseFloat(value);
-              });
+    $('#station').on('change', function(){
+        setStateParam($('#station').val());
+    });
+  }
 
-            var qianshu = 0;
-            table.api().columns(10).data().reduce(function(a, b){
-                  return a + b;
-              }).forEach(function(value , index){
-                qianshu += parseFloat(value);
-              });
+  function initSearchButton(url){
+    $('#searchButton').on('click', function(){
 
-            var datasets = [];
-            datasets.push({
-              y: normal, indexLabel: '正常烟叶'
-            });
-            datasets.push({
-              y: guoshu, indexLabel: '过熟烟叶'
-            });
-            datasets.push({
-              y: qianshu, indexLabel: '欠熟烟叶'
-            })
-            
-            return datasets;
+      var roomNo = $('#roomNo').val();
+      var tobaccoNo = $('#tobaccoNo').val();
+      var tobaccoBreed = $('#tobaccoBreed').val();
+      var tobaccoPart = $('#tobaccoPart').val();
+     
+      var protocolStartDate = $('#protocolStartDate').val();
+      var protocolEndDate = $('#protocolEndDate').val();
+      
+      if(roomNo != '')
+        url += 'room_no=' + roomNo + '&'  
+      if(tobaccoNo != '')
+        url += 'tobacco_no=' + tobaccoNo + '&';
+        
+      if(tobaccoBreed != '')
+        url += 'fresh_tobacco.breed=' + tobaccoBreed + '&';
+    
+      if(tobaccoPart != '')
+        url += 'fresh_tobacco.part=' + tobaccoPart + '&';
+     
+      if(stateParam != '')
+        url += 'code=' + stateParam + '&';
+     
+      if(protocolStartDate != '')
+        url += 'startDate=' + protocolStartDate + '&';
+
+      if(protocolEndDate != '')
+        url += 'endDate=' + protocolEndDate + '&';
+
+      url = url.substring(0, url.lastIndexOf('&') );
+      console.log(url);
+      $.getJSON(url, function(data){
+          
+          detailTable.api().clear().draw();
+          
+          if(data){
+            detailTable.api().rows.add(analysisMaturityResult(data)).draw();
+            showChart();
+         }
+
+      });
+    });
+  }
+
+  //private methods
+  function initDataForStatistics(){
+    $.getJSON('/fresh_analysis/maturity/summery?code=' + stateParam, function(data){
+
+      if(data.length > 0){
+       
+        summerayTable.api().clear().draw();    
+        summerayTable.api().rows.add(data).draw();
+
+        // var chart = new CanvasJS.Chart("sumChartContainer",
+        //   {
+        //     legend: {
+        //       maxWidth: 350,
+        //       itemWidth: 120
+        //     },
+        //     data: [
+        //       {
+        //         type: "pie",
+        //         showInLegend: true,
+        //         legendText: "{indexLabel}",
+        //         toolTipContent: "{y} - #percent %",
+        //         dataPoints: datasets
+        //       }
+        //     ]
+        //   });
+        // chart.render();
+        // $('#sumChartContainer').show();
+      }   
+    });
+  }
+
+  function createChartDatasets(){
+    var normal = 0;
+    detailTable.api().columns(8).data().reduce(function(a, b){
+          return a + b;
+      }).forEach(function(value , index){
+        normal += parseFloat(value);
+      });
+
+    var guoshu = 0;
+    detailTable.api().columns(9).data().reduce(function(a, b){
+          return a + b;
+      }).forEach(function(value , index){
+        guoshu += parseFloat(value);
+      });
+
+    var qianshu = 0;
+    detailTable.api().columns(10).data().reduce(function(a, b){
+          return a + b;
+      }).forEach(function(value , index){
+        qianshu += parseFloat(value);
+      });
+
+    var datasets = [];
+    datasets.push({
+      y: normal, indexLabel: '正常烟叶'
+    });
+    datasets.push({
+      y: guoshu, indexLabel: '过熟烟叶'
+    });
+    datasets.push({
+      y: qianshu, indexLabel: '欠熟烟叶'
+    })
+    
+    return datasets;
+  } 
+
+  function showChart(){
+    var datasets = createChartDatasets();
+
+    $('#chartContainer').show();
+    var chart = new CanvasJS.Chart("chartContainer",
+      {
+        
+        legend: {
+          maxWidth: 350,
+          itemWidth: 120
+        },
+        data: [
+        {
+          type: "pie",
+          showInLegend: true,
+          legendText: "{indexLabel}",
+          toolTipContent: "{y} - #percent %",
+          dataPoints: datasets
         }
+        ]
+      });
+      chart.render();
+  }
 
-        function showChart(){
-          var datasets = createChartDatasets();
+  function analysisMaturityResult(arr){
+    var freshTobaccos = [];
 
-          $('#chartContainer').show();
-          var chart = new CanvasJS.Chart("chartContainer",
-            {
-              
-              legend: {
-                maxWidth: 350,
-                itemWidth: 120
-              },
-              data: [
-              {
-                type: "pie",
-                showInLegend: true,
-                legendText: "{indexLabel}",
-                toolTipContent: "{y} - #percent %",
-                dataPoints: datasets
-              }
-              ]
-            });
-            chart.render();
-        }
+    arr.forEach(function(element, index, arr){
+      var tobacco = [];
+      var count = 1;
+      var amount_weight = parseFloat(element.packing.average_weight) *
+                          parseInt(element.packing.packing_amount) / 2;
 
-      </script>
+      tobacco.push(element.room_no);
+      tobacco.push(element.tobacco_no);
+      tobacco.push(amount_weight.toFixed(2));
+
+      //统计坎数
+      freshTobaccos.forEach(function(ele, index, freshTobaccos){
+          if(ele[1] == element.tobacco_no)
+            count ++;
+      });
+      tobacco.push(count);
+
+      tobacco.push(element.fresh_tobacco.breed);
+      tobacco.push(element.fresh_tobacco.part);
+      tobacco.push(element.fresh_tobacco.tobacco_type);
+      tobacco.push(element.fresh_tobacco.quality);
+
+      var maturities = element.fresh_tobacco.maturity.split('/');
+      maturities.forEach(function(m, i, maturities){
+        tobacco.push((parseFloat(m) / 100 * amount_weight).toFixed(2));
+      });
+
+      var files = element.fresh_tobacco.filename;
+      var paths = '';
+      files.forEach(function(file, index, files){
+          paths += '<a href="/images/photos/'+ file +'" target="_blank"><img src="/images/photos.jpg" width="20" height="20" /></a>'
+      });
+      tobacco.push(paths);
+
+      tobacco.push(element.protocol.yi);
+      tobacco.push(element.protocol.UID);
+      tobacco.push(element.protocol_created_at.slice(0,element.protocol_created_at.indexOf('T')));
+      freshTobaccos.push(tobacco);
+
+    });
+    return freshTobaccos;
+  } 
+</script>

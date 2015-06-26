@@ -1,14 +1,15 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="/cities/4311">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
-            <li><a href="/cities/4311/packings">装烟情况统计</a></li>
-            <li><a href="/cities/4311/bakingHistory">烘烤量统计</a></li>
+            <li><a href="/dashbord">烘烤总览</a></li>
+            <li ><a href="/fresh_tobacco">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
+            <li><a href="/fresh_tobacco/packings">装烟情况统计</a></li>
+            <li class="active"><a href="#">烘烤量统计</a></li>
             <li><a href="#">烤房使用情况统计</a></li>
-            <li><a href="/cities/4311/alarms">烤房远程监管</a></li>
-          </ul>         
+            <li><a href="">烤房远程监管</a></li>
+          </ul>        
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header"><%= place %></h1>
+         
           
           <div class="row placeholders">
             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -25,28 +26,9 @@
             <div class="tab-content">
               <div role="tabpanel" class="tab-pane active" id="home">
                 <div class="row">
-                  <div class="col-xs-6 col-sm-4">
-                    <div class="radio">
-                      <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 按烤房统计
-                      </label>
-                      <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 按大户统计
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
                   <div class="col-xs-2">
                     <select id="place" class="form form-control">
-                      <option value="">选择地区</option>
-                      <option value="江华县">江华县</option>
-                      <option value="宁远县">宁远县</option>
-                      <option value="江永县">江永县</option>
-                      <option value="蓝山县">蓝山县</option>
-                      <option value="东安县">东安县</option>
-                      <option value="双牌县">双牌县</option>
-                      <option value="道县">道县</option>
+                      <option value="">选择县</option>
                     </select>
                   </div>
                   <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
@@ -120,76 +102,125 @@
           </div>
         </div>
       </div>
-      <script type="text/javascript">
-        var table;
-          $(document).ready(function() {
-            table = $('#example').dataTable( {
-              "scrollY": 200,
-              "scrollX": true
-            });
-          });
+<script type="text/javascript">
+  var table; 
+  var advanceDisplay = false;
+  var stateParam = <%= role %>;
 
-          $('#searchButton').on('click', function(){
-            var roomNo = $('#roomNo').val();
-            var tobaccoNo = $('#tobaccoNo').val();
+  $(document).ready(function() {
+    table = $('#example').dataTable( {
+      "scrollY": 200,
+      "scrollX": true
+    });
 
-            var place = $('#place').val();
-            var protocolStartDate = $('#protocolStartDate').val();
-            var protocolEndDate = $('#protocolEndDate').val();
+    //initSearchButton('/workflows/fresh_tobacco/breeds?');
+    initLinkedSelect();
+    initAdvanceSearchLink();
+  });
 
-            var url = 'http://121.41.111.212:1337/workflows/baking_history?';
+  function setStateParam(state){
+      stateParam = state;
+  }
 
-            if(roomNo != '')
-              url += 'room_no=' + roomNo + '&';
+  function initAdvanceSearchLink(){
+    $('#advance-search-link').on('click', function(){
+      if(advanceDisplay)
+        $('#search-advance').hide();
+      else
+        $('#search-advance').show();
 
-            if(tobaccoNo != '')
-              url += 'tobacco_no=' + tobaccoNo + '&';
-           
-            if(place != '')
-              url += 'code=' + place + '&';
-           
-            if(protocolStartDate != '')
-              url += 'startDate=' + protocolStartDate + '&';
+      advanceDisplay = !advanceDisplay;
+    });
+  }
 
-            if(protocolEndDate != '')
-              url += 'endDate=' + protocolEndDate + '&';
+  function initLinkedSelect(){
+    var cityId = <%= role %>;
+    $.getJSON('/cities/' + cityId, function(data){
+      if(data){
+        console.log(data);
+        var options = '';
+        data.forEach(function(county, index){
+          options += '<option value="' +county.id +'">' + county.name + '</option>';
+        });
+        $(options).appendTo($('#place'));
+      }
+    });
 
-            url = url.substring(0, url.lastIndexOf('&'));
+    $('#place').on('change', function(){
+        var county = $('#place').val();
+        setStateParam(county);
+
+        $.getJSON('/counties/' + county + '/towns', function(data){
           
-            $.getJSON(url, function(data){
-               table.api().clear().draw();
-               if(data){
-                  table.api().rows.add(createTobacco(data)).draw();
-               }
+          if(data.length > 0){
+            var options = '<option value="">选择镇</option>';
+            data.forEach(function(town, index){
+              options += '<option value="'+ town.id +'">' + town.name + '</option>';
             });
-          });
-
-        function createTobacco(arr){
-          var datasets = [];
-          for(var i = 0; i < arr.length; i++){
-            var data = [];
-            data.room = arr[i][0].room;
-            data.tobacco_no = arr[i][0].tobacco_no;
-            data.org_name = arr[i][0].org_name;
-
-            for(var j = 0; j < 4; j++){
-              if(arr[i][j] !== undefined){
-                
-                data['start_time' + j] = arr[i][j].start_time;
-                data['fresh_tobacco' + j] = arr[i][j].fresh_weight;
-                data['dry_tobacco' + j] = arr[i][j].dry_weight;
-              }else{
-                data['start_time' + j] = '';
-                data['fresh_tobacco' + j] = '';
-                data['dry_tobacco' + j] = '';
-              }
-              
-            }
-          
-            datasets.push(data);
+            $(options).appendTo($('#town'));
+            $('#towns').show();
           }
-          console.log(datasets[0])
-          return datasets;
-        }
+        });
+    });
 
-      </script>
+    $('#town').on('change', function(){
+        var town = $('#town').val();
+        setStateParam(town);
+
+        $.getJSON('/towns/' + town + '/stations', function(data){
+          if(data.length > 0){
+              console.log(data);
+              var options = '<option value="">选择工场</option>';
+              data.forEach(function(station, index){
+                options += '<option value="' + station.middlewares + '">' + station.name + '</option>';
+              });
+              $(options).appendTo($('#station'));
+              $('#stations').show();
+          }
+        })
+      });
+
+    $('#station').on('change', function(){
+        setStateParam($('#station').val());
+    });
+  }
+
+  function initSearchButton(url){
+    $('#searchButton').on('click', function(){
+      var baseUrl = url;
+      var roomNo = $('#roomNo').val();
+      var tobaccoNo = $('#tobaccoNo').val();
+    
+      var protocolStartDate = $('#protocolStartDate').val();
+      var protocolEndDate = $('#protocolEndDate').val();
+
+      if(roomNo != '')
+        baseUrl += 'room_no=' + roomNo + '&'  
+      if(tobaccoNo != '')
+        baseUrl += 'tobacco_no=' + tobaccoNo + '&';
+     
+      if(stateParam != '')
+        baseUrl += 'code=' + stateParam + '&';
+     
+      if(protocolStartDate != '')
+        baseUrl += 'startDate=' + protocolStartDate + '&';
+
+      if(protocolEndDate != '')
+        baseUrl += 'endDate=' + protocolEndDate + '&';
+
+      baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('&') );
+      console.log(baseUrl);
+      $.getJSON(baseUrl, function(data){
+          
+          table.api().clear().draw();
+          
+          if(data){
+            table.api().rows.add(data).draw();
+            showChart();
+         }
+
+      });
+    });
+  }
+
+</script>

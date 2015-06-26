@@ -4,8 +4,10 @@ module.exports = {
   autoPK : false,
 
   attributes: {
-  	  id:       {type: 'string', primaryKey: true, unique: true, columnName: '_id'},
+  	  id:       {type: 'string', columnName: '_id', primaryKey: true},
       name:     {type: 'string'},
+      code:     {type: 'string'},
+
       belongs:  {
         model: 'state'
       },
@@ -16,16 +18,20 @@ module.exports = {
       }
   },
 
-  //Class methods
-  getCity: function(code, cb){
-      City.findOne({code: code}).exec(function(err, city){
-        cb(err, city);
+  
+  getCity: function(city, cb){
+      City.findOne({_id: city}).exec(function(err, city){
+        if(city){
+          County.find({city_id: city.id}).exec(function(err, counties){
+            city.counties = counties;
+            cb(err, city);
+          });
+        }
       })
   },
 
-  getCounties: function(city, cb){
-    sails.log('City code ' + city);
-      City.find({code: city}).populate('counties').exec(function(err, data){
+  getCounties: function(cityId, cb){
+      County.find({city_id: cityId}).exec(function(err, data){
         cb(err, data);
       })
   },

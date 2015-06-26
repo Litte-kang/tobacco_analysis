@@ -1,24 +1,24 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
+            <li><a href="/dashbord">烘烤总览</a></li>
             <li class="active"><a href="#">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
-            <li><a href="/cities/<%= code %>/packings">装烟情况统计</a></li>
-            <li><a href="/cities/<%= code %>/bakingHistory">烘烤量统计</a></li>
+            <li><a href="/fresh_tobacco/packings">装烟情况统计</a></li>
+            <li><a href="">烘烤量统计</a></li>
             <li><a href="#">烤房使用情况统计</a></li>
-            <li><a href="/cities/4311/alarms">烤房远程监管</a></li>
-          </ul>         
+            <li><a href="">烤房远程监管</a></li>
+          </ul>          
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header"><%= place %></h1>
           <div class="row placeholders">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div role="tabpanel">
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation"><a href="/cities/<%= code %>" aria-controls="home" role="tab" data-toggle="link">鲜烟成熟度分析</a></li>
+              <li role="presentation"><a href="/fresh_analysis" aria-controls="home" role="tab" data-toggle="link">鲜烟成熟度分析</a></li>
               <li role="presentation" class="active"><a href="#" aria-controls="profile" role="tab" data-toggle="link">鲜烟品种统计</a></li>
-              <li role="presentation"><a href="/cities/<%= code %>/types" aria-controls="messages" role="tab" data-toggle="link">鲜烟类型分析</a></li>
-              <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="link">干烟质量分析</a></li>
+              <li role="presentation"><a href="/fresh_analysis/types" aria-controls="messages" role="tab" data-toggle="link">鲜烟类型分析</a></li>
+              <li role="presentation"><a href="/dry_tobacco" aria-controls="settings" role="tab" data-toggle="link">干烟质量分析</a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -28,33 +28,44 @@
                   <div class="col-xs-6 col-sm-4">
                     <div class="radio">
                       <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 按烤房统计
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked> 按烤房统计
                       </label>
                       <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 按大户统计
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 按烟农统计
                       </label>
+                      
+                        <a href="javascript:void(0)" id="advance-search-link">高级搜索</a>
+                    
                     </div>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-xs-2">
+                  <div class="col-xs-2" id="counties">
                     <select id="place" class="form form-control">
-                      <option value="">选择地区</option>
-                      <option value="江华县">江华县</option>
-                      <option value="宁远县">宁远县</option>
-                      <option value="江永县">江永县</option>
-                      <option value="蓝山县">蓝山县</option>
-                      <option value="东安县">东安县</option>
-                      <option value="双牌县">双牌县</option>
-                      <option value="道县">道县</option>
+                      <option value="">选择县</option>
+
                     </select>
                   </div>
-                  <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
+                  <div class="col-xs-2" id="towns" style="display: none">
+                    <select id="town" class="form form-control">
+                    </select>
+                  </div>
+                  <div class="col-xs-2" id="stations" style="display: none">
+                    <select id="station" class="form form-control">
+                    </select>
+                  </div>
+
+                </div>
+                <div id="search-advance" style="display: none">
+                   <div class="row">
+                  <div class="col-xs-2">
+                    <input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号">
+                  </div>
                   <div class="col-xs-3">
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" />
+                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" placeholder="YYYY-M-D"/>
                         </div>
                       </div> 
                   </div>
@@ -62,27 +73,43 @@
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" />
+                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" placeholder="年-月-日"/>
                         </div>
                       </div> 
                   </div>
                 </div>
                 <div class="row">
-                
-                   <div class="col-xs-2">
-                  <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
-
-                   </div>
-  
-                  <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
-                  <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
+                  <div class="col-xs-2">
+                      <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
+                  </div>
                 </div>
+                </div>
+                <div class="row">
+                <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
+                  <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
+                  </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="profile">...</div>
-              <div role="tabpanel" class="tab-pane" id="messages">...</div>
-              <div role="tabpanel" class="tab-pane" id="settings">...</div>
+             
             </div>
         </div>
+            </div>
+          </div>
+          <div class="row">
+            <h5 class="sub-header" style="text-align:center">烘烤鲜烟品种统计表</h5>
+            <h6 style="text-align:center">单位：公斤</h6>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover table-condensed" id="sumTable">
+                <thead>
+                  <tr>
+                    <th>地区</th>
+                    <th>鲜烟总量</th>
+                    <th>云烟87</th>
+                    <th>湘烟3号</th>
+                    <th>K236</th>
+                    <th>其他</th>
+                  </tr>
+                </thead>
+              </table>
             </div>
           </div>
           <div class="row">
@@ -108,138 +135,229 @@
           </div>
         </div>
       </div>
-
+s
 <script type="text/javascript">
- var table;
+  var table;
+  var sumTable;
+
+  var advanceDisplay = false;
+  var stateParam = <%= role %>;
+
   $('document').ready(function(){
+
     table = $('#table').dataTable({
-      "scrollCollapse": true
+      "scrollCollapse": true,
+      'searching': false,
+      columns: [
+          { data: 'room' },
+          { data: 'tobacco_no'},
+          { data: 'org_name'},
+          { data: 'amount' },
+          { data: 'totalA' },
+          { data: 'totalB' },
+          { data: 'totalC' },
+          { data: 'totalD' }
+        ]
     });
+
+    sumTable = $('#sumTable').dataTable({
+      "scrollCollapse": true,
+      "paging": false,
+      'searching': false,
+      columns: [
+          { data: 'county' },
+          { data: 'amount' },
+          { data: 'totalA' },
+          { data: 'totalB' },
+          { data: 'totalC' },
+          { data: 'totalD' }
+        ]
+    });
+
+    initSearchButton('/workflows/fresh_tobacco/breeds?');
+    initLinkedSelect();
+    initAdvanceSearchLink();
+
+    $.getJSON('/fresh_analysis/breeds/summery?code=' + stateParam, function(data){
+      
+      if(data){
+        data.forEach(function(element, index){
+        
+          sumTable.api().clear().draw();    
+          sumTable.api().rows.add(data).draw();
+        });
+      }
+    });
+
   });
 
 
-            function prepairDatasets(dataTable){
-              // var packingAmount = dataTable.api().columns(2).data().reduce(function (a,b) {
-              //   return a + b;
-              // });
+  // function prepairDatasets(dataTable){
 
-              var yunyan = 0;
-              dataTable.api().columns(4).data().reduce(function(a, b){
-                  return a + b;
-              }).forEach(function(value , index){
-                yunyan += parseFloat(value);
-              });
 
-              var xiangyan = 0;
-              dataTable.api().columns(5).data().reduce(function(a, b){
-                  return a + b;
-              }).forEach(function(value , index){
-                xiangyan += parseFloat(value);
-              });
+  //   var yunyan = 0;
+  //   dataTable.api().columns(4).data().reduce(function(a, b){
+  //       return a + b;
+  //   }).forEach(function(value , index){
+  //     yunyan += parseFloat(value);
+  //   });
 
-              var K236 = 0;
-              dataTable.api().columns(6).data().reduce(function(a, b){
-                  return a + b;
-              }).forEach(function(value , index){
-                K236 += parseFloat(value);
-              });
+  //   var xiangyan = 0;
+  //   dataTable.api().columns(5).data().reduce(function(a, b){
+  //       return a + b;
+  //   }).forEach(function(value , index){
+  //     xiangyan += parseFloat(value);
+  //   });
 
-              var other = 0;
-              dataTable.api().columns(7).data().reduce(function(a, b){
-                  return a + b;
-              }).forEach(function(value , index){
-                other += parseFloat(value);
-              });
+  //   var K236 = 0;
+  //   dataTable.api().columns(6).data().reduce(function(a, b){
+  //       return a + b;
+  //   }).forEach(function(value , index){
+  //     K236 += parseFloat(value);
+  //   });
 
-              var data = [
-                {y: yunyan.toFixed(2), indexLabel:'云烟87'},
-                {y: xiangyan.toFixed(2), indexLabel:'湘烟3号'},
-                {y: K236.toFixed(2), indexLabel:'K236'},
-                {y: other.toFixed(2), indexLabel:'其他'},
-              ];
-              return data;
-            }
+  //   var other = 0;
+  //   dataTable.api().columns(7).data().reduce(function(a, b){
+  //       return a + b;
+  //   }).forEach(function(value , index){
+  //     other += parseFloat(value);
+  //   });
 
-        $('#searchButton').on('click', function(){
-            var roomNo = $('#roomNo').val();
-            var tobaccoNo = $('#tobaccoNo').val();
-            var tobaccoBreed = $('#tobaccoBreed').val();
-            
-            var place = $('#place').val();
-            var protocolStartDate = $('#protocolStartDate').val();
-            var protocolEndDate = $('#protocolEndDate').val();
+  //   var data = [
+  //     {y: yunyan.toFixed(2), indexLabel:'云烟87'},
+  //     {y: xiangyan.toFixed(2), indexLabel:'湘烟3号'},
+  //     {y: K236.toFixed(2), indexLabel:'K236'},
+  //     {y: other.toFixed(2), indexLabel:'其他'},
+  //   ];
+  //   return data;
+  // }
 
-            var url = 'http://121.41.111.212:1337/workflows/fresh_tobacco/breeds?';
+  function showChart(){
+    var datasets = prepairDatasets(table);
 
-            
-            if(roomNo != '')
-              url += 'room=' + roomNo + '&'  
-            if(tobaccoNo != '')
-              url += 'tobacco_no=' + tobaccoNo + '&';
+    $('#chartContainer').show();
+    var chart = new CanvasJS.Chart("chartContainer",
+      {
+        
+        legend: {
+          maxWidth: 350,
+          itemWidth: 120
+        },
+        data: [
+        {
+          type: "pie",
+          showInLegend: true,
+          legendText: "{indexLabel}",
+          toolTipContent: "{y} - #100 %",
+          dataPoints: datasets
+        }
+        ]
+      });
+      chart.render();
+  }
 
-            if(place != '')
-              url += 'code=' + place + '&';
-           
-            if(protocolStartDate != '')
-              url += 'startDate=' + protocolStartDate + '&';
+  function setStateParam(state){
+      stateParam = state;
+  }
 
-            if(protocolEndDate != '')
-              url += 'endDate=' + protocolEndDate + '&';
+  function initAdvanceSearchLink(){
+    $('#advance-search-link').on('click', function(){
+      if(advanceDisplay)
+        $('#search-advance').hide();
+      else
+        $('#search-advance').show();
 
-            url = url.substring(0, url.lastIndexOf('&') );
-            console.log(url);
-            $.getJSON(url, function(data){
-               table.api().clear().draw();
-               if(data){
-                table.api().rows.add(createBreeds(data)).draw();
-                showChart();
-               }
-               
-            });
+      advanceDisplay = !advanceDisplay;
+    });
+  }
 
+  function initLinkedSelect(){
+    var cityId = <%= role %>;
+    $.getJSON('/cities/' + cityId, function(data){
+      if(data){
+        console.log(data);
+        var options = '';
+        data.forEach(function(county, index){
+          options += '<option value="' +county.id +'">' + county.name + '</option>';
         });
+        $(options).appendTo($('#place'));
+      }
+    });
 
-        function createBreeds(arr){
-            var datasets = [];
-            arr.forEach(function(element, index){
-                var data = [];
-                data.push(element.room);
-                data.push(element.tobacco_no);
-                data.push(element.org_name);
-                data.push(element.amount);
-                data.push(element.totalA);
-                data.push(element.totalB);
-                data.push(element.totalC);
-                data.push(element.totalD);
+    $('#place').on('change', function(){
+        var county = $('#place').val();
+        setStateParam(county);
 
-                datasets.push(data);
+        $.getJSON('/counties/' + county + '/towns', function(data){
+          
+          if(data.length > 0){
+            var options = '<option value="">选择镇</option>';
+            data.forEach(function(town, index){
+              options += '<option value="'+ town.id +'">' + town.name + '</option>';
             });
+            $(options).appendTo($('#town'));
+            $('#towns').show();
+          }
+        });
+    });
 
-            return datasets;
-        }
+    $('#town').on('change', function(){
+        var town = $('#town').val();
+        setStateParam(town);
 
-        function showChart(){
-          var datasets = prepairDatasets(table);
+        $.getJSON('/towns/' + town + '/stations', function(data){
+          if(data.length > 0){
+              console.log(data);
+              var options = '<option value="">选择工场</option>';
+              data.forEach(function(station, index){
+                options += '<option value="' + station.middlewares + '">' + station.name + '</option>';
+              });
+              $(options).appendTo($('#station'));
+              $('#stations').show();
+          }
+        })
+      });
 
-          $('#chartContainer').show();
-          var chart = new CanvasJS.Chart("chartContainer",
-            {
-              
-              legend: {
-                maxWidth: 350,
-                itemWidth: 120
-              },
-              data: [
-              {
-                type: "pie",
-                showInLegend: true,
-                legendText: "{indexLabel}",
-                toolTipContent: "{y} - #100 %",
-                dataPoints: datasets
-              }
-              ]
-            });
-            chart.render();
-        }
+    $('#station').on('change', function(){
+        setStateParam($('#station').val());
+    });
+  }
 
+  function initSearchButton(url){
+    $('#searchButton').on('click', function(){
+      var baseUrl = url;
+      var roomNo = $('#roomNo').val();
+      var tobaccoNo = $('#tobaccoNo').val();
+    
+      var protocolStartDate = $('#protocolStartDate').val();
+      var protocolEndDate = $('#protocolEndDate').val();
+
+      if(roomNo != '')
+        baseUrl += 'room_no=' + roomNo + '&'  
+      if(tobaccoNo != '')
+        baseUrl += 'tobacco_no=' + tobaccoNo + '&';
+     
+      if(stateParam != '')
+        baseUrl += 'code=' + stateParam + '&';
+     
+      if(protocolStartDate != '')
+        baseUrl += 'startDate=' + protocolStartDate + '&';
+
+      if(protocolEndDate != '')
+        baseUrl += 'endDate=' + protocolEndDate + '&';
+
+      baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('&') );
+      console.log(baseUrl);
+      $.getJSON(baseUrl, function(data){
+          
+          table.api().clear().draw();
+          
+          if(data){
+            table.api().rows.add(data).draw();
+            showChart();
+         }
+
+      });
+    });
+  }
 </script>

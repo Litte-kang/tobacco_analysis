@@ -4,7 +4,7 @@
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
-var crypto = require('crypto');
+var helper = require('../helper');
 
 
 module.exports = {
@@ -31,22 +31,13 @@ module.exports = {
   	},
 
     analysisPacking: function(opts, cb){
-      var query = {};
-
-      Object.getOwnPropertyNames(opts).forEach(function(element, index){
-            if(element == 'startDate')
-              query.created_at = {'>=': new Date(opts[element])};
-            if(element == 'endDate')
-              query.created_at = {'<=': new Date(opts[element])};
-            if(element == 'code'){
-             query.org_name = new RegExp(opts[element]);
-            }else query[element] = opts[element];
-      }); 
+      var query = helper.createAggregateParams(opts);
+      var groupBy = helper.groupBy(opts);
 
       Packing.native(function(err, collection){
           if(err) return cb(err);
           collection.group(
-              {room: 1, tobacco_no: 1, org_name: 1, packing_average: 1},
+              groupBy,
               query,
               {amount: 0, bars:0 ,totalA: 0, totalB: 0,
                totalC: 0, totalD: 0, totalE: 0,
@@ -73,8 +64,9 @@ module.exports = {
                 result.totalK += curr.rod_uniform.B
               },
               {$sort : { room : 1 } },
-          function(err, results){
-            cb(err, results);
+          function(err, result){
+            sails.log(result)
+            cb(err, result);
 
           })
       })

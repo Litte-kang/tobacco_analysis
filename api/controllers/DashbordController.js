@@ -6,22 +6,32 @@
  */
 
 module.exports = {
+
+	//根据角色长短判断权限 4是市级权限
 	index: function(req, res){
-/*		AnalysisCounty.getAnalysisResult(null, function(err, result){
-			if(err) res.negotiate(err);
-			return res.view('dashbord', {fullName: req.session.fullName, 
-										role: req.session.role ,
-										result: result});
-		})*/
+		// var session = req.session;
+		// switch(session.role.length){
+		// 	case 4:
+		// 		City.getCounties(session.role, function(err, result){
+		// 			if(err) res.negotiate(err);
+		// 			return res.view('dashbord', {fullName: session.fullName, result: result});
+		// 		});
+		// 		break;
+		// }
 		var session = req.session;
-		switch(session.role.length){
-			case 4:
-				City.getCounties(session.role, function(err, result){
-					if(err) res.negotiate(err);
-					return res.view('dashbord', {fullName: session.fullName, result: result});
-				});
-				break;
-		}
+		Breed.roomAnalysis(req.query, function(err, result){
+			if(err) res.negotiate(err);
+			return res.view('dashbord', {fullName: session.fullName, result: result});
+		})
+		
+	},
+
+	overview: function(req, res){
+		var session = req.session;
+		Breed.roomAnalysis(req.query, function(err, result){
+			if(err) res.negotiate(err);
+			return res.view('overview', {fullName: session.fullName, result: result});
+		})
 		
 	}
 };

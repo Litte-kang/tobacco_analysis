@@ -36,9 +36,9 @@ module.exports = {
              query.org_name = new RegExp(opts[element]);
             }else query[element] = opts[element];
       }); 
-      sails.log(query);
-      Baking.find(query).sort('tobacco_no').exec(function(err, data){
-
+     
+      Baking.find(query).sort('tobacco_no start_time').exec(function(err, data){
+       
         // results = [
         //             [{'a' : 2}, {'a': 5}],
         //             [{'a' : 8}, {'a': 9}]

@@ -4,8 +4,9 @@ module.exports = {
   autoPK : false,
 
   attributes: {
-  	  _id:      {type: 'string', primaryKey: true, unique: true},
+  	  id:       {type: 'string', primaryKey: true, columnName: '_id'},
       name:     {type: 'string'},
+      code:     {type: 'string'},
 
       belongs:  {
         model: 'county'
@@ -16,6 +17,12 @@ module.exports = {
         via: 'belongs'
       }
 
+  },
+
+  getTownsByCounty: function(countyId, cb){
+    Town.find({county_id: countyId}).exec(function(err, towns){
+      cb(err, towns);
+    })
   }
 
 };

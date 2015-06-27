@@ -4,7 +4,7 @@
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
-
+var helper = require('../helper');
 
 
 module.exports = {
@@ -25,50 +25,70 @@ module.exports = {
 
 	  //Class method
     findBakingHistory: function(opts, cb){
-      var query = {};
+     var query = helper.createQueryParams(opts);
+    
+      Baking.find(query).sort('tobacco_no').exec(function(err, data){
+        cb(err, data);
+      })
+    },
 
-      Object.getOwnPropertyNames(opts).forEach(function(element, index){
-            if(element == 'startDate')
-              query.created_at = {'>=': new Date(opts[element])};
-            if(element == 'endDate')
-              query.created_at = {'<=': new Date(opts[element])};
-            if(element == 'code'){
-             query.org_name = new RegExp(opts[element]);
-            }else query[element] = opts[element];
-      }); 
-     
-      Baking.find(query).sort('tobacco_no start_time').exec(function(err, data){
-       
-        // results = [
-        //             [{'a' : 2}, {'a': 5}],
-        //             [{'a' : 8}, {'a': 9}]
-        //           ]
-        var results = [];
-        var temp = [];
-        var lastNo;
-        
-        if(data.length > 0)
-            for(var i = 0; i < data.length; i++){
-              if(temp.length == 0){
-                temp.push(data[i]);
-                lastNo = data[i].tobacco_no;
-              }else{
-                if(lastNo == data[i].tobacco_no){
-                  temp.push(data[i]);
-                  lastNo = data[i].tobacco_no;
-                }else{
-                  results.push(temp);
-                  temp = [];
-                  temp.push(data[i]);
-                  lastNo = data[i].tobacco_no;
-                }
-              }
-              if(i == data.length -1)
-                results.push(temp);
+    aggragateBaking: function(opts, cb){
+      sails.log('Analysis baking...');
+
+      var query =helper.createAggregateParams(opts);
+
+      Baking.native(function(err, collection){
+        if(err) cb(err);
+        collection.group(
+          {room: 1, tobacco_no:1 , org_name:1},
+          query,
+          {bakingAmount:0, count :0, bakedAmount: 0},
+          function(curr, result){
+            if(curr.history.length > 0){
+              result.count += curr.history.length;
+              curr.history.forEach(function(history, index){
+                result.bakedAmount += history.fresh_weight
+              })
+            }
+            result.bakingAmount += curr.baking_weight
+          },function(err, result){
+              sails.log(result);
+              cb(err,result);
+          }
+        )
+      })
+    },
+
+    aggragateUsage: function(opts, cb){
+      var query =helper.createAggregateParams(opts);
+      Baking.native(function(err, collection){
+        if(err) cb(err);
+        collection.group(
+          {room: 1, tobacco_no: 1, org_name:1},
+          query,
+          {freshAmount:0, dryAmount:0, count: 0, amountTime: 0},
+          function(curr, result){
+            result.freshAmount += curr.baking_weight;
+            if(curr.history.length > 0){
+              result.count += curr.history.length;
+
+              curr.history.forEach(function(history, index){
+                result.amountTime += (history.end_time.getTime() - history.start_time.getTime())/3600000;
+                result.dryAmount += history.dry_weight;
+                result.freshAmount += history.fresh_weight;
+              })
+
+            }else{
+              var date = new Date();
+              result.amountTime += (date.getTime() - curr.start_time.getTime())/3600000;
             }
 
-        sails.log(results);
-        cb(err, results);
+          },function(err, result){
+            sails.log(result);
+            cb(err, result);
+          }
+        )
       })
+
     }
 };

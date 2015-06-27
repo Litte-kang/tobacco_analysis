@@ -105,10 +105,13 @@ module.exports.routes = {
   'get /workflows/fresh_tobacco/packings'     :'WorkflowController.analysisPacking',
 
 
+  //烤房使用情况统计
+  'get /analysis_room_usage'                  :'WorkflowController.roomUsage',
 
-
-
-
+ 
+ //烘烤量统计分析
+ 'get /baking_analysis/baking'                :'WorkflowController.bakingAnalysis',
+ 'get /workflows/baking_history'               :'WorkflowController.findBakingHistory',
 
 
 
@@ -137,7 +140,7 @@ module.exports.routes = {
   
   
 
-  'get /workflows/baking_history'              :'WorkflowController.findBakingHistory',
+ 
 
   
   //Monitor

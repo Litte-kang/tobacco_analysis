@@ -17,8 +17,8 @@
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" class="active"><a href="/workflows/fresh_tobacco" aria-controls="home" role="tab" data-toggle="link">烘烤量统计分析</a></li>
-              <li role="presentation"><a href="/baking_analysis/baking?code=4311" aria-controls="profile" role="tab" data-toggle="link">在烤统计分析</a></li>
+              <li role="presentation" ><a href="/workflows/baking_history?code=4311" aria-controls="home" role="tab" data-toggle="link">烘烤量统计分析</a></li>
+              <li class="active" role="presentation"><a href="#" aria-controls="profile" role="tab" data-toggle="link">在烤统计分析</a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -73,27 +73,12 @@
             <table id="example" class="display table" cellspacing="0" width="100%">
               <thead>
                 <tr>
-                  <th rowspan="2">烤房</th>
-                  <th rowspan="2">烟基号</th>
-                  <th rowspan="2">机构组织</th>
-                  <th colspan="2">第一烤</th>
-                  <th colspan="2">第二烤</th>
-                  <th colspan="2">第三烤</th>
-                  <th colspan="2">第四烤</th>
-                </tr>
-                <tr>
-                  
-                  <th>鲜烟重量</th>
-                  <th>干烟重量</th>
-                 
-                  <th>鲜烟重量</th>
-                  <th>干烟重量</th>
-                
-                  <th>鲜烟重量</th>
-                  <th>干烟重量</th>
-                 
-                  <th>鲜烟重量</th>
-                  <th>干烟重量</th>
+                  <th >烤房</th>
+                  <th >烟基号</th>
+                  <th >机构组织</th>
+                  <th >已烤鲜烟总量</th>
+                  <th >已烤坎数</th>
+                  <th >在烤鲜烟重量</th>
                 </tr>
               </thead>
               <tbody>
@@ -102,15 +87,9 @@
                     <td><%= room.room %></td>
                     <td><%= room.tobacco_no %></td>
                     <td><%= room.org_name %></td>
-                    <%_.each(room.history, function(h){ %>
-                      
-                      <td><%= h.fresh_weight.toFixed(2) %></td>
-                      <td><%= h.dry_weight.toFixed(2) %></td>
-                   
-                    <% }) %>
-
-                     <td><%= room.baking_weight.toFixed(2) %></td>
-                     <td></td>
+                    <td><%= room.bakedAmount.toFixed(2) %></td>
+                    <td><%= room.count %></td>
+                    <td><%= room.bakingAmount.toFixed(2) %></td>
                   </tr>
                 <%  }) %>
               </tbody>

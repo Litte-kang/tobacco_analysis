@@ -11,8 +11,9 @@ module.exports = {
 	},
 
 	alarms: function(req, res){
-		Alarm.findAlarmMessage(req.params.roomNo , function(err, results){
+		Alarm.findAlarmMessage(req , function(err, results){
 			if(err) res.negotiate(err);
+			sails.log(results.length);
 			res.send(results);
 		})
 	}

@@ -1,17 +1,5 @@
-var helper = require('../helper');
-
-module.exports = {
-  connection: 'innotek_tobacco',
-  tableName: 'alarmhistories',
-
-  attributes: {
-      address:    'string',
-      midAddress: 'string',
-      createdAt:  'date',
-      data:       'array',
-
-
-      parseAlarm: function(){
+function parseAlarm(data){
+        
         var array = [];
         var alert_info = 0;
     
@@ -63,21 +51,21 @@ module.exports = {
         //array_len = this.data.length - 4;
     
         for(var i = 0; i < 2; ++i){
-          tmp = this.data[i];
+          tmp = data[i];
           tmp <<= (i * 8);
           alert_info |= tmp;
           
         }
         
-        tmp = this.data[4];
+        tmp = data[4];
         tmp <<= 8;
-        tmp |= this.data[5];
+        tmp |= data[5];
     
         array[array_i++] = (tmp / 10);
     
-        tmp = this.data[6];
+        tmp = data[6];
         tmp <<= 8;
-        tmp |= this.data[7];
+        tmp |= data[7];
     
         array[array_i++] = (tmp / 10);
       
@@ -88,54 +76,14 @@ module.exports = {
           }
         }
     
-        tmp = this.data[2];
+        //tmp = (alert_info & 0x00ff0000) >> 8;
+        //tmp |= (alert_info & 0xff000000) >> 24;
+        tmp = data[2];
         tmp <<= 8;
-        tmp |= this.data[3];
+        tmp |= data[3];
 
         array[array_i] = (tmp / 10);
     
         
         return array;
       }
-  },
-
-  //Class methods
-  findAlarmMessage: function(opts, cb){
-    var pointsPerDay = 24 * 30;
-
-    Tobacco.findOne({room_no: opts.params.roomNo, middleware: '4311290111'}).exec(function(err, data){
-      if(err) cb(err);
-      if(data){        
-        var points = [];
-        var query = {};
-        sails.log(opts.query.startDate);
-        query.createdAt = {'>=' : new Date(opts.query.startDate), 
-                       '<=' : new Date(opts.query.endDate)};
-        query.midAddress = data.middleware;
-        query.address = data.aca;
-        sails.log(query);
-        // Alarm.find(query, limit: 30*24, sort: 'createdAt DESC'}).exec(function(err, result){
-        //             if(result.length < 30*24){
-
-        //               cb(err, result);
-        //             }else{
-        //               for(var i = 0; i < 24; i++){
-        //                 points.push(result[i*30])
-        //               }
-        //               points.push(result[result.length - 1])
-        //             }
-
-        //             cb(err, points);
-        //           })
-        Alarm.find(query).exec(function(err, result){
-          cb(err, result);
-        })
-        
-      }else
-        cb(null);
-
-    })
-  }
-  
-
-}

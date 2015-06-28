@@ -181,11 +181,12 @@ s
     $.getJSON('/fresh_analysis/breeds/summery?code=' + stateParam, function(data){
       
       if(data){
-        data.forEach(function(element, index){
+        sumTable.api().clear().draw();    
+        sumTable.api().rows.add(data).draw();
+        // data.forEach(function(element, index){
         
-          sumTable.api().clear().draw();    
-          sumTable.api().rows.add(data).draw();
-        });
+          
+        // });
       }
     });
 
@@ -233,7 +234,7 @@ s
   // }
 
   function showChart(){
-    var datasets = prepairDatasets(table);
+    //var datasets = prepairDatasets(table);
 
     $('#chartContainer').show();
     var chart = new CanvasJS.Chart("chartContainer",
@@ -347,7 +348,7 @@ s
         baseUrl += 'endDate=' + protocolEndDate + '&';
 
       baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('&') );
-      console.log(baseUrl);
+      
       $.getJSON(baseUrl, function(data){
           
           table.api().clear().draw();

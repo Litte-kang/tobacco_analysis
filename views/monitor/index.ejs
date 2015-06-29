@@ -17,7 +17,7 @@
                 <div class="form-group">
                   <div class="input-group">
                       <div class="input-group-addon">开始日期</div>
-                      <input type="text" class="form-control" id="startTime" name="startDate" />
+                      <input type="text" class="form-control" id="startTime" name="startDate" placeholder="YYYY-MM-DD"/>
                   </div>
                 </div> 
             </div>
@@ -25,17 +25,19 @@
                 <div class="form-group">
                   <div class="input-group">
                       <div class="input-group-addon">结束日期</div>
-                      <input type="text" class="form-control" id="endTime" name="endDate" />
+                      <input type="text" class="form-control" id="endTime" name="endDate" placeholder="YYYY-MM-DD"/>
                   </div>
                 </div> 
             </div>
             <div class="col-xs-2"><button id="search_btn" type="button" class="btn btn-primary">搜索</button></div>
           </div>
+          <h5>Per hour</h5>
           <div id="chartContainer" style="height: 400px; width: 100%; display: none"></div>
 
           <hr />
           <h3 style="text-align: center; display:none" id="loading">Loading...</h3>
           <div class="table-responsive">
+
             <table id="alarms" class="table table-striped table-hover table-condensed cell-border">
               <thead>
                 <tr>
@@ -85,7 +87,7 @@ var table;
         $.getJSON(baseURL, function(result){
 
         if(result.length > 0){
-          
+          $('#loading').text('Initialing Data...');
           var days = ((new Date(endDate)).getTime() - (new Date(startDate)).getTime())/(3600000*24);
           var looper = 0;
 
@@ -109,8 +111,8 @@ var table;
               wet: alarm[1]
             };
 
-            var createdAt = (new Date(date.split('-')[0], date.split('-')[1] -1, date.split('-')[2],
-                                        time.split(':')[0], time.split(':')[1] -1, time.split(':')[2])).getTime();
+            var createdAt = (new Date(date.split('-')[0], date.split('-')[1] - 1 , date.split('-')[2],
+                                        time.split(':')[0], time.split(':')[1] - 1 , time.split(':')[2])).getTime();
 
             dryPoints.push({x: createdAt, y: object.dry});
             wetPoints.push({x: createdAt, y: object.wet});

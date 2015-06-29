@@ -110,23 +110,13 @@ module.exports = {
         var query = {};
         sails.log(opts.query.startDate);
         query.createdAt = {'>=' : new Date(opts.query.startDate), 
-                       '<=' : new Date(opts.query.endDate)};
+                       '<=' : new Date(opts.query.endDate.split('-')[0],
+                                        opts.query.endDate.split('-')[1],
+                                        opts.query.endDate.split('-')[2], 23,59,59)};
         query.midAddress = data.middleware;
         query.address = data.aca;
-        sails.log(query);
-        // Alarm.find(query, limit: 30*24, sort: 'createdAt DESC'}).exec(function(err, result){
-        //             if(result.length < 30*24){
-
-        //               cb(err, result);
-        //             }else{
-        //               for(var i = 0; i < 24; i++){
-        //                 points.push(result[i*30])
-        //               }
-        //               points.push(result[result.length - 1])
-        //             }
-
-        //             cb(err, points);
-        //           })
+        
+        
         Alarm.find(query).exec(function(err, result){
           cb(err, result);
         })

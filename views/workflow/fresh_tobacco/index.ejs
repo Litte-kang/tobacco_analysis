@@ -22,7 +22,9 @@
               </div>
             </div>
           </div>         
-         
+          <div class="row">
+            <div id="sumChartContainer" style="height: 300px; width: 100%;"></div>
+          </div>
           <h4 class="sub-header" style="text-align:center">烘烤鲜烟成熟度统计</h4>
           <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
@@ -155,7 +157,7 @@
       </div>
 
 <script type="text/javascript">
-  var summerayTable;
+  var sumTable;
   var detailTable;
 
   var advanceDisplay = false;
@@ -167,219 +169,80 @@
         'searching': false
       });
 
-      summerayTable = $('#fresh-sum').dataTable({
+      sumTable = $('#fresh-sum').dataTable({
         "scrollCollapse": true,
         "paging": false,
         "ordering": false,
-        'searching': false,
-        columns: [
-          { data: 'county' },
-          { data: 'amount' },
-          { data: 'totalA' },
-          { data: 'totalB' },
-          { data: 'totalC' }
-        ]
-
+        'searching': false
       });
 
       initAdvanceSearchLink();
-      initSearchButton('/workflows/manage_fresh/tobaccos?');
+
+      initSearchButton('/workflows/manage_fresh/tobaccos?', 
+                      function(data){
+                          detailTable.api().clear().draw();
+                          if(data){
+                            detailTable.api().rows.add(analysisMaturityResult(data)).draw();
+                            $('#chartContainer').show();
+                            var datasets = generatePieChartDatasets(detailTable,[8,9,10], ['正常烟叶', '欠熟烟叶', '过熟烟叶'])
+                            createPieChart('chartContainer', datasets);
+                          }
+                          initDataForStatistics();
+                      }
+      );
+      
       initDataForStatistics();
       initLinkedSelect();
 
       
   }); 
 
-  function setStateParam(state){
-    stateParam = state;
-  }
-
-  function initAdvanceSearchLink(){
-    $('#advance-search-link').on('click', function(){
-      if(advanceDisplay)
-        $('#search-advance').hide();
-      else
-        $('#search-advance').show();
-
-      advanceDisplay = !advanceDisplay;
-    });
-  }
-
-  function initLinkedSelect(){
-    $('#place').on('change', function(){
-        var county = $('#place').val();
-        setStateParam(county);
-
-        $.getJSON('/counties/' + county + '/towns', function(data){
-          
-          if(data.length > 0){
-            var options = '<option value="">选择镇</option>';
-            data.forEach(function(town, index){
-              options += '<option value="'+ town.id +'">' + town.name + '</option>';
-            });
-            $(options).appendTo($('#town'));
-            $('#towns').show();
-          }
-        });
-    });
-
-    $('#town').on('change', function(){
-        var town = $('#town').val();
-        setStateParam(town);
-
-        $.getJSON('/towns/' + town + '/stations', function(data){
-          if(data.length > 0){
-              console.log(data);
-              var options = '<option value="">选择工场</option>';
-              data.forEach(function(station, index){
-                options += '<option value="' + station.middlewares + '">' + station.name + '</option>';
-              });
-              $(options).appendTo($('#station'));
-              $('#stations').show();
-          }
-        })
-      });
-
-    $('#station').on('change', function(){
-        setStateParam($('#station').val());
-    });
-  }
-
-  function initSearchButton(url){
-    $('#searchButton').on('click', function(){
-
-      var roomNo = $('#roomNo').val();
-      var tobaccoNo = $('#tobaccoNo').val();
-      var tobaccoBreed = $('#tobaccoBreed').val();
-      var tobaccoPart = $('#tobaccoPart').val();
-     
-      var protocolStartDate = $('#protocolStartDate').val();
-      var protocolEndDate = $('#protocolEndDate').val();
-      
-      if(roomNo != '')
-        url += 'room_no=' + roomNo + '&'  
-      if(tobaccoNo != '')
-        url += 'tobacco_no=' + tobaccoNo + '&';
-        
-      if(tobaccoBreed != '')
-        url += 'fresh_tobacco.breed=' + tobaccoBreed + '&';
-    
-      if(tobaccoPart != '')
-        url += 'fresh_tobacco.part=' + tobaccoPart + '&';
-     
-      if(stateParam != '')
-        url += 'code=' + stateParam + '&';
-     
-      if(protocolStartDate != '')
-        url += 'startDate=' + protocolStartDate + '&';
-
-      if(protocolEndDate != '')
-        url += 'endDate=' + protocolEndDate + '&';
-
-      url = url.substring(0, url.lastIndexOf('&') );
-      console.log(url);
-      $.getJSON(url, function(data){
-          
-          detailTable.api().clear().draw();
-          
-          if(data){
-            detailTable.api().rows.add(analysisMaturityResult(data)).draw();
-            showChart();
-         }
-
-      });
-    });
-  }
 
   //private methods
   function initDataForStatistics(){
-    $.getJSON('/fresh_analysis/maturity/summery?code=' + stateParam, function(data){
+    var url = '/fresh_analysis/maturity/summery?code=' + stateParam;
+    $.getJSON(url, function(data){
 
       if(data.length > 0){
-       
-        summerayTable.api().clear().draw();    
-        summerayTable.api().rows.add(data).draw();
+        var datasets = [];
+        data.forEach(function(element){
+          var array = [];
+          
+          switch((stateParam+'').length){
+            case 2:
+              array.push(element.city);
+              break;
+            case 4:
+              array.push(element.county);
+              break;
+            case 6:
+              array.push(element.town);
+              break;
+            case 8:
+              array.push(element.org_name);
+              break;
+          }
 
-        // var chart = new CanvasJS.Chart("sumChartContainer",
-        //   {
-        //     legend: {
-        //       maxWidth: 350,
-        //       itemWidth: 120
-        //     },
-        //     data: [
-        //       {
-        //         type: "pie",
-        //         showInLegend: true,
-        //         legendText: "{indexLabel}",
-        //         toolTipContent: "{y} - #percent %",
-        //         dataPoints: datasets
-        //       }
-        //     ]
-        //   });
-        // chart.render();
-        // $('#sumChartContainer').show();
+          array.push(element.amount);
+          array.push(element.totalA);
+          array.push(element.totalB);
+          array.push(element.totalC);
+
+          datasets.push(array);
+        });
+
+        sumTable.api().clear().draw();    
+        sumTable.api().rows.add(datasets).draw();
+
+        //var datasets = generatePieChartDatasets(sumTable,[2,3,4], ['正常烟叶', '欠熟烟叶', '过熟烟叶']);
+        createPieChart('sumChartContainer',
+                       generatePieChartDatasets(sumTable,[2,3,4], ['正常烟叶', '欠熟烟叶', '过熟烟叶']));        
+      }else{
+        sumTable.api().clear().draw();
+        $('#sumChartContainer').hide();
+        $('#chartContainer').hide();   
       }   
     });
-  }
-
-  function createChartDatasets(){
-    var normal = 0;
-    detailTable.api().columns(8).data().reduce(function(a, b){
-          return a + b;
-      }).forEach(function(value , index){
-        normal += parseFloat(value);
-      });
-
-    var guoshu = 0;
-    detailTable.api().columns(9).data().reduce(function(a, b){
-          return a + b;
-      }).forEach(function(value , index){
-        guoshu += parseFloat(value);
-      });
-
-    var qianshu = 0;
-    detailTable.api().columns(10).data().reduce(function(a, b){
-          return a + b;
-      }).forEach(function(value , index){
-        qianshu += parseFloat(value);
-      });
-
-    var datasets = [];
-    datasets.push({
-      y: normal, indexLabel: '正常烟叶'
-    });
-    datasets.push({
-      y: guoshu, indexLabel: '过熟烟叶'
-    });
-    datasets.push({
-      y: qianshu, indexLabel: '欠熟烟叶'
-    })
-    
-    return datasets;
-  } 
-
-  function showChart(){
-    var datasets = createChartDatasets();
-
-    $('#chartContainer').show();
-    var chart = new CanvasJS.Chart("chartContainer",
-      {
-        
-        legend: {
-          maxWidth: 350,
-          itemWidth: 120
-        },
-        data: [
-        {
-          type: "pie",
-          showInLegend: true,
-          legendText: "{indexLabel}",
-          toolTipContent: "{y} - #percent %",
-          dataPoints: datasets
-        }
-        ]
-      });
-      chart.render();
   }
 
   function analysisMaturityResult(arr){
@@ -389,7 +252,7 @@
       var tobacco = [];
       var count = 1;
       var amount_weight = parseFloat(element.packing.average_weight) *
-                          parseInt(element.packing.packing_amount) / 2;
+                          parseInt(element.packing.packing_amount) ;
 
       tobacco.push(element.room_no);
       tobacco.push(element.tobacco_no);
@@ -418,10 +281,10 @@
           paths += '<a href="/images/photos/'+ file +'" target="_blank"><img src="/images/photos.jpg" width="20" height="20" /></a>'
       });
       tobacco.push(paths);
-
       tobacco.push(element.protocol.yi);
       tobacco.push(element.protocol.UID);
       tobacco.push(element.protocol_created_at.slice(0,element.protocol_created_at.indexOf('T')));
+
       freshTobaccos.push(tobacco);
 
     });

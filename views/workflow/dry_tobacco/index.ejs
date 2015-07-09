@@ -59,9 +59,6 @@
                   <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="profile">...</div>
-              <div role="tabpanel" class="tab-pane" id="messages">...</div>
-              <div role="tabpanel" class="tab-pane" id="settings">...</div>
             </div>
         </div>
             </div>
@@ -70,16 +67,16 @@
           <h5 class="sub-header" style="text-align:center">烘烤量统计表</h5>
           <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
-            <table id="example" class="display table" cellspacing="0" width="100%">
+            <table id="table" class="display table" cellspacing="0" width="100%">
               <thead>
                 <tr>
                   <th rowspan="2">烤房</th>
                   <th rowspan="2">烟基号</th>
-                  <th rowspan="2">机构组织</th>
                   <th colspan="2">第一烤</th>
                   <th colspan="2">第二烤</th>
                   <th colspan="2">第三烤</th>
                   <th colspan="2">第四烤</th>
+                  <th colspan="2">第五烤</th>
                 </tr>
                 <tr>
                   
@@ -94,14 +91,17 @@
                  
                   <th>鲜烟重量</th>
                   <th>干烟重量</th>
+
+                  <th>鲜烟重量</th>
+                  <th>干烟重量</th>
                 </tr>
               </thead>
               <tbody>
                 <%_.each(result, function(room){ %>
                   <tr>
-                    <td><%= room.room %></td>
+                    <td><%= room.room_no %></td>
                     <td><%= room.tobacco_no %></td>
-                    <td><%= room.org_name %></td>
+
                     <%_.each(room.history, function(h){ %>
                       
                       <td><%= h.fresh_weight.toFixed(2) %></td>
@@ -110,7 +110,7 @@
                     <% }) %>
 
                      <td><%= room.baking_weight.toFixed(2) %></td>
-                     <td></td>
+                     
                   </tr>
                 <%  }) %>
               </tbody>
@@ -125,83 +125,15 @@
   var stateParam = <%= role %>;
 
   $(document).ready(function() {
-    // table = $('#example').dataTable( {
-    //   "scrollY": 200,
-    //   "scrollX": true
-    // });
-
-    //initSearchButton('/workflows/fresh_tobacco/breeds?');
+    table = $('#table').dataTable({
+      "scrollCollapse": true,
+      'searching': false
+    });
     initLinkedSelect();
     initAdvanceSearchLink();
   });
 
-  function setStateParam(state){
-      stateParam = state;
-  }
-
-  function initAdvanceSearchLink(){
-    $('#advance-search-link').on('click', function(){
-      if(advanceDisplay)
-        $('#search-advance').hide();
-      else
-        $('#search-advance').show();
-
-      advanceDisplay = !advanceDisplay;
-    });
-  }
-
-  function initLinkedSelect(){
-    var cityId = <%= role %>;
-    $.getJSON('/cities/' + cityId, function(data){
-      if(data){
-        console.log(data);
-        var options = '';
-        data.forEach(function(county, index){
-          options += '<option value="' +county.id +'">' + county.name + '</option>';
-        });
-        $(options).appendTo($('#place'));
-      }
-    });
-
-    $('#place').on('change', function(){
-        var county = $('#place').val();
-        setStateParam(county);
-
-        $.getJSON('/counties/' + county + '/towns', function(data){
-          
-          if(data.length > 0){
-            var options = '<option value="">选择镇</option>';
-            data.forEach(function(town, index){
-              options += '<option value="'+ town.id +'">' + town.name + '</option>';
-            });
-            $(options).appendTo($('#town'));
-            $('#towns').show();
-          }
-        });
-    });
-
-    $('#town').on('change', function(){
-        var town = $('#town').val();
-        setStateParam(town);
-
-        $.getJSON('/towns/' + town + '/stations', function(data){
-          if(data.length > 0){
-              console.log(data);
-              var options = '<option value="">选择工场</option>';
-              data.forEach(function(station, index){
-                options += '<option value="' + station.middlewares + '">' + station.name + '</option>';
-              });
-              $(options).appendTo($('#station'));
-              $('#stations').show();
-          }
-        })
-      });
-
-    $('#station').on('change', function(){
-        setStateParam($('#station').val());
-    });
-  }
-
+ 
   function initSearchButton(url){
     $('#searchButton').on('click', function(){
       var baseUrl = url;

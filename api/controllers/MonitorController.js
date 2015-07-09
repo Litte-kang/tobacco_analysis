@@ -11,10 +11,12 @@ module.exports = {
 	},
 
 	alarms: function(req, res){
-		Alarm.findAlarmMessage(req , function(err, results){
+		Alarm.findAlarmMessage(req , function(err, result){
 			if(err) res.negotiate(err);
-			sails.log(results.length);
-			res.send(results);
+			if(result)
+				res.send(result);
+			else
+				res.send(null);
 		})
 	}
 };

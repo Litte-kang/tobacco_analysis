@@ -45,7 +45,6 @@ module.exports = {
           tobaccos.forEach(function(element, index){
             arr.push(element.tobacco_no);
           })
-          sails.log(arr);
           Breed.find({tobacco_no: arr}).exec(function(err, results){
             cb(err, results);
           })

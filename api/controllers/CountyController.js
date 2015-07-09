@@ -28,7 +28,6 @@ module.exports = {
   getTowns: function(req, res){
     Town.getTownsByCounty(req.params.id, function(err, towns){
       if(err) res.negotiate(err);
-      sails.log(towns);
       return res.send(towns);
     })
   },

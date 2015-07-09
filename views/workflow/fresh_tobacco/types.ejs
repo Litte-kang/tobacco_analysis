@@ -95,7 +95,10 @@
             </div>
           </div>
           <div class="row">
-            <h5 class="sub-header" style="text-align:center">烘烤鲜烟品种统计表</h5>
+            <div id="sumChartContainer" style="height: 300px; width: 100%;"></div>
+          </div>
+          <div class="row">
+            <h5 class="sub-header" style="text-align:center">烘烤鲜烟品种合计表</h5>
             <h6 style="text-align:center">单位：公斤</h6>
             <div class="table-responsive">
               <table class="table table-striped table-hover table-condensed" id="sumTable">
@@ -116,7 +119,7 @@
           <div class="row">
             <div id="chartContainer" style="height: 300px; width: 100%; display: none"></div>
           </div>
-          <h5 class="sub-header" style="text-align:center">烘烤鲜烟烟叶类型统计表</h5>
+          <h5 class="sub-header" style="text-align:center">烘烤鲜烟烟叶类型明细表</h5>
           <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
             <table class="table table-striped table-hover table-condensed" id="table">
@@ -124,7 +127,6 @@
                 <tr>
                   <th>烤房编号</th>
                   <th>烟基编号</th>
-                  <th>所属机构</th>
                   <th>鲜烟总量</th>
                   <th>正常烟叶</th>
                   <th>返青烟叶</th>
@@ -149,9 +151,8 @@
     table = $('#table').dataTable({
         "scrollCollapse": true,
         columns: [
-          { data: 'room' },
+          { data: 'room_no' },
           { data: 'tobacco_no'},
-          { data: 'org_name'},
           { data: 'amount' },
           { data: 'totalA' },
           { data: 'totalB' },
@@ -164,213 +165,77 @@
     sumTable = $('#sumTable').dataTable({
       "scrollCollapse": true,
       "paging": false,
-      'searching': false,
-      columns: [
-          { data: 'county' },
-          { data: 'amount' },
-          { data: 'totalA' },
-          { data: 'totalB' },
-          { data: 'totalC' },
-          { data: 'totalD' },
-          { data: 'totalE' }
-        ]
+      'searching': false
     });
 
-    initSearchButton('/workflows/fresh_tobacco/fresh_type?');
-    initLinkedSelect();
+    initSearchButton('/workflows/fresh_tobacco/fresh_type?',
+                     function(data){
+                      table.api().clear().draw();
+                          if(data){
+                            table.api().rows.add(data).draw();
+                            $('#chartContainer').show();
+                            var datasets = generatePieChartDatasets(table,[3,4,5,6,7],
+                                                                   ['正常烟叶','返青烟叶','干旱烟叶','黑暴烟叶','后发烟叶']);
+                            createPieChart('chartContainer', datasets);
+                          }
+
+                        initDataForStatistics();
+                    }
+    );
+
+    initLinkedSelectByJSON(stateParam);
     initAdvanceSearchLink();
+    initDataForStatistics();
 
-    $.getJSON('/fresh_analysis/types/summery?code=' + stateParam, function(data){
-      
-      if(data){
-        data.forEach(function(element, index){
-          console.log(element);
-          sumTable.api().clear().draw();    
-          sumTable.api().rows.add(data).draw();
-        });
-      }
-    });
   });
 
-  function prepairDatasets(dataTable){
-
-    var normal = 0;
-    dataTable.api().columns(4).data().reduce(function(a, b){
-        return a + b;
-    }).forEach(function(value , index){
-      normal += parseFloat(value);
-    });
-
-    var fanqing = 0;
-    dataTable.api().columns(5).data().reduce(function(a, b){
-        return a + b;
-    }).forEach(function(value , index){
-      fanqing += parseFloat(value);
-    });
-
-    var ganhan = 0;
-    dataTable.api().columns(6).data().reduce(function(a, b){
-        return a + b;
-    }).forEach(function(value , index){
-      ganhan += parseFloat(value);
-    });
-
-    var heibao = 0;
-    dataTable.api().columns(7).data().reduce(function(a, b){
-        return a + b;
-    }).forEach(function(value , index){
-      heibao += parseFloat(value);
-    });
-
-    var houfa = 0;
-    dataTable.api().columns(8).data().reduce(function(a, b){
-        return a + b;
-    }).forEach(function(value , index){
-      houfa += parseFloat(value);
-    });
-    
-    console.log(normal)
-    var data = [
-      {y: normal.toFixed(2),  indexLabel: "正常烟叶"},
-      {y: fanqing.toFixed(2),  indexLabel: "返青烟叶"},
-      {y: ganhan.toFixed(2),  indexLabel: "干旱烟叶"},
-      {y: heibao.toFixed(2),  indexLabel: "黑暴烟叶"},
-      {y: houfa.toFixed(2),  indexLabel: "后发烟叶"}
-    ];
-    return data;
-  }
-
-
-
-
-  function showChart(){
-    var datasets = prepairDatasets(table);
-
-    $('#chartContainer').show();
-    var chart = new CanvasJS.Chart("chartContainer",
-      {
-        
-        legend: {
-          maxWidth: 350,
-          itemWidth: 120
-        },
-        data: [
-        {
-          type: "pie",
-          showInLegend: true,
-          legendText: "{indexLabel}",
-          toolTipContent: "{y} - #100 %",
-          dataPoints: datasets
-        }
-        ]
-      });
-      chart.render();
-  }
-function setStateParam(state){
-      stateParam = state;
-  }
-
-  function initAdvanceSearchLink(){
-    $('#advance-search-link').on('click', function(){
-      if(advanceDisplay)
-        $('#search-advance').hide();
-      else
-        $('#search-advance').show();
-
-      advanceDisplay = !advanceDisplay;
-    });
-  }
-
-  function initLinkedSelect(){
-    var cityId = <%= role %>;
-    $.getJSON('/cities/' + cityId, function(data){
+  function initDataForStatistics(){
+      $.getJSON('/fresh_analysis/types/summery?code=' + stateParam, function(data){
+      
       if(data){
         console.log(data);
-        var options = '';
-        data.forEach(function(county, index){
-          options += '<option value="' +county.id +'">' + county.name + '</option>';
-        });
-        $(options).appendTo($('#place'));
-      }
-    });
+        var datasets = [];
+          data.forEach(function(element){
+            var array = [];
+            
+            switch((stateParam+'').length){
+              case 2:
+                array.push(element.city);
+                break;
+              case 4:
+                array.push(element.county);
+                break;
+              case 6:
+                array.push(element.town);
+                break;
+              case 8:
+                array.push(element.org_name);
+                break;
+            }
 
-    $('#place').on('change', function(){
-        var county = $('#place').val();
-        setStateParam(county);
+            array.push(element.amount);
+            array.push(element.totalA);
+            array.push(element.totalB);
+            array.push(element.totalC);
+            array.push(element.totalD);
+            array.push(element.totalE);
 
-        $.getJSON('/counties/' + county + '/towns', function(data){
+            datasets.push(array);
+          });
+
+          sumTable.api().clear().draw();    
+          sumTable.api().rows.add(datasets).draw();
           
-          if(data.length > 0){
-            var options = '<option value="">选择镇</option>';
-            data.forEach(function(town, index){
-              options += '<option value="'+ town.id +'">' + town.name + '</option>';
-            });
-            $(options).appendTo($('#town'));
-            $('#towns').show();
-          }
-        });
-    });
-
-    $('#town').on('change', function(){
-        var town = $('#town').val();
-        setStateParam(town);
-
-        $.getJSON('/towns/' + town + '/stations', function(data){
-          if(data.length > 0){
-              console.log(data);
-              var options = '<option value="">选择工场</option>';
-              data.forEach(function(station, index){
-                options += '<option value="' + station.middlewares + '">' + station.name + '</option>';
-              });
-              $(options).appendTo($('#station'));
-              $('#stations').show();
-          }
-        })
-      });
-
-    $('#station').on('change', function(){
-        setStateParam($('#station').val());
+          createPieChart('sumChartContainer', 
+                        generatePieChartDatasets(sumTable,
+                          [2,3,4,5,6], 
+                          ['正常烟叶','返青烟叶','干旱烟叶','黑暴烟叶','后发烟叶']));   
+      }else{
+          sumTable.api().clear().draw();
+          $('#sumChartContainer').hide();
+          $('#chartContainer').hide();   
+      }  
     });
   }
 
-  function initSearchButton(url){
-    $('#searchButton').on('click', function(){
-
-      var baseUrl = url;
-      var roomNo = $('#roomNo').val();
-      var tobaccoNo = $('#tobaccoNo').val();
-    
-      var protocolStartDate = $('#protocolStartDate').val();
-      var protocolEndDate = $('#protocolEndDate').val();
-
-      if(roomNo != '')
-        baseUrl += 'room_no=' + roomNo + '&'  
-      if(tobaccoNo != '')
-        baseUrl += 'tobacco_no=' + tobaccoNo + '&';
-     
-      if(stateParam != '')
-        baseUrl += 'code=' + stateParam + '&';
-     
-      if(protocolStartDate != '')
-        baseUrl += 'startDate=' + protocolStartDate + '&';
-
-      if(protocolEndDate != '')
-        baseUrl += 'endDate=' + protocolEndDate + '&';
-
-      baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('&') );
-      console.log(baseUrl);
-      $.getJSON(baseUrl, function(data){
-          
-          table.api().clear().draw();
-          
-          if(data){
-            table.api().rows.add(data).draw();
-            showChart();
-         }
-
-      });
-    });
-  }
-
-    
 </script>

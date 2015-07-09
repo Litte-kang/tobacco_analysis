@@ -95,7 +95,10 @@
             </div>
           </div>
           <div class="row">
-            <h5 class="sub-header" style="text-align:center">烘烤鲜烟品种统计表</h5>
+            <div id="sumChartContainer" style="height: 300px; width: 100%;"></div>
+          </div>
+          <div class="row">
+            <h5 class="sub-header" style="text-align:center">烘烤鲜烟品种合计表</h5>
             <h6 style="text-align:center">单位：公斤</h6>
             <div class="table-responsive">
               <table class="table table-striped table-hover table-condensed" id="sumTable">
@@ -110,9 +113,9 @@
             </div>
           </div>
            <div class="row">
-            <canvas id="myChart" height="400" width="947" style="display:none"></canvas>
+            <div id="chartContainer" style="height: 300px; width: 100%; display: none"></div>
           </div>
-          <h5 class="sub-header" style="text-align:center">烘烤鲜烟干烟质量统计表</h5>
+          <h5 class="sub-header" style="text-align:center">烘烤鲜烟干烟质量明细表</h5>
           <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
             <table class="table table-striped table-hover table-condensed" id="table">
@@ -120,7 +123,6 @@
                 <tr>
                   <th>烤房编号</th>
                   <th>烟基编号</th>
-                  <th>所属机构</th>
                   <th>鲜烟总量</th>
                   <th>干烟总量</th>
                 </tr>
@@ -140,10 +142,10 @@
   $('document').ready(function(){
       table = $('#table').dataTable({
         "scrollCollapse": true,
+        'searching': false,
         columns: [
-            { data: 'room' },
+            { data: 'room_no' },
             { data: 'tobacco_no' },
-            { data: 'org_name'},
             { data: 'amount' },
             { data: 'dry'}
           ]
@@ -153,182 +155,62 @@
         "scrollCollapse": true,
         "paging": false,
         'searching': false,
-        columns: [
-            { data: 'county' },
-            { data: 'amount' },
-            { data: 'dry' }
-          ]
       });
 
-      initSearchButton('/workflows/dries?');
-      initLinkedSelect();
+      initSearchButton('/workflows/dries?', 
+                      function(data){
+                        table.api().clear().draw();
+                          if(data){
+                            table.api().rows.add(data).draw();
+                            $('#chartContainer').show();
+                            var datasets = generatePieChartDatasets(table,[2,3],
+                                                                   ['鲜烟总量', '干烟总量']);
+                            createPieChart('chartContainer', datasets);
+                          }
+                          initDataForStatistics();
+                      }
+      );
+
+      initLinkedSelectByJSON(stateParam);
       initAdvanceSearchLink();
+      initDataForStatistics();
 
-      $.getJSON('/dry_tobacco/summery?code=' + stateParam, function(data){
-          if(data){
-            data.forEach(function(element, index){
-              console.log(element);
-              sumTable.api().clear().draw();    
-              sumTable.api().rows.add(data).draw();
-            });
-          }
-      });
+  });
 
-
- 
-
-
-            // function prepairDatasets(dataTable){
-
-            //   var normal = 0;
-            //   dataTable.api().columns(4).data().reduce(function(a, b){
-            //       return a + b;
-            //   }).forEach(function(value , index){
-            //     normal += parseFloat(value);
-            //   });
-
-            //   var fanqing = 0;
-            //   dataTable.api().columns(5).data().reduce(function(a, b){
-            //       return a + b;
-            //   }).forEach(function(value , index){
-            //     fanqing += parseFloat(value);
-            //   });
-
-            //   var ganhan = 0;
-            //   dataTable.api().columns(6).data().reduce(function(a, b){
-            //       return a + b;
-            //   }).forEach(function(value , index){
-            //     ganhan += parseFloat(value);
-            //   });
-
-            //   var heibao = 0;
-            //   dataTable.api().columns(7).data().reduce(function(a, b){
-            //       return a + b;
-            //   }).forEach(function(value , index){
-            //     heibao += parseFloat(value);
-            //   });
-
-           
-              
-            //   console.log(normal)
-            //   var data = [
-            //     {value: normal.toFixed(2), color:"#F7464A", highlight: "#FF5A5E", label: "云烟87"},
-            //     {value: fanqing.toFixed(2), color:"#46BFBD", highlight: "#5AD3D1", label: "湘烟3号"},
-            //     {value: ganhan.toFixed(2), color:"#FDB45C", highlight: "#FFC870", label: "K236"},
-            //     {value: heibao.toFixed(2), color:"#FCE95E", highlight: "#F1E970", label: "其他"},
-            //   ];
-            //   return data;
-            // }
-
-        
-
-});
-function setStateParam(state){
-      stateParam = state;
-  }
-
-  function initAdvanceSearchLink(){
-    $('#advance-search-link').on('click', function(){
-      if(advanceDisplay)
-        $('#search-advance').hide();
-      else
-        $('#search-advance').show();
-
-      advanceDisplay = !advanceDisplay;
-    });
-  }
-
-  function initLinkedSelect(){
-    var cityId = <%= role %>;
-    $.getJSON('/cities/' + cityId, function(data){
+  function initDataForStatistics(){
+    $.getJSON('/dry_tobacco/summery?code=' + stateParam, function(data){
       if(data){
-        console.log(data);
-        var options = '';
-        data.forEach(function(county, index){
-          options += '<option value="' +county.id +'">' + county.name + '</option>';
-        });
-        $(options).appendTo($('#place'));
+          var datasets = [];
+          data.forEach(function(element){
+            var array = [];
+            
+            switch((stateParam + '').length){
+              case 2:
+                array.push(element.city);
+                break;
+              case 4:
+                array.push(element.county);
+                break;
+              case 6:
+                array.push(element.town);
+                break;
+              case 8:
+                array.push(element.org_name);
+                break;
+            }
+
+            array.push(element.amount);
+            array.push(element.dry);
+           
+            datasets.push(array);
+          });
+          sumTable.api().clear().draw();    
+          sumTable.api().rows.add(datasets).draw();
+
+          createPieChart('sumChartContainer', 
+                        generatePieChartDatasets(sumTable, [1,2], ['鲜烟总量', '干烟总量'])); 
       }
     });
-
-    $('#place').on('change', function(){
-        var county = $('#place').val();
-        setStateParam(county);
-
-        $.getJSON('/counties/' + county + '/towns', function(data){
-          
-          if(data.length > 0){
-            var options = '<option value="">选择镇</option>';
-            data.forEach(function(town, index){
-              options += '<option value="'+ town.id +'">' + town.name + '</option>';
-            });
-            $(options).appendTo($('#town'));
-            $('#towns').show();
-          }
-        });
-    });
-
-    $('#town').on('change', function(){
-        var town = $('#town').val();
-        setStateParam(town);
-
-        $.getJSON('/towns/' + town + '/stations', function(data){
-          if(data.length > 0){
-              console.log(data);
-              var options = '<option value="">选择工场</option>';
-              data.forEach(function(station, index){
-                options += '<option value="' + station.middlewares + '">' + station.name + '</option>';
-              });
-              $(options).appendTo($('#station'));
-              $('#stations').show();
-          }
-        })
-      });
-
-    $('#station').on('change', function(){
-        setStateParam($('#station').val());
-    });
   }
-
-  function initSearchButton(url){
-    $('#searchButton').on('click', function(){
-
-      var baseUrl = url;
-      var roomNo = $('#roomNo').val();
-      var tobaccoNo = $('#tobaccoNo').val();
-    
-      var protocolStartDate = $('#protocolStartDate').val();
-      var protocolEndDate = $('#protocolEndDate').val();
-
-      if(roomNo != '')
-        baseUrl += 'room_no=' + roomNo + '&'  
-      if(tobaccoNo != '')
-        baseUrl += 'tobacco_no=' + tobaccoNo + '&';
-     
-      if(stateParam != '')
-        baseUrl += 'code=' + stateParam + '&';
-     
-      if(protocolStartDate != '')
-        baseUrl += 'startDate=' + protocolStartDate + '&';
-
-      if(protocolEndDate != '')
-        baseUrl += 'endDate=' + protocolEndDate + '&';
-
-      baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('&') );
-      console.log(baseUrl);
-      $.getJSON(baseUrl, function(data){
-          
-          table.api().clear().draw();
-          
-          if(data){
-            table.api().rows.add(data).draw();
-            showChart();
-         }
-
-      });
-    });
-  }
-
-
 
 </script>

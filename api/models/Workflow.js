@@ -87,10 +87,12 @@ module.exports = {
               break;
 
             case 'startDate':
-              query.protocol_created_at['>='] = new Date(opts[element]);
+              var date = opts[element].split('-');
+              query.protocol_created_at['>='] = new Date(date[0],parseInt(date[1]) - 1,date[2],0,0,0);
               break;
             case 'endDate':
-              query.protocol_created_at['<='] = new Date(opts[element]);
+              var endDate = opts[element].split('-');
+              query.protocol_created_at['<='] = new Date(endDate[0],parseInt(endDate[1]) - 1,endDate[2],23,59,59);
               break;
 
             case 'fresh_tobacco.breed':
@@ -99,7 +101,7 @@ module.exports = {
               break;
           }
       });
-        
+      sails.log(query);
       Workflow.find(query).exec(function(err, result){
         cb(err, result);
       })

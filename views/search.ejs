@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="col-xs-2" id="counties">
+    <select id="place" class="form form-control">
+      <option value="">选择县</option>
+      <%_.each(place.counties, function(county){%>
+        <option value="<%= county.id %>"> <%= county.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-xs-2" id="towns" style="display: none">
+    <select id="town" class="form form-control">
+    </select>
+  </div>
+  <div class="col-xs-2" id="stations" style="display: none">
+    <select id="station" class="form form-control">
+    </select>
+  </div>
+    <a href="javascript:void(0)" id="advance-search-link">高级搜索</a>
+</div>
+<div id="search-advance" style="display: none">
+   <div class="row">
+  <div class="col-xs-2">
+    <input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号">
+  </div>
+  <div class="col-xs-3">
+      <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">开始日期</div>
+            <input type="text" class="form-control" id="protocolStartDate" name="startDate" placeholder="YYYY-M-D"/>
+        </div>
+      </div> 
+  </div>
+  <div class="col-xs-3">
+      <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-addon">结束日期</div>
+            <input type="text" class="form-control" id="protocolEndDate" name="endDate" placeholder="年-月-日"/>
+        </div>
+      </div> 
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-2">
+      <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
+  </div>
+  <div class="col-xs-2">
+    <select id="tobaccoBreed" class="form form-control">
+        <option value="">选择鲜烟品种</option>
+        <option value="云烟87">云烟87</option>
+        <option value="湘烟3号">湘烟3号</option>
+        <option value="K236">K236</option>
+        <option value="other">其他</option>
+        
+      </select>
+    </div>
+
+  <div class="col-xs-2">
+      <select id="tobaccoPart" class="form form-control">
+        <option value="">选择烟叶部位</option>
+        <option value="上部叶">上部叶</option>
+        <option value="中部叶">中部叶</option>
+        <option value="下部叶">下部叶</option>
+      </select>
+  </div>
+  
+</div>
+</div>
+<div class="row">
+  <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
+  <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
+</div>

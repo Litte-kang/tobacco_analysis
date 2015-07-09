@@ -62,28 +62,6 @@ $('document').ready(function(){
         'paging': false,
         'searching': false
     });
-
-	var chart = new CanvasJS.Chart("chartContainer",
-	{
-	animationEnabled: true,
-	title:{
-		text: "永州各县鲜烟量"
-	},
-	data: [
-	{
-		type: "column", //change type to bar, line, area, pie, etc
-		dataPoints: [
-			{ label: "江华县", y: 78225 },
-			{ label: "道县", y: 0 },
-			{ label: "双牌县",  y: 0 },                                    
-			{ label: "蓝山县",  y: 0 },
-			{ label: "宁远县",  y: 0 }
-		]
-	}
-	]
-	});
-
-	chart.render();
 })
 
 </script>

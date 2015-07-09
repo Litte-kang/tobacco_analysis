@@ -6,12 +6,9 @@ module.exports = {
   attributes: {
   	  id:       {type: 'string', columnName: '_id' ,primaryKey: true},
       name:     {type: 'string'},
-    
-      
       belongs:  {
         model: 'city'
       },
-
       towns: {
         collection: 'town',
         via: 'belongs'
@@ -31,18 +28,9 @@ module.exports = {
       if(err) cb(err);
       if(county)
         Town.find({county_id: county.id}).exec(function(err, towns){
-          
           county.towns = towns;
-          sails.log(county);
           cb(err, county);
         });
     });
   }
-
-  // getTowns: function(id, cb){
-  //   Town.findOne({id: id}).exec(function(err, town){
-  //     cb(err, town);
-  //   })
-  // }
-
 };

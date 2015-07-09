@@ -20,7 +20,6 @@ module.exports = {
 	      			query.created_at['<='] = new Date(opts[element]);
 	      			break;
 	      		case 'code':
-	      			//query.org_name = new RegExp(opts[element]);
 	      			query.middleware['startsWith'] = opts[element]
 	      			break;
 	      		default:
@@ -28,66 +27,65 @@ module.exports = {
 
 	      	}
 	      });
-	      sails.log(query);
+	     
 	      return query;
     },
 
-    //Use mongodb native methods
+    //Cause the aggregation using mongodb native method
+    //so this query is different from waterline.js ORM method 
 	createAggregateParams: function(opts){
       var query = {};
-
       var params = Object.getOwnPropertyNames(opts);
 
       if(params.indexOf('startDate') >= 0 || params.indexOf('endDate') >= 0){
       	query.created_at = {};
       }
 
-      params.forEach(function(param, index){
+      params.forEach(function(param){
       	switch(param){
       		case 'code':
       			query.middleware = new RegExp(opts[param]);
       			break;
       		case 'startDate':
-      			query.created_at['$gt'] = new Date(opts[param]);
+      			query.created_at['$gte'] = new Date(opts[param]);
       			break;
       		case 'endDate':
-      			query.created_at['$lt'] = new Date(opts[param]);
+      			query.created_at['$lte'] = new Date(opts[param]);
       			break;
-      		case 'groupBy':
-
-      			break;
+          case 'groupBy':
+            break;
       		default:
       			query[param] = opts[param];
       	}
-      })
+      });
 
-      sails.log(query);
       return query;
     },
 
+    //Aggregation group
     groupBy: function(opts){
-    	var groupBy = {};
+      var groupBy = {};
+      if(opts.groupBy != undefined && opts.groupBy == '2'){
+        return {room_no : 1 , tobacco_no : 1, org_name : 1};
+      }
 
-      	var params = Object.getOwnPropertyNames(opts);
-    	    if(params.indexOf('groupBy') >= 0)
-		      	switch(parseInt(opts['groupBy'])){
-		      		case 1:
-		      			groupBy.city = 1;
-		      			break;
-		      		case 2:
-		      			groupBy.county = 1;
-		      			break;
-		      		case 3:
-		      			groupBy.town = 1;
-		      			break;
-		      		case 4:
-		      			groupBy.org_name = 1;
-		      			break;
-		      	}
-     		else
-      			groupBy = {room : 1 , tobacco_no : 1, org_name : 1};
-      		
-      	sails.log(groupBy);
-      	return groupBy;
+      switch(opts['code'].length){
+        case 2:
+          groupBy.city = 1;
+          break;
+        case 4:
+          groupBy.county = 1;
+          break;
+        case 6:
+          groupBy.town = 1;
+          break;
+        case 8:
+          groupBy.org_name = 1;
+          break;
+        default:
+          groupBy = {room_no : 1 , tobacco_no : 1, org_name : 1}; 
+      } 
+     		
+      return groupBy;
     }
 }

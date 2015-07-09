@@ -17,8 +17,8 @@
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" ><a href="/workflows/baking_history?code=4311" aria-controls="home" role="tab" data-toggle="link">烘烤量统计分析</a></li>
-              <li class="active" role="presentation"><a href="#" aria-controls="profile" role="tab" data-toggle="link">在烤统计分析</a></li>
+              <li class="active" role="presentation" ><a href="/workflows/baking_history?code=4311" aria-controls="home" role="tab" data-toggle="link">烤房使用情况统计</a></li>
+              <li  role="presentation"><a href="#" aria-controls="profile" role="tab" data-toggle="link">在烤统计分析</a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -31,37 +31,19 @@
                     </select>
                   </div>
                   <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
-                  <div class="col-xs-3">
-                      <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" />
-                        </div>
-                      </div> 
-                  </div>
-                  <div class="col-xs-3">
-                      <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" />
-                        </div>
-                      </div> 
-                  </div>
+
                 </div>
                 <div class="row">
-                  
                    <div class="col-xs-2">
-                  <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
-
+                      <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
                    </div>
-                 
+                </div>
+                <div class="row">
                   <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
                   <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
                 </div>
               </div>
-              <div role="tabpanel" class="tab-pane" id="profile">...</div>
-              <div role="tabpanel" class="tab-pane" id="messages">...</div>
-              <div role="tabpanel" class="tab-pane" id="settings">...</div>
+        
             </div>
         </div>
             </div>
@@ -70,7 +52,7 @@
           <h5 class="sub-header" style="text-align:center">烘烤量统计表</h5>
           <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
-            <table id="example" class="display table" cellspacing="0" width="100%">
+            <table id="table" class="display table" cellspacing="0" width="100%">
               <thead>
                 <tr>
                   <th >烤房</th>
@@ -85,7 +67,7 @@
               <tbody>
                 <%_.each(result, function(room){ %>
                   <tr>
-                    <td><%= room.room %></td>
+                    <td><%= room.room_no %></td>
                     <td><%= room.tobacco_no %></td>
                     <td><%= room.org_name %></td>
                     <td><%= room.freshAmount.toFixed(2) %></td>
@@ -106,119 +88,16 @@
   var stateParam = <%= role %>;
 
   $(document).ready(function() {
-    // table = $('#example').dataTable( {
-    //   "scrollY": 200,
-    //   "scrollX": true
-    // });
+    table = $('#example').dataTable( {
+      "scrollY": 200,
+      "scrollX": true
+    });
 
     //initSearchButton('/workflows/fresh_tobacco/breeds?');
     initLinkedSelect();
     initAdvanceSearchLink();
   });
 
-  function setStateParam(state){
-      stateParam = state;
-  }
-
-  function initAdvanceSearchLink(){
-    $('#advance-search-link').on('click', function(){
-      if(advanceDisplay)
-        $('#search-advance').hide();
-      else
-        $('#search-advance').show();
-
-      advanceDisplay = !advanceDisplay;
-    });
-  }
-
-  function initLinkedSelect(){
-    var cityId = <%= role %>;
-    $.getJSON('/cities/' + cityId, function(data){
-      if(data){
-        console.log(data);
-        var options = '';
-        data.forEach(function(county, index){
-          options += '<option value="' +county.id +'">' + county.name + '</option>';
-        });
-        $(options).appendTo($('#place'));
-      }
-    });
-
-    $('#place').on('change', function(){
-        var county = $('#place').val();
-        setStateParam(county);
-
-        $.getJSON('/counties/' + county + '/towns', function(data){
-          
-          if(data.length > 0){
-            var options = '<option value="">选择镇</option>';
-            data.forEach(function(town, index){
-              options += '<option value="'+ town.id +'">' + town.name + '</option>';
-            });
-            $(options).appendTo($('#town'));
-            $('#towns').show();
-          }
-        });
-    });
-
-    $('#town').on('change', function(){
-        var town = $('#town').val();
-        setStateParam(town);
-
-        $.getJSON('/towns/' + town + '/stations', function(data){
-          if(data.length > 0){
-              console.log(data);
-              var options = '<option value="">选择工场</option>';
-              data.forEach(function(station, index){
-                options += '<option value="' + station.middlewares + '">' + station.name + '</option>';
-              });
-              $(options).appendTo($('#station'));
-              $('#stations').show();
-          }
-        })
-      });
-
-    $('#station').on('change', function(){
-        setStateParam($('#station').val());
-    });
-  }
-
-  function initSearchButton(url){
-    $('#searchButton').on('click', function(){
-      var baseUrl = url;
-      var roomNo = $('#roomNo').val();
-      var tobaccoNo = $('#tobaccoNo').val();
-    
-      var protocolStartDate = $('#protocolStartDate').val();
-      var protocolEndDate = $('#protocolEndDate').val();
-
-      if(roomNo != '')
-        baseUrl += 'room_no=' + roomNo + '&'  
-      if(tobaccoNo != '')
-        baseUrl += 'tobacco_no=' + tobaccoNo + '&';
-     
-      if(stateParam != '')
-        baseUrl += 'code=' + stateParam + '&';
-     
-      if(protocolStartDate != '')
-        baseUrl += 'startDate=' + protocolStartDate + '&';
-
-      if(protocolEndDate != '')
-        baseUrl += 'endDate=' + protocolEndDate + '&';
-
-      baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('&') );
-      console.log(baseUrl);
-      $.getJSON(baseUrl, function(data){
-          
-          table.api().clear().draw();
-          
-          if(data){
-            table.api().rows.add(data).draw();
-            showChart();
-         }
-
-      });
-    });
-  }
+ 
 
 </script>

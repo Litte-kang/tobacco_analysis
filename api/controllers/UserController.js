@@ -18,7 +18,8 @@ module.exports = {
 				req.session.user = user._id;
 				req.session.role = user.role;
 				req.session.fullName = user.fullName();
-
+				req.session.middleware = user.middlewares[0];
+				
 				if(req.wantsJSON) return res.send({user: user});
 				return res.redirect('/dashbord');
 

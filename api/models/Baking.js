@@ -12,7 +12,7 @@ module.exports = {
   tableName: 'analysis_baking',
 
   attributes: {
-  		room:             {type: 'string'},
+  		room_no:          {type: 'string'},
   		tobacco_no:       {type: 'string'},
       org_name:         {type: 'string'},
   		start_time:       {type: 'date'},
@@ -28,6 +28,7 @@ module.exports = {
      var query = helper.createQueryParams(opts);
     
       Baking.find(query).sort('tobacco_no').exec(function(err, data){
+        sails.log(data);
         cb(err, data);
       })
     },
@@ -40,7 +41,7 @@ module.exports = {
       Baking.native(function(err, collection){
         if(err) cb(err);
         collection.group(
-          {room: 1, tobacco_no:1 , org_name:1},
+          {room_no: 1, tobacco_no:1 , org_name:1},
           query,
           {bakingAmount:0, count :0, bakedAmount: 0},
           function(curr, result){

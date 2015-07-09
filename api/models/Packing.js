@@ -14,7 +14,7 @@ module.exports = {
   attributes: {
 
   		tobacco_no:         {type: 'string'},
-  		room:               {type: 'string'},
+  		room_no:            {type: 'string'},
   		org_name:           {type: 'string'},
   		packing_amount:     {type: 'float'},
   		packing_bar:        {type: 'integer'},
@@ -33,6 +33,8 @@ module.exports = {
     analysisPacking: function(opts, cb){
       var query = helper.createAggregateParams(opts);
       var groupBy = helper.groupBy(opts);
+      sails.log(query);
+      sails.log(groupBy);
 
       Packing.native(function(err, collection){
           if(err) return cb(err);
@@ -47,6 +49,7 @@ module.exports = {
               function(curr, result){
                 result.amount += curr.packing_amount
                 result.bars   += curr.packing_bar
+                
                 result.totalA += curr.packing_category.A
                 result.totalB += curr.packing_category.B
 
@@ -63,7 +66,7 @@ module.exports = {
                 result.totalJ += curr.rod_uniform.A
                 result.totalK += curr.rod_uniform.B
               },
-              {$sort : { room : 1 } },
+              {$sort : { room_no : 1 } },
           function(err, result){
             sails.log(result)
             cb(err, result);

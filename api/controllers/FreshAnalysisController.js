@@ -12,9 +12,8 @@ module.exports = {
   		case 4:
   			City.getCity(req.session.role, function(err, city){
   				if(err) res.negotiate(err);
-  				
   				return res.view('workflow/fresh_tobacco/index', 
-  								{place: city, fullName: req.session.fullName});
+  								{place: city, fullName: req.session.fullName, middleware: req.session.middleware});
   			});
   		break;
   	}

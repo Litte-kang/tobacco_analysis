@@ -57,7 +57,7 @@ var table;
     table =  $('#alarms').dataTable({
         "retrieve": true,
         "searching" : false,
-        'ordering':false,
+        'ordering' : true,
         columns:[
           { data: 'createdAt' },
           { data: 'dry'},
@@ -84,146 +84,111 @@ var table;
       }else{
         baseURL += 'startDate=' +startDate + '&endDate='+endDate;
         $('#loading').show();
+
         $.getJSON(baseURL, function(result){
+          console.log(result);
+          if(result){
+            $('#loading').text('Initializing Data...');
 
-        if(result.length > 0){
-          $('#loading').text('Initialing Data...');
-          var days = ((new Date(endDate)).getTime() - (new Date(startDate)).getTime())/(3600000*24);
-          var looper = 0;
+            var days = ((new Date(endDate)).getTime() - (new Date(startDate)).getTime())/(3600000*24);
+            var looper = 0;
 
-          if(days * 24 * 30 > result.length)
-            looper = Math.floor(result.length / 30);
-          else
-            looper = days * 24;
+            if(days * 24 * 30 > result.length)
+              looper = Math.floor(result.length / 30);
+            else
+              looper = days * 24;
 
+            for(var i =0; i < looper; i++){
+            
+              var data = result[i*30];
+              var alarm = parseAlarm(data.data);
+              var dateTime = data.createdAt.split('.')[0];
+              var date = dateTime.split('T')[0];
+              var time = dateTime.split('T')[1];
 
-          for(var i =0; i < looper; i++){
-            // points.push(result[i * 30]);
-            var data = result[i*30];
-            var alarm = parseAlarm(data.data);
-            var dateTime = data.createdAt.split('.')[0];
-            var date = dateTime.split('T')[0];
-            var time = dateTime.split('T')[1];
+              var object = {createdAt: data.createdAt.split('.')[0] ,
+                            dry: alarm[0],
+                            wet: alarm[1]};
 
-            var object = {
-              createdAt: data.createdAt.split('.')[0] ,
-              dry: alarm[0],
-              wet: alarm[1]
-            };
+              var createdAt = (new Date(date.split('-')[0], date.split('-')[1] - 1 , date.split('-')[2],
+                                        time.split(':')[0], time.split(':')[1] - 1 , time.split(':')[2])).
+                                        getTime();
 
-            var createdAt = (new Date(date.split('-')[0], date.split('-')[1] - 1 , date.split('-')[2],
-                                        time.split(':')[0], time.split(':')[1] - 1 , time.split(':')[2])).getTime();
+              dryPoints.push({x: createdAt, y: object.dry});
+              wetPoints.push({x: createdAt, y: object.wet});
 
-            dryPoints.push({x: createdAt, y: object.dry});
-            wetPoints.push({x: createdAt, y: object.wet});
-
-            datasets.push(object);
-          }
-
-
-
-/*          result.forEach(function(data){
-            var alarm = parseAlarm(data.data);
-
-            var dateTime = data.createdAt.split('.')[0]
-            var date = dateTime.split('T')[0];
-            var time = dateTime.split('T')[1];
-
-            var object = {
-              createdAt: data.createdAt.split('.')[0] ,
-              dry: alarm[0],
-              wet: alarm[1]
-            };
-
-            var createdAt = (new Date(date.split('-')[0], date.split('-')[1], date.split('-')[2],
-                                        time.split(':')[0], time.split(':')[1], time.split(':')[2])).getTime();
-
-            dryPoints.push({x: createdAt, y: object.dry});
-            wetPoints.push({x: createdAt, y: object.wet});
-
-            datasets.push(object);
-          });*/
-          $('#chartContainer').show();
-          var chart = new CanvasJS.Chart("chartContainer",
-    {
-
-      
-      animationEnabled: true,
-      axisX:{
-
-        gridColor: "Silver",
-        tickColor: "silver",
-        interval:1, 
-        intervalType: "minut",        
-        valueFormatString: "YYYY-MM-DD HH:m:s", 
-        labelAngle: -50
-      },                        
-                        toolTip:{
-                          shared:true
-                        },
-      theme: "theme2",
-      axisY: {
-        gridColor: "Silver",
-        tickColor: "silver"
-      },
-      legend:{
-        verticalAlign: "center",
-        horizontalAlign: "right"
-      },
-      data: [
-      {        
-        type: "line",
-        showInLegend: true,
-        lineThickness: 2,
-        name: "干球实际温度",
-        markerType: "square",
-        color: "#F08080",
-       
-       valueFormatString: "YYYY-MM-DD:HH:m:s",
-        dataPoints: dryPoints
-      },
-      {        
-        type: "line",
-        showInLegend: true,
-        name: "湿球实际温度",
-        color: "#20B2AA",
-        lineThickness: 2,
-        xValueType: "dateTime",
-        dataPoints: wetPoints
-      }
-
-      
-      ],
-          legend:{
-            cursor:"pointer",
-            itemclick:function(e){
-              if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                e.dataSeries.visible = false;
-              }
-              else{
-                e.dataSeries.visible = true;
-              }
-              chart.render();
+              datasets.push(object);
             }
-          }
-    });
 
-chart.render();
+            $('#chartContainer').show();
+            var chart = new CanvasJS.Chart("chartContainer",
+                {
+                  animationEnabled: true,
+                  axisX:{
+                    gridColor: "Silver",
+                    tickColor: "silver",
+                    interval:1, 
+                    intervalType: "minut",        
+                    valueFormatString: "YYYY-MM-DD HH:mm:ss", 
+                    labelAngle: -50
+                  },                        
+                  toolTip:{
+                    shared:true
+                  },
+                  theme: "theme2",
+                  axisY: {
+                    gridColor: "Silver",
+                    tickColor: "silver"
+                  },
+                  legend:{
+                    verticalAlign: "center",
+                    horizontalAlign: "right"
+                  },
+                  data: [
+                  {        
+                    type: "line",
+                    showInLegend: true,
+                    lineThickness: 2,
+                    name: "干球实际温度",
+                    markerType: "square",
+                    color: "#F08080",
+                   
+                    valueFormatString: "YYYY-MM-DD:HH:mm:ss",
+                    dataPoints: dryPoints
+                  },
+                  {        
+                    type: "line",
+                    showInLegend: true,
+                    name: "湿球实际温度",
+                    color: "#20B2AA",
+                    lineThickness: 2,
+                    xValueType: "dateTime",
+                    dataPoints: wetPoints
+                  }
+                  ],
+                  legend:{
+                    cursor:"pointer",
+                    itemclick:function(e){
+                      if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible){
+                        e.dataSeries.visible = false;
+                      }
+                      else{
+                        e.dataSeries.visible = true;
+                      }
+                      chart.render();
+                    }
+                  }
+                });
+            chart.render();
+          }else
+            $('#loading').text('Data not found!');
 
-
-
-        }else
-          alert('Not found');
-        $('#loading').hide();
-        table.api().clear().draw();    
-        table.api().rows.add(datasets).draw();
-      })
+            $('#loading').hide();
+            table.api().clear().draw();    
+            table.api().rows.add(datasets).draw();
+        })
       }
-    }
-    else
+    }else
       alert('请填写烤房号');
   });
-
-
-
 </script>

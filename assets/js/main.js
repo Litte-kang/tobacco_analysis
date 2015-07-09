@@ -1,3 +1,5 @@
+$('#protocolStartDate').datepicker({format: 'yyyy-mm-dd'});
+$('#protocolEndDate').datepicker({format: 'yyyy-mm-dd'});
 function parseAlarm(data){
         
     var array = [];

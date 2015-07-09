@@ -73,7 +73,7 @@
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" placeholder="YYYY-M-D"/>
+                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" />
                         </div>
                       </div> 
                   </div>
@@ -81,7 +81,7 @@
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" placeholder="年-月-日"/>
+                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" />
                         </div>
                       </div> 
                   </div>
@@ -165,6 +165,7 @@
   var stateParam = <%= place.code %>;
 
   $(document).ready(function(){
+
       detailTable = $('#fresh_table').dataTable({
         "scrollCollapse": true,
         'searching': false
@@ -362,4 +363,6 @@
     });
     return freshTobaccos;
   } 
+
+
 </script>

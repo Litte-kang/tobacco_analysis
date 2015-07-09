@@ -17,7 +17,7 @@
                 <div class="form-group">
                   <div class="input-group">
                       <div class="input-group-addon">开始日期</div>
-                      <input type="text" class="form-control" id="startTime" name="startDate" placeholder="YYYY-MM-DD"/>
+                      <input type="text" class="form-control" id="protocolStartDate" name="protocolStartDate" />
                   </div>
                 </div> 
             </div>
@@ -25,7 +25,7 @@
                 <div class="form-group">
                   <div class="input-group">
                       <div class="input-group-addon">结束日期</div>
-                      <input type="text" class="form-control" id="endTime" name="endDate" placeholder="YYYY-MM-DD"/>
+                      <input type="text" class="form-control" id="protocolEndDate" name="protocolEndDate" />
                   </div>
                 </div> 
             </div>
@@ -70,8 +70,8 @@ var table;
 
   $('#search_btn').on('click', function(){
     var roomNo = $('#roomNo').val();
-    var startDate = $('#startTime').val();
-    var endDate = $('#endTime').val();
+    var startDate = $('#protocolStartDate').val();
+    var endDate = $('#protocolEndDate').val();
 
     if(roomNo != ''){
       var datasets = [];

@@ -7,7 +7,7 @@
 
 module.exports = {
 	index: function(req, res){
-		res.view('monitor/index', {fullName: req.session.fullName});
+		res.view('monitor/index', {fullName: req.session.fullName, role: req.session.role});
 	},
 
 	alarms: function(req, res){

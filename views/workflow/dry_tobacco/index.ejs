@@ -3,8 +3,8 @@
             <li><a href="/dashbord">烘烤总览</a></li>
             <li ><a href="/fresh_analysis">鲜烟素质分析 <span class="sr-only">(current)</span></a></li>
             <li ><a href="/fresh_tobacco/packings">装烟情况统计</a></li>
-            <li class="active"><a href="/workflows/baking_history?code=4311">烘烤量统计</a></li>
-            <li><a href="/analysis_room_usage?code=4311">烤房使用情况统计</a></li>
+            <li class="active"><a href="/workflows/baking_history?code=<%= role %>">烘烤量统计</a></li>
+            <li><a href="/analysis_room_usage?groupBy=2&code=<%= role %>">烤房使用情况统计</a></li>
             <li><a href="/alarms">烤房远程监管</a></li>
           </ul>       
         </div>
@@ -17,17 +17,25 @@
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" class="active"><a href="/workflows/fresh_tobacco" aria-controls="home" role="tab" data-toggle="link">烘烤量统计分析</a></li>
-              <li role="presentation"><a href="/baking_analysis/baking?code=4311" aria-controls="profile" role="tab" data-toggle="link">在烤统计分析</a></li>
+              <li role="presentation" class="active"><a href="#" aria-controls="home" role="tab" data-toggle="link">烘烤量统计分析</a></li>
+              <li role="presentation"><a href="/baking_analysis/baking?groupBy=2&code=<%= role %>" aria-controls="profile" role="tab" data-toggle="link">在烤统计分析</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
               <div role="tabpanel" class="tab-pane active" id="home">
                 <div class="row">
-                  <div class="col-xs-2">
+                  <div class="col-xs-2" id="counties">
                     <select id="place" class="form form-control">
                       <option value="">选择县</option>
+                    </select>
+                  </div>
+                  <div class="col-xs-2" id="towns" style="display: none">
+                    <select id="town" class="form form-control">
+                    </select>
+                  </div>
+                  <div class="col-xs-2" id="stations" style="display: none">
+                    <select id="station" class="form form-control">
                     </select>
                   </div>
                   <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
@@ -96,24 +104,7 @@
                   <th>干烟重量</th>
                 </tr>
               </thead>
-              <tbody>
-                <%_.each(result, function(room){ %>
-                  <tr>
-                    <td><%= room.room_no %></td>
-                    <td><%= room.tobacco_no %></td>
-
-                    <%_.each(room.history, function(h){ %>
-                      
-                      <td><%= h.fresh_weight.toFixed(2) %></td>
-                      <td><%= h.dry_weight.toFixed(2) %></td>
-                   
-                    <% }) %>
-
-                     <td><%= room.baking_weight.toFixed(2) %></td>
-                     
-                  </tr>
-                <%  }) %>
-              </tbody>
+              
             </table>
            
           </div>
@@ -129,47 +120,63 @@
       "scrollCollapse": true,
       'searching': false
     });
-    initLinkedSelect();
+
+    initLinkedSelectByJSON(stateParam);
     initAdvanceSearchLink();
+
+    initSearchButton('/workflows/baking_history?',
+     function(data){
+          if(data){
+            table.api().clear().draw();
+            table.api().rows.add(initDataForStatistics(data)).draw();
+          } 
+      }
+    );
+
+    initLinkedSelectByJSON(stateParam);
+    initAdvanceSearchLink();
+    
+
+    $.getJSON('/workflows/baking_history?&code=' + stateParam, function(data){
+      if(data){
+         table.api().clear().draw();
+         table.api().rows.add(initDataForStatistics(data)).draw();
+      }else
+         table.api().clear().draw();
+    })
+
+    
   });
 
- 
-  function initSearchButton(url){
-    $('#searchButton').on('click', function(){
-      var baseUrl = url;
-      var roomNo = $('#roomNo').val();
-      var tobaccoNo = $('#tobaccoNo').val();
-    
-      var protocolStartDate = $('#protocolStartDate').val();
-      var protocolEndDate = $('#protocolEndDate').val();
+  function initDataForStatistics(data){
+    var datasets = [];
 
-      if(roomNo != '')
-        baseUrl += 'room_no=' + roomNo + '&'  
-      if(tobaccoNo != '')
-        baseUrl += 'tobacco_no=' + tobaccoNo + '&';
-     
-      if(stateParam != '')
-        baseUrl += 'code=' + stateParam + '&';
-     
-      if(protocolStartDate != '')
-        baseUrl += 'startDate=' + protocolStartDate + '&';
+    data.forEach(function(element){
+      var array = [];
+      array.push(element.room_no);
+      array.push(element.tobacco_no);
 
-      if(protocolEndDate != '')
-        baseUrl += 'endDate=' + protocolEndDate + '&';
-
-      baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('&') );
-      console.log(baseUrl);
-      $.getJSON(baseUrl, function(data){
-          
-          table.api().clear().draw();
-          
-          if(data){
-            table.api().rows.add(data).draw();
-            showChart();
-         }
-
+      var count = 0;
+      element.history.forEach(function(h){
+        array.push(h.fresh_weight);
+        array.push(h.dry_weight);
+        count++;
       });
+
+      if(count < 5){
+        for(var i = 0; i < 5 - count; i++){
+          array.push('');
+          array.push('');
+        }
+      }
+
+      datasets.push(array);
+      
+
     });
+    return datasets;
   }
+ 
+
 
 </script>

@@ -229,12 +229,19 @@ module.exports = {
       });
     },
 
+    //烘烤总览
     roomAnalysis: function(opts, cb){
+      var query = helper.createAggregateParams(opts);
+      var groupBy = helper.groupBy(opts);
+
+      sails.log(query);
+      sails.log(groupBy);
+      
       Breed.native(function(err, collection){
         if(err) cb(err);
         collection.group(
-          {city : 1},
-          {middleware: opts},
+          groupBy,
+          query,
           {bakingRoom: 0, amount: 0, normalRoom: 0, dryAmount:0, abitrateRoom:0, abitrateTobacco:0, abitrateFinished:0},
           function(curr, result){
             if(curr.dry_tobacco == null ){
@@ -245,7 +252,6 @@ module.exports = {
               result.dryAmount += curr.dry_tobacco.dry_tobacco_weight;
             }
           },function(err, result){
-            sails.log(result);
             cb(err, result);
           }
         )

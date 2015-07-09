@@ -11,20 +11,14 @@ module.exports = {
 	index: function(req, res){
 
 		var session = req.session;
-		Breed.roomAnalysis(session.middleware, function(err, result){
+		req.query.code = session.role;
+
+		Breed.roomAnalysis(req.query, function(err, result){
 			if(err) res.negotiate(err);
-			return res.view('dashbord', {fullName: session.fullName, result: result});
+			if(req.wantsJSON) return res.send(result); 
+			return res.view('dashbord', {fullName: session.fullName, result: result, role: session.role});
 		})
 		
-	},
-
-	// overview: function(req, res){
-	// 	var session = req.session;
-	// 	Breed.roomAnalysis(req.query, function(err, result){
-	// 		if(err) res.negotiate(err);
-	// 		return res.view('overview', {fullName: session.fullName, result: result});
-	// 	})
-		
-	// }
+	}
 };
 

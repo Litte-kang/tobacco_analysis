@@ -25,8 +25,8 @@ module.exports = {
 
 	  //Class method
     findBakingHistory: function(opts, cb){
-     var query = helper.createQueryParams(opts);
-    
+      var query = helper.createQueryParams(opts);
+      
       Baking.find(query).sort('tobacco_no').exec(function(err, data){
         sails.log(data);
         cb(err, data);
@@ -34,14 +34,13 @@ module.exports = {
     },
 
     aggragateBaking: function(opts, cb){
-      sails.log('Analysis baking...');
-
-      var query =helper.createAggregateParams(opts);
+      var query = helper.createAggregateParams(opts);
+      var groupBy = helper.groupBy(opts);
 
       Baking.native(function(err, collection){
         if(err) cb(err);
         collection.group(
-          {room_no: 1, tobacco_no:1 , org_name:1},
+          groupBy,
           query,
           {bakingAmount:0, count :0, bakedAmount: 0},
           function(curr, result){
@@ -61,11 +60,13 @@ module.exports = {
     },
 
     aggragateUsage: function(opts, cb){
-      var query =helper.createAggregateParams(opts);
+      var query = helper.createAggregateParams(opts);
+      var groupBy = helper.groupBy(opts);
+
       Baking.native(function(err, collection){
         if(err) cb(err);
         collection.group(
-          {room: 1, tobacco_no: 1, org_name:1},
+          groupBy,
           query,
           {freshAmount:0, dryAmount:0, count: 0, amountTime: 0},
           function(curr, result){

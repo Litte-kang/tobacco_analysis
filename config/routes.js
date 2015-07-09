@@ -111,7 +111,7 @@ module.exports.routes = {
  
  //烘烤量统计分析
  'get /baking_analysis/baking'                :'WorkflowController.bakingAnalysis',
- 'get /workflows/baking_history'               :'WorkflowController.findBakingHistory',
+ 'get /workflows/baking_history'              :'WorkflowController.findBakingHistory',
 
 
 

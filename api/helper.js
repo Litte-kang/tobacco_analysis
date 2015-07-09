@@ -65,6 +65,7 @@ module.exports = {
     //Aggregation group
     groupBy: function(opts){
       var groupBy = {};
+      
       if(opts.groupBy != undefined && opts.groupBy == '2'){
         return {room_no : 1 , tobacco_no : 1, org_name : 1};
       }

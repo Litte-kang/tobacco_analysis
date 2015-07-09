@@ -60,21 +60,24 @@ module.exports = {
 
     Baking.findBakingHistory(req.query, function(err, result){
       if(err) res.negotiate(err);
-      res.view('workflow/dry_tobacco/index', {result: result, fullName: req.session.fullName, role: req.session.role});
+      if(req.wantsJSON) return res.send(result);
+      return res.view('workflow/dry_tobacco/index', {result: result, fullName: req.session.fullName, role: req.session.role});
     })
   },
 
   bakingAnalysis: function(req, res){
     Baking.aggragateBaking(req.query, function(err, result){
       if(err) res.negotiate(err);
-      res.view('workflow/baking/index', {result: result, fullName: req.session.fullName, role: req.session.role});
+      if(req.wantsJSON) return res.send(result);
+      return res.view('workflow/baking/index', {result: result, fullName: req.session.fullName, role: req.session.role});
     })
   },
 
   roomUsage: function(req, res){
     Baking.aggragateUsage(req.query, function(err, result){
       if(err) res.negotiate(err);
-      res.view('workflow/baking/room', {result: result, fullName: req.session.fullName, role: req.session.role});
+      if(req.wantsJSON) return res.send(result);
+      return res.view('workflow/baking/room', {result: result, fullName: req.session.fullName, role: req.session.role});
     })
   }
 

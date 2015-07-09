@@ -20,7 +20,7 @@
               <li class="active" role="presentation" >
                 <a href="/workflows/baking_history?code=<%= role %>" aria-controls="home" role="tab" data-toggle="link">烤房使用情况统计</a>
               </li>
-              <li role="presentation"><a href="#" aria-controls="profile" role="tab" data-toggle="link">在烤统计分析</a></li>
+             
             </ul>
 
             <!-- Tab panes -->
@@ -40,29 +40,14 @@
                     <select id="station" class="form form-control">
                     </select>
                   </div>
-                  <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
+                  
 
                 </div>
                 <div class="row">
                    <div class="col-xs-2">
                       <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
                    </div>
-                   <div class="col-xs-3">
-                      <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" placeholder="YYYY-M-D"/>
-                        </div>
-                      </div> 
-                  </div>
-                  <div class="col-xs-3">
-                      <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" placeholder="年-月-日"/>
-                        </div>
-                      </div> 
-                  </div>
+                   <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
                 </div>
                 <div class="row">
                   <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
@@ -131,12 +116,8 @@
           table.api().clear().draw();
           if(data){
             table.api().rows.add(data).draw();
-            //$('#chartContainer').show();
-            // var datasets = generatePieChartDatasets(table,[3,4,5,6],
-            //                                        ['云烟87', '湘烟3号', 'K236','其他']);
-            // createPieChart('chartContainer', datasets);
           }
-          initDataForStatistics();
+          
       }
     );
 

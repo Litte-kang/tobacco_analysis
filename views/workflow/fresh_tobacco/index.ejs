@@ -23,7 +23,8 @@
             </div>
           </div>         
           <div class="row">
-            <div id="sumChartContainer" style="height: 300px; width: 100%;"></div>
+            <div id="sumChartContainer" style="height: 300px;" class="col-xs-4"></div>
+            <div id="groupByPlaceContainer" style="height: 300px;;" class="col-xs-8"></div>
           </div>
           <h4 class="sub-header" style="text-align:center">烘烤鲜烟成熟度统计</h4>
           <h6 style="text-align:center">单位：公斤</h6>
@@ -205,38 +206,107 @@
 
       if(data.length > 0){
         var datasets = [];
+        var chartData = [];
+
+        var chartObj1 = {};
+        var chartObj2 = {};
+        var chartObj3 = {};
+
+        chartObj1.type = 'stackedColumn';
+        chartObj1.showInLegend = true;
+        chartObj1.name = '正常烟叶';
+        //chartObj1.color = "#EDCA93";
+        chartObj1.toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}Kg",
+        chartObj1.dataPoints = [];
+
+        chartObj2.type = 'stackedColumn';
+        chartObj2.showInLegend = true;
+        chartObj2.name = '过熟烟叶';
+        //chartObj2.color = "#695A42";
+        chartObj2.toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}Kg",
+        chartObj2.dataPoints = [];
+
+        chartObj3.type = 'stackedColumn';
+        chartObj3.showInLegend = true;
+        chartObj3.name = '欠熟烟叶';
+        //chartObj3.color = '#B6B1A8';
+        chartObj3.toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}Kg",
+        chartObj3.dataPoints = [];
+
         data.forEach(function(element){
           var array = [];
-          
-          switch((stateParam+'').length){
+          var x ;
+          switch((stateParam + '').length){
             case 2:
               array.push(element.city);
+              x = element.city;
               break;
             case 4:
               array.push(element.county);
+              x = element.county;
               break;
             case 6:
               array.push(element.town);
+              x = element.town;
               break;
             case 8:
               array.push(element.org_name);
+              x = element.org_name;
               break;
           }
-
+          
           array.push(element.amount);
+
           array.push(element.totalA);
+          chartObj1.dataPoints.push({label: x, y: element.totalA});
+
           array.push(element.totalB);
+          chartObj2.dataPoints.push({label: x, y: element.totalB});
+
           array.push(element.totalC);
+          chartObj3.dataPoints.push({label: x, y: element.totalC});
 
           datasets.push(array);
         });
 
+        chartData.push(chartObj1);
+        chartData.push(chartObj2);
+        chartData.push(chartObj3);
+
+        console.log(chartData);
         sumTable.api().clear().draw();    
         sumTable.api().rows.add(datasets).draw();
 
-        //var datasets = generatePieChartDatasets(sumTable,[2,3,4], ['正常烟叶', '欠熟烟叶', '过熟烟叶']);
         createPieChart('sumChartContainer',
-                       generatePieChartDatasets(sumTable,[2,3,4], ['正常烟叶', '欠熟烟叶', '过熟烟叶']));        
+                       generatePieChartDatasets(sumTable,[2,3,4], ['正常烟叶', '欠熟烟叶', '过熟烟叶']));  
+
+
+         var chart = new CanvasJS.Chart("groupByPlaceContainer",
+        {
+            title:{
+      text: "各县鲜烟素质分析"   
+      },
+      axisY:{
+        title:"装烟量(Kg)"   
+      },
+      animationEnabled: true,
+      data: chartData,
+      legend:{
+        cursor:"pointer",
+        itemclick: function(e) {
+          if (typeof (e.dataSeries.visible) ===  "undefined" || e.dataSeries.visible) {
+            e.dataSeries.visible = false;
+          }
+          else
+          {
+            e.dataSeries.visible = true;
+          }
+          chart.render();
+        }
+      }
+       });
+
+        chart.render();      
       }else{
         sumTable.api().clear().draw();
         $('#sumChartContainer').hide();
@@ -244,6 +314,8 @@
       }   
     });
   }
+
+
 
   function analysisMaturityResult(arr){
     var freshTobaccos = [];

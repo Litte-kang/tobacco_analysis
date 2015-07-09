@@ -283,10 +283,10 @@ function initSearchButton(baseURL, callBack){
     if(stateParam != '')
       url += 'code=' + stateParam + '&';
    
-    if(protocolStartDate != '')
+    if(protocolStartDate != '' && protocolStartDate != undefined)
       url += 'startDate=' + protocolStartDate + '&';
 
-    if(protocolEndDate != '')
+    if(protocolEndDate != '' && protocolEndDate != undefined)
       url += 'endDate=' + protocolEndDate + '&';
 
     url = url.substring(0, url.lastIndexOf('&') );

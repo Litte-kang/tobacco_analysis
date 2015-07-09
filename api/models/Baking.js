@@ -63,6 +63,8 @@ module.exports = {
       var query = helper.createAggregateParams(opts);
       var groupBy = helper.groupBy(opts);
 
+      sails.log(groupBy);
+      sails.log(query);
       Baking.native(function(err, collection){
         if(err) cb(err);
         collection.group(

@@ -358,6 +358,7 @@
       var dryFiles = [];
       var dryPath = ''
       if(element.dry_tobacco != undefined && element.dry_tobacco != null && element.dry_tobacco.filename != undefined && element.dry_tobacco.filename != null){
+          dryFiles = element.dry_tobacco.filename;
           dryFiles.forEach(function(file){
             dryPath += '<a href="/images/photos/'+ file +'" target="_blank"><img src="/images/photos.jpg" width="20" height="20" /></a>'
           });

@@ -47,10 +47,11 @@ module.exports = {
             if(curr.history.length > 0){
               result.count += curr.history.length;
               curr.history.forEach(function(history, index){
-                result.bakedAmount += history.fresh_weight
+                result.bakedAmount += parseFloat(history.fresh_weight.toFixed(2))
               })
             }
-            result.bakingAmount += curr.baking_weight
+            result.bakingAmount += parseFloat(curr.baking_weight.toFixed(2));
+            result.bakedAmount = parseFloat(result.bakedAmount.toFixed(2));
           },function(err, result){
               sails.log(result);
               cb(err,result);
@@ -79,8 +80,12 @@ module.exports = {
               curr.history.forEach(function(history, index){
                 result.amountTime += (history.end_time.getTime() - history.start_time.getTime())/3600000;
                 result.dryAmount += history.dry_weight;
-                result.freshAmount += history.fresh_weight;
-              })
+                result.freshAmount += history.fresh_weight; 
+              });
+
+              result.amountTime = parseFloat(result.amountTime.toFixed(2))
+              result.freshAmount = parseFloat(result.freshAmount.toFixed(2));
+              result.dryAmount = parseFloat(result.dryAmount.toFixed(2));
 
             }else{
               var date = new Date();

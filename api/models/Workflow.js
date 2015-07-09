@@ -67,7 +67,6 @@ module.exports = {
 
   getBackups: function(opts, cb){
       var query = {};
-     
       var arr = Object.getOwnPropertyNames(opts);
 
       if(arr.indexOf('startDate') >= 0 || arr.indexOf('endDate') >= 0 )

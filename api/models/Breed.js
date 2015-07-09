@@ -30,11 +30,13 @@ module.exports = {
               query,
               {amount: 0, totalA: 0, totalB: 0, totalC: 0, totalD:0},
               function(curr, result){
-                result.amount += curr.packing_amount
-                result.totalA += curr.breeds.A
-                result.totalB += curr.breeds.B
-                result.totalC += curr.breeds.C
-                result.totalD += curr.breeds.D
+                result.amount += curr.packing_amount;
+                result.totalA += curr.breeds.A;
+                result.totalB += curr.breeds.B;
+                result.totalC += curr.breeds.C;
+                result.totalD += curr.breeds.D;
+
+
               },
               function(err, result){
                   result.sort();
@@ -167,6 +169,9 @@ module.exports = {
               result.dry += curr.dry_tobacco.dry_tobacco_weight;
             else
               result.dry += 0;
+
+            result.amount = parseFloat(result.amount.toFixed(2));
+            result.dry = parseFloat(result.dry.toFixed(2));
           },
           function(err, result){
             sails.log(result);
@@ -206,8 +211,7 @@ module.exports = {
             query[param] = opts[param];
           }
       });
-      sails.log(query);
-      sails.log(groupBy);
+      
       Breed.native(function(err, collection){
         if(err) return cb(err);
           collection.group(
@@ -215,11 +219,15 @@ module.exports = {
               query,
               {amount: 0, totalA: 0, totalB: 0, totalC: 0},
               function(curr, result){
-                result.amount += curr.packing_amount
-                result.totalA += curr.maturity.A
-                result.totalB += curr.maturity.B
-                result.totalC += curr.maturity.C
+                result.amount += curr.packing_amount;
+                result.totalA += curr.maturity.A;
+                result.totalB += curr.maturity.B;
+                result.totalC += curr.maturity.C;
                 
+                result.amount = parseFloat(result.amount.toFixed(2));
+                result.totalA = parseFloat(result.totalA.toFixed(2));
+                result.totalB = parseFloat(result.totalB.toFixed(2));
+                result.totalC = parseFloat(result.totalC.toFixed(2))
               }, 
               function(err, result){
                   sails.log(result)
@@ -251,6 +259,7 @@ module.exports = {
               result.normalRoom += 1;
               result.dryAmount += curr.dry_tobacco.dry_tobacco_weight;
             }
+            result.dryAmount = parseFloat(result.dryAmount.toFixed(2));
           },function(err, result){
             cb(err, result);
           }

@@ -254,7 +254,7 @@ module.exports = {
           query,
           {bakingRoom: 0, amount: 0, normalRoom: 0, dryAmount:0, abitrateRoom:0, abitrateTobacco:0, abitrateFinished:0},
           function(curr, result){
-            if(curr.dry_tobacco == null ){
+            if(curr.dry_tobacco == null || curr.dry_tobacco == undefined){
               result.bakingRoom += 1;
               result.amount += curr.packing_amount;
             }else{

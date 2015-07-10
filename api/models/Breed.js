@@ -240,6 +240,9 @@ module.exports = {
     },
 
     //烘烤总览
+    /**
+
+    **/
     roomAnalysis: function(opts, cb){
       var query = helper.createAggregateParams(opts);
       var groupBy = helper.groupBy(opts);
@@ -256,11 +259,13 @@ module.exports = {
           function(curr, result){
             if(curr.dry_tobacco == null || curr.dry_tobacco == undefined){
               result.bakingRoom += 1;
-              result.amount += curr.packing_amount;
+              //result.amount += curr.packing_amount;
             }else{
               result.normalRoom += 1;
               result.dryAmount += curr.dry_tobacco.dry_tobacco_weight;
             }
+            result.amount += curr.packing_amount;
+            result.amount = parseFloat(result.amount.toFixed(2));
             result.dryAmount = parseFloat(result.dryAmount.toFixed(2));
           },function(err, result){
             cb(err, result);

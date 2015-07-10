@@ -65,7 +65,7 @@ module.exports.routes = {
       action: 'index'
   },
 
-  'get /overview'                             :'DashbordController.overview',
+
 
   //鲜烟成熟度分析返回 view
   'get /fresh_analysis'                       :'FreshAnalysisController.index',

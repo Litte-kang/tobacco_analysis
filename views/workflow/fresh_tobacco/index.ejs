@@ -190,7 +190,7 @@
                             var datasets = generatePieChartDatasets(detailTable,[8,9,10], ['正常烟叶', '欠熟烟叶', '过熟烟叶'])
                             createPieChart('chartContainer', datasets);
                           }
-                          initDataForStatistics();
+                          //initDataForStatistics();
                       }
       );
       
@@ -204,6 +204,7 @@
   //private methods
   function initDataForStatistics(){
     var url = '/fresh_analysis/maturity/summery?code=' + stateParam;
+    console.log(url);
     $.getJSON(url, function(data){
 
       if(data.length > 0){

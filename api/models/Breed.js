@@ -212,6 +212,8 @@ module.exports = {
           }
       });
       
+      sails.log(query);
+
       Breed.native(function(err, collection){
         if(err) return cb(err);
           collection.group(

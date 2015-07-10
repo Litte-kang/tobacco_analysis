@@ -86,7 +86,7 @@ var table;
         $('#loading').show();
 
         $.getJSON(baseURL, function(result){
-          console.log(result);
+          
           if(result){
             $('#loading').text('Initializing Data...');
 
@@ -114,8 +114,15 @@ var table;
                                         time.split(':')[0], time.split(':')[1] - 1 , time.split(':')[2])).
                                         getTime();
 
-              dryPoints.push({x: createdAt, y: object.dry});
-              wetPoints.push({x: createdAt, y: object.wet});
+              if(parseFloat(object.dry) > 80)
+                dryPoints.push({x: createdAt, y: undefined});
+              else
+                dryPoints.push({x: createdAt, y: object.dry});
+
+              if(parseFloat(object.wet) > 80)
+                wetPoints.push({x: createdAt, y: undefined});
+              else
+                wetPoints.push({x: createdAt, y: object.wet});
 
               datasets.push(object);
             }

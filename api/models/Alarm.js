@@ -103,12 +103,11 @@ module.exports = {
   findAlarmMessage: function(opts, cb){
     var pointsPerDay = 24 * 30;
 
-    Tobacco.findOne({room_no: opts.params.roomNo, middleware: '4311290111'}).exec(function(err, data){
+    Tobacco.findOne({room_no: opts.params.roomNo, middleware: opts.session.middleware}).exec(function(err, data){
       if(err) cb(err);
       if(data){        
         var points = [];
         var query = {};
-        sails.log(opts.query.startDate);
         query.createdAt = {'>=' : new Date(opts.query.startDate), 
                        '<=' : new Date(opts.query.endDate.split('-')[0],
                                         opts.query.endDate.split('-')[1],

@@ -257,17 +257,20 @@ module.exports = {
           query,
           {bakingRoom: 0, amount: 0, normalRoom: 0, dryAmount:0, abitrateRoom:0, abitrateTobacco:0, abitrateFinished:0},
           function(curr, result){
-            if(curr.dry_tobacco == null || curr.dry_tobacco == undefined){
+            if(!curr.dry_tobacco){
               result.bakingRoom += 1;
-              //result.amount += curr.packing_amount;
+              result.amount += curr.packing_amount;
             }else{
               result.normalRoom += 1;
               result.dryAmount += curr.dry_tobacco.dry_tobacco_weight;
             }
-            result.amount += curr.packing_amount;
+            //result.amount += curr.packing_amount;
+
+
             result.amount = parseFloat(result.amount.toFixed(2));
             result.dryAmount = parseFloat(result.dryAmount.toFixed(2));
           },function(err, result){
+            sails.log(result);
             cb(err, result);
           }
         )

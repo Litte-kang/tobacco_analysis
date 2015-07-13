@@ -100,7 +100,6 @@ module.exports = {
               break;
           }
       });
-      sails.log(query);
       Workflow.find(query).exec(function(err, result){
         cb(err, result);
       })

@@ -64,8 +64,7 @@ module.exports = {
       var query = helper.createAggregateParams(opts);
       var groupBy = helper.groupBy(opts);
 
-      sails.log(groupBy);
-      sails.log(query);
+
       Baking.native(function(err, collection){
         if(err) cb(err);
         collection.group(
@@ -77,7 +76,7 @@ module.exports = {
             if(curr.history.length > 0){
               result.count += curr.history.length;
 
-              curr.history.forEach(function(history, index){
+              curr.history.forEach(function(history){
                 result.amountTime += (history.end_time.getTime() - history.start_time.getTime())/3600000;
                 result.dryAmount += history.dry_weight;
                 result.freshAmount += history.fresh_weight; 
@@ -93,7 +92,7 @@ module.exports = {
             }
 
           },function(err, result){
-            sails.log(result);
+  
             cb(err, result);
           }
         )

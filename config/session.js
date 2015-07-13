@@ -52,12 +52,12 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  host: 'localhost',
-  port: 6379,
-  ttl: 5000,
-  db: 'innotek_tobacco',
+  //host: 'localhost',
+  //port: 6379,
+  //ttl: 5000,
+  //db: 'innotek_tobacco',
   // pass: <redis auth password>,
-  prefix: 'sess:',
+  //prefix: 'sess:',
 
 
   /***************************************************************************

@@ -136,7 +136,7 @@
           </div>
         </div>
       </div>
-s
+
 <script type="text/javascript">
   var table;
   var sumTable;
@@ -170,6 +170,13 @@ s
                       function(data){
                           table.api().clear().draw();
                           if(data){
+                            data.map(function(r){
+                              r.amount = r.amount.toFixed(2);
+                              r.totalA = r.totalA.toFixed(2);
+                              r.totalB = r.totalB.toFixed(2);
+                              r.totalC = r.totalC.toFixed(2);
+                              r.totalD = r.totalD.toFixed(2);
+                            });
                             table.api().rows.add(data).draw();
                             $('#chartContainer').show();
                             var datasets = generatePieChartDatasets(table,[3,4,5,6],
@@ -210,11 +217,11 @@ s
                 break;
             }
 
-            array.push(element.amount);
-            array.push(element.totalA);
-            array.push(element.totalB);
-            array.push(element.totalC);
-            array.push(element.totalD);
+            array.push(element.amount.toFixed(2));
+            array.push(element.totalA.toFixed(2));
+            array.push(element.totalB.toFixed(2));
+            array.push(element.totalC.toFixed(2));
+            array.push(element.totalD.toFixed(2));
 
             datasets.push(array);
           });

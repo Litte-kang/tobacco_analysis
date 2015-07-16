@@ -98,7 +98,7 @@
             <div id="sumChartContainer" style="height: 300px; width: 100%;"></div>
           </div>
           <div class="row">
-            <h5 class="sub-header" style="text-align:center">烘烤鲜烟品种合计表</h5>
+            <h5 class="sub-header" style="text-align:center">烘烤烟叶类型合计表</h5>
             <h6 style="text-align:center">单位：公斤</h6>
             <div class="table-responsive">
               <table class="table table-striped table-hover table-condensed" id="sumTable">
@@ -119,7 +119,7 @@
           <div class="row">
             <div id="chartContainer" style="height: 300px; width: 100%; display: none"></div>
           </div>
-          <h5 class="sub-header" style="text-align:center">烘烤鲜烟烟叶类型明细表</h5>
+          <h5 class="sub-header" style="text-align:center">烘烤烟叶类型明细表</h5>
           <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
             <table class="table table-striped table-hover table-condensed" id="table">
@@ -150,6 +150,7 @@
   $('document').ready(function(){
     table = $('#table').dataTable({
         "scrollCollapse": true,
+        'searching': false,
         columns: [
           { data: 'room_no' },
           { data: 'tobacco_no'},
@@ -213,12 +214,12 @@
                 break;
             }
 
-            array.push(element.amount);
-            array.push(element.totalA);
-            array.push(element.totalB);
-            array.push(element.totalC);
-            array.push(element.totalD);
-            array.push(element.totalE);
+            array.push(element.amount.toFixed(2));
+            array.push(element.totalA.toFixed(2));
+            array.push(element.totalB.toFixed(2));
+            array.push(element.totalC.toFixed(2));
+            array.push(element.totalD.toFixed(2));
+            array.push(element.totalE.toFixed(2));
 
             datasets.push(array);
           });

@@ -16,6 +16,7 @@
 		        <div class="table-responsive">
 		        	<table class="table table-striped table-hover table-condensed" id="useage">
 		        		<thead>
+		        			<th>应用烤房数</th>
 		        			<th>装烟量</th>
 		        			<th>干烟总量</th>
 		        			<th>房数</th>
@@ -25,37 +26,70 @@
 		        </div>
             </div>
 	   		<div class="row">
-				<h5 class="sub-header" style="text-align:center">烘烤总览</h5>
+				<h5 class="sub-header" style="text-align:center">正在烘烤总量</h5>
 		        <h6 style="text-align:center">单位：公斤</h6>
 		        <div class="table-responsive">
 		          <table class="table table-striped table-hover table-condensed" id="table">
 		              <thead>
 		                <tr>
-		                  <th colspan="2">正在烘烤烟叶</th>
-		                  <th colspan="2">烘烤正常</th>
-		                  <th colspan="3">有质量争议</th>
-		                </tr>
-		                <tr>
-		                	<th>应用烤房数</th>
-		                	<th>装烟量</th>
-		                	<th>房数</th>
-		                	<th>干烟总量</th>
-		                	<th>房数</th>
-		                	<th>烟叶总量</th>
-		                	<th>已仲裁房数</th>
+		                  <th>应用烤房数</th>
+		                  <th>正在烘烤房数</th>
+		                  <th>装烟量</th>
+		                
 		                </tr>
 		              </thead>
 		              <tbody>
 		              	<%_.each(result, function(p){ %>
 		              		<tr>
-		              			
+		              			<td>50</td>
 		              			<td><%= p.bakingRoom %></td>
-		              			<td><%= p.amount %></td>
+		              			<td><%= p.amount %></td>	
+		              		</tr>
+		              	<% }) %>
+		              </tbody>
+		            </table>
+		  		</div>
+		  		<h5 class="sub-header" style="text-align:center">烘烤正常完成总量</h5>
+		        <h6 style="text-align:center">单位：公斤</h6>
+		        <div class="table-responsive">
+		          <table class="table table-striped table-hover table-condensed" id="table1">
+		              <thead>
+		                <tr>
+		                	<th>应用烤房数</th>
+		                	<th>房数</th>
+		                	<th>装烟量</th>
+		                </tr>
+		              </thead>
+		              <tbody>
+		              	<%_.each(result, function(p){ %>
+		              		<tr>
+		              			<td>50</td>
 		              			<td><%= p.normalRoom %></td>
 		              			<td><%= p.dryAmount %></td>
+		              		</tr>
+		              	<% }) %>
+		              </tbody>
+		            </table>
+		  		</div>
+		  		<h5 class="sub-header" style="text-align:center">烘烤争议总量</h5>
+		        <h6 style="text-align:center">单位：公斤</h6>
+		        <div class="table-responsive">
+		          <table class="table table-striped table-hover table-condensed" id="table2">
+		              <thead>
+		                <tr>
+		                	<th>应用烤房数</th>
+		                	<th>房数</th>
+		                	<th>装烟量</th>
+		                	<th>已决房数</th>
+		                </tr>
+		              </thead>
+		              <tbody>
+		              	<%_.each(result, function(p){ %>
+		              		<tr>
+		              			<td>50</td>
 		              			<td><%= p.abitrateRoom %></td>
 		              			<td><%= p.abitrateTobacco %></td>
-		              			<td><%= p.abitrateFinished %></td>
+		              			<td><%= p.abitrateFinished %></td> 
 		              		</tr>
 		              	<% }) %>
 		              </tbody>
@@ -77,12 +111,24 @@ $('document').ready(function(){
         'paging': false,
         'searching': false
     });
+    var table1 = $('#table1').dataTable({
+        "scrollCollapse": true,
+        'paging': false,
+        'searching': false
+    });
+    var table1 = $('#table2').dataTable({
+        "scrollCollapse": true,
+        'paging': false,
+        'searching': false
+    });
+   
 
 	useage = $('#useage').dataTable({
         "scrollCollapse": true,
         'paging': false,
         'searching': false,
         columns: [
+        	{data: 'rooms'},
         	{data: 'freshAmount'},
         	{data: 'dryAmount'},
         	{data: 'count'},
@@ -94,6 +140,12 @@ $('document').ready(function(){
 
 	var url = '/analysis_room_usage?code=<%= role %>';
     $.getJSON(url, function(data){
+    	console.log(data);
+    	data[0].rooms = 50;
+    	data[0].freshAmount = parseFloat(data[0].freshAmount).toFixed(2);
+    	data[0].dryAmount = parseFloat(data[0].dryAmount).toFixed(2);
+    	data[0].amountTime = parseFloat(data[0].freshAmount).toFixed(2);
+    	
     	useage.api().rows.add(data).draw();
     })
 })

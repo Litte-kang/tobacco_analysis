@@ -59,19 +59,34 @@
         </div>
             </div>
           </div>
-
-          <h5 class="sub-header" style="text-align:center">烘烤量统计表</h5>
+          <h5 class="sub-header" style="text-align:center">烤房使用统计表</h5>
+          <h6 style="text-align:center">单位：公斤</h6>
+          <div class="table-responsive">
+            <table id="sumTable" class="display table" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th>应用烤房数</th>
+                  <th>累计鲜烟总量</th>
+                  <th>累计干烟总量</th>
+                  <th>累计烘烤坎数</th>
+                  <th>平均每砍鲜烟量</th>
+                  <th>平均每砍干烟量</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <h5 class="sub-header" style="text-align:center">烤房使用明细表</h5>
           <h6 style="text-align:center">单位：公斤</h6>
           <div class="table-responsive">
             <table id="table" class="display table" cellspacing="0" width="100%">
               <thead>
                 <tr>
-                  <th >烤房</th>
-                  <th >烟基号</th>
-                  <th >累计鲜烟总量</th>
+                  <th>烤房</th>
+                  <th>烟基号</th>
+                  <th>累计鲜烟总量</th>
                   <th>累计干烟总量</th>
-                  <th >累计烘烤坎数</th>
-                  <th >累计烘烤时间(小时)</th>
+                  <th>累计烘烤坎数</th>
+                  <th>累计烘烤时间(小时)</th>
                 </tr>
               </thead>
               <tbody>
@@ -93,11 +108,14 @@
       </div>
 <script type="text/javascript">
   var table; 
+  var sumTable;
   var advanceDisplay = false;
   var stateParam = <%= role %>;
 
+  var sumData = {};
+
   $(document).ready(function() {
-    table = $('#table').dataTable( {
+    table = $('#table').dataTable({
       "scrollY": false,
       "scrollX": false,
       'searching': false,
@@ -111,13 +129,41 @@
       ]
     });
 
+    sumTable = $('#sumTable').dataTable({
+      "scrollY": false,
+      "scrollX": false,
+      'searching': false,
+      columns: [
+        {data : 'rooms'},
+        {data: 'freshAmount'},
+        {data: 'dryAmount'},
+        {data: 'bakingTimes'},
+        {data: 'averageFresh'},
+        {data: 'averageDry'}
+      ]
+    });
+
+    sumData.rooms = 50;
+    sumData.freshAmount = sumColumnValues(table, 2).toFixed(2);
+    sumData.dryAmount = sumColumnValues(table, 3).toFixed(2);
+    sumData.bakingTimes = sumColumnValues(table, 4);
+    sumData.averageFresh = (sumData.freshAmount / sumData.bakingTimes).toFixed(2);
+    sumData.averageDry = (sumData.dryAmount / sumData.bakingTimes).toFixed(2);
+    
+    console.log(sumData);
+    sumTable.api().rows.add([sumData]).draw();
+
     initSearchButton('/analysis_room_usage?groupBy=2&', 
       function(data){
           table.api().clear().draw();
           if(data){
+            data.map(function(r){
+              r.freshAmount = r.freshAmount.toFixed(2);
+              r.dryAmount = r.dryAmount.toFixed(2);
+              r.amountTime = r.amountTime.toFixed(2);
+            })
             table.api().rows.add(data).draw();
-          }
-          
+          }  
       }
     );
 

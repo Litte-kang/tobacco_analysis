@@ -37,7 +37,7 @@
                   <th colspan="3">成熟度</th>
                 </tr>
                 <tr>
-                  <th>正常烟叶</th>
+                  <th>适熟烟叶</th>
                   <th>欠熟烟叶</th>
                   <th>过熟烟叶</th>
                 </tr>
@@ -141,7 +141,7 @@
                   <th rowspan="2">日期</th>
                 </tr>
                 <tr>
-                  <th>正常烟叶</th>
+                  <th>适熟烟叶</th>
                   <th>欠熟烟叶</th>
                   <th>过熟烟叶</th>
                 </tr>
@@ -190,7 +190,6 @@
                             var datasets = generatePieChartDatasets(detailTable,[8,9,10], ['正常烟叶', '欠熟烟叶', '过熟烟叶'])
                             createPieChart('chartContainer', datasets);
                           }
-                          //initDataForStatistics();
                       }
       );
       
@@ -217,7 +216,7 @@
 
         chartObj1.type = 'stackedColumn';
         chartObj1.showInLegend = true;
-        chartObj1.name = '正常烟叶';
+        chartObj1.name = '适熟烟叶';
         //chartObj1.color = "#EDCA93";
         chartObj1.toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}Kg",
         chartObj1.dataPoints = [];
@@ -281,13 +280,13 @@
         sumTable.api().rows.add(datasets).draw();
 
         createPieChart('sumChartContainer',
-                       generatePieChartDatasets(sumTable,[2,3,4], ['正常烟叶', '欠熟烟叶', '过熟烟叶']));  
+                       generatePieChartDatasets(sumTable,[2,3,4], ['适熟烟叶', '欠熟烟叶', '过熟烟叶']));  
 
 
          var chart = new CanvasJS.Chart("groupByPlaceContainer",
         {
             title:{
-      text: "各县鲜烟素质分析"   
+      text: "各县鲜烟成熟度分析图"   
       },
       axisY:{
         title:"装烟量(Kg)"   

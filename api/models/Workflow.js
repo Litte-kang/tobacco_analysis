@@ -79,12 +79,9 @@ module.exports = {
             case 'tobacco_no':
               query[element] = opts[element];
               break;
-
             case 'code':
               query.middleware = {'startsWith': opts[element]};
-
               break;
-
             case 'startDate':
               var date = opts[element].split('-');
               query.protocol_created_at['>='] = new Date(date[0],parseInt(date[1]) - 1,date[2],0,0,0);

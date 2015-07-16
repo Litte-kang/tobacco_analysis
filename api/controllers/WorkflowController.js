@@ -17,7 +17,6 @@ module.exports = {
   getFreshTobaccos: function(req, res){
     Workflow.getBackups(req.query, function(err, tobaccos){
       if(err) res.negotiate(err);
-      sails.log(tobaccos);
       return res.send(tobaccos);
     })
   },

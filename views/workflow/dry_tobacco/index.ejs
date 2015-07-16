@@ -160,6 +160,12 @@
         count++;
       });
 
+      if(element.baking_weight > 0){
+        array.push(element.baking_weight);
+        array.push('');
+        count++;
+      }
+      
       if(count < 5){
         for(var i = 0; i < 5 - count; i++){
           array.push('');

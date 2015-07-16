@@ -82,9 +82,9 @@ module.exports = {
                 result.freshAmount += history.fresh_weight; 
               });
 
-              result.amountTime = parseFloat(result.amountTime.toFixed(2))
-              result.freshAmount = parseFloat(result.freshAmount.toFixed(2));
-              result.dryAmount = parseFloat(result.dryAmount.toFixed(2));
+              // result.amountTime = parseFloat(result.amountTime.toFixed(2))
+              // result.freshAmount = parseFloat(result.freshAmount.toFixed(2));
+              // result.dryAmount = parseFloat(result.dryAmount.toFixed(2));
 
             }else{
               var date = new Date();

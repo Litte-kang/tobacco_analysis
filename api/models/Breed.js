@@ -153,8 +153,6 @@ module.exports = {
     analysisDrySummery: function(opts, cb){
       var query = helper.createAggregateParams(opts);
       var groupBy = helper.groupBy(opts);
-      sails.log(query);
-      sails.log(groupBy);
 
       Breed.native(function(err, collection){
         if(err) cb(err);
@@ -224,10 +222,10 @@ module.exports = {
                 result.totalB += curr.maturity.B;
                 result.totalC += curr.maturity.C;
                 
-                result.amount = parseFloat(result.amount.toFixed(2));
-                result.totalA = parseFloat(result.totalA.toFixed(2));
-                result.totalB = parseFloat(result.totalB.toFixed(2));
-                result.totalC = parseFloat(result.totalC.toFixed(2))
+                // result.amount = parseFloat(result.amount.toFixed(2));
+                // result.totalA = parseFloat(result.totalA.toFixed(2));
+                // result.totalB = parseFloat(result.totalB.toFixed(2));
+                // result.totalC = parseFloat(result.totalC.toFixed(2))
               }, 
               function(err, result){
                   sails.log(result)
@@ -255,16 +253,14 @@ module.exports = {
           query,
           {bakingRoom: 0, amount: 0, normalRoom: 0, dryAmount:0, abitrateRoom:0, abitrateTobacco:0, abitrateFinished:0},
           function(curr, result){
-            if(!curr.dry_tobacco){
+            if(curr.dry_tobacco == null){
               result.bakingRoom += 1;
               result.amount += curr.packing_amount;
             }else{
               result.normalRoom += 1;
               result.dryAmount += curr.dry_tobacco.dry_tobacco_weight;
             }
-            //result.amount += curr.packing_amount;
-
-
+            
             result.amount = parseFloat(result.amount.toFixed(2));
             result.dryAmount = parseFloat(result.dryAmount.toFixed(2));
           },function(err, result){

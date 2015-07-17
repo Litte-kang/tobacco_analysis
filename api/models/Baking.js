@@ -70,9 +70,11 @@ module.exports = {
         collection.group(
           groupBy,
           query,
-          {freshAmount:0, dryAmount:0, count: 0, amountTime: 0},
+          {freshAmount:0, dryAmount:0, count: 0, amountTime: 0, bakingRooms: 0},
           function(curr, result){
             result.freshAmount += curr.baking_weight;
+            if (curr.baking_weight > 0) 
+              result.bakingRooms++;
             if(curr.history.length > 0){
               result.count += curr.history.length;
 
@@ -81,11 +83,6 @@ module.exports = {
                 result.dryAmount += history.dry_weight;
                 result.freshAmount += history.fresh_weight; 
               });
-
-              // result.amountTime = parseFloat(result.amountTime.toFixed(2))
-              // result.freshAmount = parseFloat(result.freshAmount.toFixed(2));
-              // result.dryAmount = parseFloat(result.dryAmount.toFixed(2));
-
             }else{
               var date = new Date();
               result.amountTime += (date.getTime() - curr.start_time.getTime())/3600000;

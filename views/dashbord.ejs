@@ -17,7 +17,7 @@
 		        	<table class="table table-striped table-hover table-condensed" id="useage">
 		        		<thead>
 		        			<th>应用烤房数</th>
-		        			<th>装烟量</th>
+		        			<th>鲜烟总量</th>
 		        			<th>干烟总量</th>
 		        			<th>房数</th>
 		        			<th>烘烤总时间(小时)</th>
@@ -34,19 +34,10 @@
 		                <tr>
 		                  <th>应用烤房数</th>
 		                  <th>正在烘烤房数</th>
-		                  <th>装烟量</th>
-		                
+		                  <th>鲜烟总量</th>
 		                </tr>
 		              </thead>
-		              <tbody>
-		              	<%_.each(result, function(p){ %>
-		              		<tr>
-		              			<td>50</td>
-		              			<td><%= p.bakingRoom %></td>
-		              			<td><%= p.amount %></td>	
-		              		</tr>
-		              	<% }) %>
-		              </tbody>
+		              
 		            </table>
 		  		</div>
 		  		<h5 class="sub-header" style="text-align:center">烘烤正常完成总量</h5>
@@ -57,7 +48,7 @@
 		                <tr>
 		                	<th>应用烤房数</th>
 		                	<th>房数</th>
-		                	<th>装烟量</th>
+		                	<th>干烟量</th>
 		                </tr>
 		              </thead>
 		              <tbody>
@@ -79,7 +70,7 @@
 		                <tr>
 		                	<th>应用烤房数</th>
 		                	<th>房数</th>
-		                	<th>装烟量</th>
+		                	<th>干烟量</th>
 		                	<th>已决房数</th>
 		                </tr>
 		              </thead>
@@ -109,14 +100,19 @@ $('document').ready(function(){
 	var table = $('#table').dataTable({
         "scrollCollapse": true,
         'paging': false,
-        'searching': false
+        // 'searching': false,
+        // columns:[
+        // 	{data: 'rooms'},
+        // 	{data: 'bakingRooms'},
+        // 	{data: 'freshAmount'}
+        // ]
     });
     var table1 = $('#table1').dataTable({
         "scrollCollapse": true,
         'paging': false,
         'searching': false
     });
-    var table1 = $('#table2').dataTable({
+    var table2 = $('#table2').dataTable({
         "scrollCollapse": true,
         'paging': false,
         'searching': false
@@ -140,13 +136,14 @@ $('document').ready(function(){
 
 	var url = '/analysis_room_usage?code=<%= role %>';
     $.getJSON(url, function(data){
-    	console.log(data);
+    	
     	data[0].rooms = 50;
     	data[0].freshAmount = parseFloat(data[0].freshAmount).toFixed(2);
     	data[0].dryAmount = parseFloat(data[0].dryAmount).toFixed(2);
     	data[0].amountTime = parseFloat(data[0].freshAmount).toFixed(2);
     	
     	useage.api().rows.add(data).draw();
+    	table.api().rows.add([[50, data[0].bakingRooms, data[0].freshAmount]]).draw()
     })
 })
 

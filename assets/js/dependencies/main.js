@@ -104,9 +104,15 @@ indexs: column index
 */
 function generatePieChartDatasets(table, indexs, labels){
   var datasets = [];
+  var amount = 0;
   indexs.forEach(function(value, index){
-    datasets.push({y: sumColumnValues(table, value), indexLabel: labels[index]});
+    amount += sumColumnValues(table, value);
+    //datasets.push({y: sumColumnValues(table, value),legendText: labels[index], label: labels[index]});
   });
+
+  indexs.forEach(function(value, index){
+    datasets.push({y: (sumColumnValues(table, value) / amount  * 100).toFixed(2),legendText: labels[index], label: labels[index]});
+  })
   return datasets;
 }
 
@@ -155,11 +161,11 @@ function generateColumnChartDatasets(table, indexs, legendTexts){
   return datasets;
 }
 
-function createPieChart(chartContainer, datasets){
+function createPieChart(chartContainer, datasets, title){
   
   var chart = new CanvasJS.Chart(chartContainer,
     {
-      
+      title:  title,
       legend: {
         maxWidth: 350,
         itemWidth: 120
@@ -168,8 +174,9 @@ function createPieChart(chartContainer, datasets){
       {
         type: "pie",
         showInLegend: true,
-        legendText: "{indexLabel}",
-        toolTipContent: "{y} - #percent %",
+        //legendText: "{indexLabel}",
+        toolTipContent: "{legendText}: <strong>{y}%</strong>",
+        indexLabel: "{label} {y}%",
         dataPoints: datasets
       }
       ]

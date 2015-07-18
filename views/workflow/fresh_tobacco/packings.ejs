@@ -92,7 +92,18 @@
         </div>
             </div>
           </div>
-                    <div class="row">
+          <div class="row">
+            <div class="col-xs-6 col-sm-4">
+              <div id="container1" style="height: 300px; width: 100%;"></div>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <div id="container2" style="height: 300px; width: 100%;"></div>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+              <div id="container3" style="height: 300px; width: 100%;"></div>
+            </div>
+          </div>
+          <div class="row">
             <h5 class="sub-header" style="text-align:center">烘烤编烟统计表</h5>
             <h6 style="text-align:center">单位：公斤</h6>
             <div class="table-responsive">
@@ -253,7 +264,10 @@
 
           sumTable.api().clear().draw();    
           sumTable.api().rows.add(datasets).draw();
-                  
+
+          createPieChart('container1', generatePieChartDatasets(sumTable,[4,5], ['同质','混编']));
+          createPieChart('container2', generatePieChartDatasets(sumTable,[6,7], ['均匀','不均匀']));
+          createPieChart('container3', generatePieChartDatasets(sumTable,[10,11,12], ['均匀','前密后稀', '前稀后密']));
         }else{
           sumTable.api().clear().draw();
           $('#sumChartContainer').hide();

@@ -114,12 +114,12 @@ var table;
                                         time.split(':')[0], time.split(':')[1] - 1 , time.split(':')[2])).
                                         getTime();
 
-              if(parseFloat(object.dry) > 80)
+              if(parseFloat(object.dry) > 80 || parseFloat(object.dry) < 20)
                 dryPoints.push({x: createdAt, y: undefined});
               else
                 dryPoints.push({x: createdAt, y: object.dry});
 
-              if(parseFloat(object.wet) > 80)
+              if(parseFloat(object.wet) > 80 || parseFloat(object.wet) < 20)
                 wetPoints.push({x: createdAt, y: undefined});
               else
                 wetPoints.push({x: createdAt, y: object.wet});

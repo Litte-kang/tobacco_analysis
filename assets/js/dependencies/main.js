@@ -110,6 +110,50 @@ function generatePieChartDatasets(table, indexs, labels){
   return datasets;
 }
 
+/*
+      {          
+        type: "bar",  
+        showInLegend: true, 
+        legendText: "Reserves  in MMbbl",
+        dataPoints: [      
+        { x: 10, y: 267017,  label: "Saudi Arabia" },
+        { x: 20, y: 116000,  label: "Russia"},
+        { x: 30, y: 20682,  label: "US"},
+        { x: 40, y: 154580,  label: "Iran"},
+        { x: 50, y: 20350,  label: "China"},
+        { x: 60, y: 175200,  label: "Canda"},
+        { x: 70, y: 97800, label:"UAE"},
+        { x: 80, y: 297571, label:"Venezuela"}
+
+
+        ]
+      }
+*/
+function generateColumnChartDatasets(table, indexs, legendTexts){
+  var datasets = [];
+  var labels = table.api().columns(0).data().reduce(function(a,b){
+    return a + b
+  })
+  
+  indexs.forEach(function(index, k){
+
+    var obj = {};
+    obj.type = "bar";
+    obj.showInLegend = true;
+    obj.legendText = '';
+    obj.dataPoints = [];
+
+    var step = 10;
+    table.api().columns(index).data().each(function(v, i){
+      console.log('The log index is ' + i + ' and value ' + v);
+      //obj.dataPoints.push({x : (i+1) * 10, y: v[0], label: labels[i]});
+    });
+
+    datasets.push(obj);
+  });
+
+  return datasets;
+}
 
 function createPieChart(chartContainer, datasets){
   
@@ -132,6 +176,44 @@ function createPieChart(chartContainer, datasets){
     });
     chart.render();
 }
+
+function createColumnChart(chartContainer, info, datasets){
+  console.log(datasets)
+    var chart = new CanvasJS.Chart(chartContainer,
+    {
+      title:{
+        text: info.title   
+      },
+      axisY2: {
+        title: info.Y2
+      },
+      animationEnabled: true,
+      axisY: {
+        title: info.Y1
+      },
+      axisX :{
+        labelFontSize: 12
+      },
+      legend: {
+        verticalAlign: "bottom"
+      },
+      data: datasets,
+      legend: {
+        cursor:"pointer",
+        itemclick : function(e){
+          if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+            e.dataSeries.visible = false;
+          }
+          else{
+            e.dataSeries.visible = true;
+          }
+          chart.render();
+        }
+      }
+    });
+    chart.render();
+}
+
 
 function initLinkedSelect(){
   $('#place').on('change', function(){

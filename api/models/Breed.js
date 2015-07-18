@@ -221,11 +221,6 @@ module.exports = {
                 result.totalA += curr.maturity.A;
                 result.totalB += curr.maturity.B;
                 result.totalC += curr.maturity.C;
-                
-                // result.amount = parseFloat(result.amount.toFixed(2));
-                // result.totalA = parseFloat(result.totalA.toFixed(2));
-                // result.totalB = parseFloat(result.totalB.toFixed(2));
-                // result.totalC = parseFloat(result.totalC.toFixed(2))
               }, 
               function(err, result){
                   sails.log(result)

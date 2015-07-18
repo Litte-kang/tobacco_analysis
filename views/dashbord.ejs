@@ -20,7 +20,6 @@
 		        			<th>鲜烟总量</th>
 		        			<th>干烟总量</th>
 		        			<th>房数</th>
-		        			<th>烘烤总时间(小时)</th>
 		        		</thead>
 		        	</table>
 		        </div>
@@ -100,7 +99,7 @@ $('document').ready(function(){
 	var table = $('#table').dataTable({
         "scrollCollapse": true,
         'paging': false,
-        // 'searching': false,
+        'searching': false,
         // columns:[
         // 	{data: 'rooms'},
         // 	{data: 'bakingRooms'},
@@ -127,8 +126,8 @@ $('document').ready(function(){
         	{data: 'rooms'},
         	{data: 'freshAmount'},
         	{data: 'dryAmount'},
-        	{data: 'count'},
-        	{data: 'amountTime'}
+        	{data: 'count'}
+        	
         ]
     });
 
@@ -140,10 +139,10 @@ $('document').ready(function(){
     	data[0].rooms = 50;
     	data[0].freshAmount = parseFloat(data[0].freshAmount).toFixed(2);
     	data[0].dryAmount = parseFloat(data[0].dryAmount).toFixed(2);
-    	data[0].amountTime = parseFloat(data[0].freshAmount).toFixed(2);
+    	
     	
     	useage.api().rows.add(data).draw();
-    	table.api().rows.add([[50, data[0].bakingRooms, data[0].freshAmount]]).draw()
+    	table.api().rows.add([[50, data[0].bakingRooms, data[0].bakingWeight.toFixed(2)]]).draw()
     })
 })
 

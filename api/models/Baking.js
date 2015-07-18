@@ -70,9 +70,11 @@ module.exports = {
         collection.group(
           groupBy,
           query,
-          {freshAmount:0, dryAmount:0, count: 0, amountTime: 0, bakingRooms: 0},
+          {freshAmount:0, dryAmount:0, count: 0, amountTime: 0, bakingRooms: 0, bakingWeight: 0},
           function(curr, result){
+            result.bakingWeight += curr.baking_weight;
             result.freshAmount += curr.baking_weight;
+            
             if (curr.baking_weight > 0) 
               result.bakingRooms++;
             if(curr.history.length > 0){

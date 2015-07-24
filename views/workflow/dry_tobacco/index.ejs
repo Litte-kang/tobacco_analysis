@@ -19,57 +19,67 @@
             <ul class="nav nav-tabs" role="tablist">
               <li role="presentation" class="active"><a href="#" aria-controls="home" role="tab" data-toggle="link">烘烤量统计分析</a></li>
               <li role="presentation"><a href="/baking_analysis/baking?groupBy=2&code=<%= role %>" aria-controls="profile" role="tab" data-toggle="link">在烤统计分析</a></li>
-              <li role="presentation"><a href="/dry_tobacco" aria-controls="profile" role="tab" data-toggle="link">干烟质量分析</a></li>
             </ul>
-
+             <br>
             <!-- Tab panes -->
             <div class="tab-content">
               <div role="tabpanel" class="tab-pane active" id="home">
-                <div class="row">
-                  <div class="col-xs-2" id="counties">
-                    <select id="place" class="form form-control">
+               <div class="row">
+                  <div class="col-xs-3" id="counties">
+                    <select id="place" class="form form-control" style="background:#B0E0E6">
                       <option value="">选择县</option>
                     </select>
                   </div>
-                  <div class="col-xs-2" id="towns" style="display: none">
+                  <div class="col-xs-3" id="towns" style="display: none">
                     <select id="town" class="form form-control">
                     </select>
                   </div>
-                  <div class="col-xs-2" id="stations" style="display: none">
+                  <div class="col-xs-3" id="stations" style="display: none">
                     <select id="station" class="form form-control">
                     </select>
                   </div>
-                  <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
+
+                </div>
+                <br>
+                <div id="search-advance" >
+                   <div class="row">
                   <div class="col-xs-3">
+                    <input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"style="background:#E6E6FA">
+                  </div>
+                 
+                   <div class="col-xs-3">
+                      <input id="roomNo" type="text" class="form-control" placeholder="烤房编号" style="background:#E6E6FA">
+                  </div>
+                  </div>
+                <br>
+                <div class="row">
+                 <div class="col-xs-3">
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" />
+                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" placeholder="YYYY-MM--DD" />
                         </div>
                       </div> 
                   </div>
-                  <div class="col-xs-3">
+                <div class="col-xs-3">
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" />
+                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" placeholder="YYYY-MM--DD"/>
                         </div>
                       </div> 
                   </div>
                 </div>
-                <div class="row">
-                  
-                   <div class="col-xs-2">
-                  <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
-
-                   </div>
-                 
-                  <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
-                  <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
+                </div>
+                 <br>
+               <div class="row">
+                  <div class="col-xs-1"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
+                  <div class="col-xs-3"><button type="button" class="btn btn-default" style="background:#BC8F8F">重置</button></div>
                 </div>
               </div>
+             
             </div>
-        </div>
+            </div>
             </div>
           </div>
 

@@ -38,72 +38,66 @@
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-xs-2" id="counties">
-                    <select id="place" class="form form-control">
+                  <div class="row">
+                  <div class="col-xs-3" id="counties">
+                    <select id="place" class="form form-control" style="background:#B0E0E6">
                       <option value="">选择县</option>
-
                     </select>
                   </div>
-                  <div class="col-xs-2" id="towns" style="display: none">
-                    <select id="town" class="form form-control">
+                  <div class="col-xs-3" id="towns" style="display: none" >
+                    <select id="town" class="form form-control" style="background:#B0E0E6">
                     </select>
                   </div>
-                  <div class="col-xs-2" id="stations" style="display: none">
-                    <select id="station" class="form form-control">
+                  <div class="col-xs-3" id="stations" style="display: none" >
+                    <select id="station" class="form form-control" style="background:#B0E0E6">
                     </select>
                   </div>
 
                 </div>
+                <br>
                 <div id="search-advance" style="display: none">
                    <div class="row">
-                  <div class="col-xs-2">
-                    <input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号">
-                  </div>
                   <div class="col-xs-3">
+                    <input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"style="background:#E6E6FA">
+                  </div>
+                 
+                   <div class="col-xs-3">
+                      <input id="roomNo" type="text" class="form-control" placeholder="烤房编号" style="background:#E6E6FA">
+                  </div>
+                  </div>
+                <br>
+                <div class="row">
+                 <div class="col-xs-3">
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" placeholder="YYYY-M-D"/>
+                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" placeholder="YYYY-MM--DD" />
                         </div>
                       </div> 
                   </div>
-                  <div class="col-xs-3">
+                <div class="col-xs-3">
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" placeholder="年-月-日"/>
+                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" placeholder="YYYY-MM--DD"/>
                         </div>
                       </div> 
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-xs-2">
-                      <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
-                  </div>
+                 
                 </div>
                 </div>
-                <div class="row">
-                <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
-                  <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
-                  </div>
+                 <br>
+               <div class="row">
+                  <div class="col-xs-1"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
+                  <div class="col-xs-3"><button type="button" class="btn btn-default" style="background:#BC8F8F">重置</button></div>
+                </div>
               </div>
+             
             </div>
-        </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-6 col-sm-4">
-              <div id="container1" style="height: 300px; width: 100%;"></div>
-            </div>
-            <div class="col-xs-6 col-sm-4">
-              <div id="container2" style="height: 300px; width: 100%;"></div>
-            </div>
-            <div class="col-xs-6 col-sm-4">
-              <div id="container3" style="height: 300px; width: 100%;"></div>
             </div>
           </div>
-          <div class="row">
+                    <div class="row">
             <h5 class="sub-header" style="text-align:center">烘烤编烟统计表</h5>
             <h6 style="text-align:center">单位：公斤</h6>
             <div class="table-responsive">
@@ -115,20 +109,21 @@
                     <th rowspan="2">每杆重量</th>
                     <th rowspan="2">装烟量(杆)</th>
                     <th colspan="2">编杆分类(杆)</th>
-                    <th colspan="2">杆/夹分类(杆)</th>
+                    <th colspan="2">同杆/夹均匀程度(杆)</th>
                     <th colspan="2">分类装烟情况(房)</th>
-                    <th colspan="3">均匀性(房)</th>
+                    <th colspan="3">均匀性(杆)</th>
                   </tr>
                   <tr>
-                    <th>同质</th>
-                    <th>混编</th>
+                  <th>混编</th>
+                    <th>同杆同质</th>
                     <th>均匀</th>
                     <th>不均匀</th>
-                    <th>正确</th>
-                    <th>不正确</th>
+                    <th>同层同质</th>
+                    <th>按气流方式正确分层</th>
                     <th>均匀</th>
                     <th>前密后稀</th>
                     <th>前稀后密</th>
+                   
                   </tr>
                 </thead>
               </table>
@@ -145,18 +140,17 @@
                     <th rowspan="2">装烟量</th>
                     <th rowspan="2">装烟量(杆)</th>
                     <th colspan="2">编杆分类(杆)</th>
-                    <th colspan="2">杆/夹分类(杆)</th>
+                    <th colspan="2">同杆/夹均匀程度(杆)</th>
                     <th colspan="2">分类装烟情况(房)</th>
-                    <th colspan="3">均匀性(房)</th>
+                    <th colspan="3">均匀性(杆)</th>
                   </tr>
                   <tr>
-                    
-                    <th>同质</th>
+                    <th>同杆同质</th>
                     <th>混编</th>
                     <th>均匀</th>
                     <th>不均匀</th>
-                    <th>正确</th>
-                    <th>不正确</th>
+                    <th>同层同质</th>
+                    <th>按气流方式正确分层</th>
                     <th>均匀</th>
                     <th>前密后稀</th>
                     <th>前稀后密</th>
@@ -186,13 +180,13 @@
             { data: 'bars'   },
             { data: 'totalA' },
             { data: 'totalB' },
-            { data: 'totalJ' },
-            { data: 'totalK' },
-            { data: 'totalF' },
-            { data: 'totalG' },
             { data: 'totalC' },
             { data: 'totalD' },
-            { data: 'totalE' } 
+            { data: 'totalE' },
+            { data: 'totalF' },
+            { data: 'totalG' },
+            { data: 'totalJ' },
+            { data: 'totalK' }
           ]
       });
 
@@ -264,10 +258,7 @@
 
           sumTable.api().clear().draw();    
           sumTable.api().rows.add(datasets).draw();
-
-          createPieChart('container1', generatePieChartDatasets(sumTable,[4,5], ['同质','混编']));
-          createPieChart('container2', generatePieChartDatasets(sumTable,[6,7], ['均匀','不均匀']));
-          createPieChart('container3', generatePieChartDatasets(sumTable,[10,11,12], ['均匀','前密后稀', '前稀后密']));
+                  
         }else{
           sumTable.api().clear().draw();
           $('#sumChartContainer').hide();

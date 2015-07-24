@@ -19,33 +19,45 @@
             <ul class="nav nav-tabs" role="tablist">
               <li role="presentation" ><a href="/workflows/baking_history?code=<%= role %>" aria-controls="home" role="tab" data-toggle="link">烘烤量统计分析</a></li>
               <li class="active" role="presentation"><a href="#" aria-controls="profile" role="tab" data-toggle="link">在烤统计分析</a></li>
-              <li role="presentation"><a href="/dry_tobacco" aria-controls="profile" role="tab" data-toggle="link">干烟质量分析</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
               <div role="tabpanel" class="tab-pane active" id="home">
                 <div class="row">
-                  <div class="col-xs-2" id="counties">
-                    <select id="place" class="form form-control">
+                  <div class="col-xs-3" id="counties">
+                    <select id="place" class="form form-control"style="background:#E1FFFF">
                       <option value="">选择县</option>
 
                     </select>
                   </div>
-                  <div class="col-xs-2" id="towns" style="display: none">
-                    <select id="town" class="form form-control">
+                  <div class="col-xs-3" id="towns" style="display: none">
+                    <select id="town" class="form form-control" style="background:#E1FFFF">
                     </select>
                   </div>
-                  <div class="col-xs-2" id="stations" style="display: none">
-                    <select id="station" class="form form-control">
+                  <div class="col-xs-3" id="stations" style="display: none">
+                    <select id="station" class="form form-control" style="background:#E1FFFF">
                     </select>
                   </div>
-                  <div class="col-xs-2"><input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号"></div>
+                   </div>
+                   <br>
+                  <div class="row">
                   <div class="col-xs-3">
+                  <input id="tobaccoNo" type="text" class="form-control" placeholder="烟基编号" style="background:#B0E0E6">
+                  </div>
+                  <div class="col-xs-3">
+                <input id="roomNo" type="text" class="form-control" placeholder="烤房编号"style="background:#B0E0E6">
+                </div>
+                  
+                </div>
+                 </div>
+                 <br>
+                <div class="row">
+                    <div class="col-xs-3">
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">开始日期</div>
-                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" />
+                            <input type="text" class="form-control" id="protocolStartDate" name="startDate" placeholder="年-月-日"/>
                         </div>
                       </div> 
                   </div>
@@ -53,18 +65,12 @@
                       <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">结束日期</div>
-                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" />
+                            <input type="text" class="form-control" id="protocolEndDate" name="endDate" placeholder="年-月-日" />
                         </div>
                       </div> 
                   </div>
-                </div>
-                <div class="row">
-                  
-                   <div class="col-xs-2">
-                  <input id="roomNo" type="text" class="form-control" placeholder="烤房编号">
-
-                   </div>
-                 
+                  </div>
+                  <div class="row">
                   <div class="col-xs-2"><button type="button" class="btn btn-primary" id="searchButton">搜索</button></div>
                   <div class="col-xs-2"><button type="button" class="btn btn-default">重置</button></div>
                 </div>
